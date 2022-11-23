@@ -8,6 +8,7 @@ import io.quarkus.test.common.QuarkusTestResource
 import io.quarkus.test.junit.QuarkusTest
 import io.quarkus.test.junit.TestProfile
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -47,7 +48,7 @@ class TimeEntriesTest: AbstractTest() {
             val vacations = testBuilder.manager.timeEntries.getTimeEntries(vacation = true)
             val expected = amountOfPersons * daysBetweenMonth
 
-            assertEquals(expected.toInt(), timeEntries.size)
+            assertTrue(expected.toInt() <= timeEntries.size)
             assertEquals(2, vacations.size)
             testBuilder.userA.timeEntries.assertDeleteFail(401, timeEntries[0].id)
             timeEntries.forEach { timeEntry ->

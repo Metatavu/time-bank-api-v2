@@ -1,10 +1,10 @@
 package fi.metatavu.timebank.api.controllers
 
+import fi.metatavu.timebank.api.forecast.ForecastService
 import fi.metatavu.timebank.api.forecast.models.ForecastTask
 import fi.metatavu.timebank.api.forecast.models.ForecastTimeEntry
 import fi.metatavu.timebank.api.persistence.model.TimeEntry
 import fi.metatavu.timebank.api.persistence.repositories.TimeEntryRepository
-import fi.metatavu.timebank.api.utils.VacationUtils
 import java.time.LocalDate
 import java.time.OffsetDateTime
 import java.util.*
@@ -49,11 +49,13 @@ class TimeEntryController {
         forecastTimeEntry: ForecastTimeEntry, forecastTasks: List<ForecastTask>): Boolean {
         val nonBillableTask = forecastTasks.find { it.id == forecastTimeEntry.task }?.unBillable ?: true
         val internalTime = forecastTimeEntry.nonProjectTime != null
+        val miscTime = forecastTimeEntry.nonProjectTime == ForecastService.MISC_ID
         val newTimeEntry = TimeEntry()
         newTimeEntry.id = UUID.randomUUID()
         newTimeEntry.forecastId = forecastTimeEntry.id
         newTimeEntry.person = forecastTimeEntry.person
-        newTimeEntry.internalTime = if (internalTime) forecastTimeEntry.timeRegistered else 0
+        newTimeEntry.internalTime = if (internalTime && !miscTime) forecastTimeEntry.timeRegistered else 0
+        newTimeEntry.miscTime = if (internalTime && miscTime) forecastTimeEntry.timeRegistered else 0
         newTimeEntry.billableProjectTime = 0
         newTimeEntry.nonBillableProjectTime = 0
 
@@ -66,7 +68,7 @@ class TimeEntryController {
         newTimeEntry.date = LocalDate.parse(forecastTimeEntry.date)
         newTimeEntry.createdAt = OffsetDateTime.parse(forecastTimeEntry.createdAt)
         newTimeEntry.updatedAt = OffsetDateTime.parse(forecastTimeEntry.updatedAt)
-        newTimeEntry.isVacation = forecastTimeEntry.nonProjectTime == VacationUtils.VACATION_ID
+        newTimeEntry.isVacation = forecastTimeEntry.nonProjectTime == ForecastService.VACATION_ID
 
         return timeEntryRepository.persistEntry(newTimeEntry)
     }

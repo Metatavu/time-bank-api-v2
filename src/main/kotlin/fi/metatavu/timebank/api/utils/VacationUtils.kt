@@ -8,7 +8,6 @@ import java.time.Year
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 import kotlin.math.roundToInt
-import org.eclipse.microprofile.config.ConfigProvider
 
 /**
  * Vacation Utils class
@@ -54,7 +53,6 @@ class VacationUtils {
     }
 
     companion object {
-        val VACATION_ID = ConfigProvider.getConfig().getValue("forecast.vacation.id", Int::class.java) ?: 228255
         val vacationAccumulationStart = checkVacationAccumulationStart()
         val vacationAccumulationEnd = checkVacationAccumulationEnd()
         val lastVacationAccumulationStart = checkLastVacationAccumulationStart()

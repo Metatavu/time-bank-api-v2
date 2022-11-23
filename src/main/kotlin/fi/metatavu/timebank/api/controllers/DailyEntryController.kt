@@ -104,6 +104,7 @@ class DailyEntryController {
      */
     suspend fun calculateDailyEntries(entriesOfDay: List<TimeEntry>, personId: Int, holidays: List<LocalDate>, personsWorktimeCalendars: List<WorktimeCalendar>): DailyEntry {
         var internalTime = 0
+        var miscTime = 0
         var billableProjectTime = 0
         var nonBillableProjectTime = 0
         val date = entriesOfDay.first().date!!
@@ -120,6 +121,7 @@ class DailyEntryController {
 
         entriesOfDay.forEach{ entry ->
             internalTime += entry.internalTime ?: 0
+            miscTime += entry.miscTime ?: 0
             billableProjectTime += entry.billableProjectTime ?: 0
             nonBillableProjectTime += entry.nonBillableProjectTime ?: 0
         }
@@ -131,16 +133,18 @@ class DailyEntryController {
         )
 
         val loggedProjectTime = billableProjectTime + nonBillableProjectTime
+        val totalInternalTime = internalTime + miscTime
 
         return DailyEntry(
             person = personId,
-            internalTime = internalTime,
+            internalTime = totalInternalTime,
+            miscTime = miscTime,
             billableProjectTime = billableProjectTime,
             nonBillableProjectTime = nonBillableProjectTime,
-            logged = internalTime + loggedProjectTime,
+            logged = totalInternalTime + loggedProjectTime,
             loggedProjectTime = loggedProjectTime,
             expected = expected,
-            balance = internalTime + loggedProjectTime - expected,
+            balance = totalInternalTime + loggedProjectTime - expected,
             date = date,
             isVacation = isVacation
         )

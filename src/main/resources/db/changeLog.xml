@@ -61,4 +61,9 @@
         <dropForeignKeyConstraint baseTableName="TimeEntry" constraintName="FK_TIME_ENTRY_WORKTIME_CALENDAR" />
         <dropColumn tableName="TimeEntry" columnName="worktimeCalendar_id" />
     </changeSet>
+    <changeSet id="misc_worktime" author="Ville Juutila">
+       <addColumn tableName="timeEntry">
+           <column name="miscTime" type="integer"/>
+       </addColumn>
+    </changeSet>
 </databaseChangeLog>

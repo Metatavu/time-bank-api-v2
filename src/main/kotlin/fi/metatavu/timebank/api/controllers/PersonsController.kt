@@ -207,6 +207,7 @@ class PersonsController {
     private suspend fun calculatePersonTotalTime(personId: Int, days: List<DailyEntry>, timespan: Timespan): PersonTotalTime {
         val weekOfYear = WeekFields.of(DayOfWeek.MONDAY, 7).weekOfYear()
         var internalTime = 0
+        var miscTime = 0
         var billableProjectTime = 0
         var nonBillableProjectTime = 0
         var expected = 0
@@ -218,6 +219,7 @@ class PersonsController {
 
         days.forEachIndexed{ idx, day ->
             internalTime += day.internalTime
+            miscTime += day.miscTime
             billableProjectTime += day.billableProjectTime
             nonBillableProjectTime += day.nonBillableProjectTime
             expected += day.expected
@@ -229,6 +231,7 @@ class PersonsController {
         }
 
         val loggedProjectTime = billableProjectTime + nonBillableProjectTime
+        val totalInternalTime = internalTime + miscTime
         val timePeriod = timespanDateStringBuilder(
             timespan = timespan,
             year = year,
@@ -239,11 +242,12 @@ class PersonsController {
         )
 
         return PersonTotalTime(
-            balance = internalTime + loggedProjectTime - expected,
-            logged = internalTime + loggedProjectTime,
+            balance = totalInternalTime + loggedProjectTime - expected,
+            logged = totalInternalTime + loggedProjectTime,
             loggedProjectTime = loggedProjectTime,
             expected = expected,
-            internalTime = internalTime,
+            internalTime = totalInternalTime,
+            miscTime = miscTime,
             billableProjectTime = billableProjectTime,
             nonBillableProjectTime = nonBillableProjectTime,
             personId = personId,

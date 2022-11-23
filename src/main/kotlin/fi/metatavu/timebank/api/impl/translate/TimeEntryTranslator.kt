@@ -15,6 +15,7 @@ class TimeEntryTranslator: AbstractTranslator<TimeEntry, fi.metatavu.timebank.mo
             forecastId = entity.forecastId,
             person = entity.person!!,
             internalTime =  entity.internalTime!!,
+            miscTime = entity.miscTime!!,
             billableProjectTime = entity.billableProjectTime!!,
             nonBillableProjectTime = entity.nonBillableProjectTime!!,
             date = entity.date!!,

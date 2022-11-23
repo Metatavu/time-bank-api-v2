@@ -33,6 +33,9 @@ class TimeEntry {
     var nonBillableProjectTime: Int? = null
 
     @Column
+    var miscTime: Int? = null
+
+    @Column
     var date: LocalDate? = null
 
     @Column
@@ -55,6 +58,7 @@ class TimeEntry {
             internalTime == other.internalTime &&
             billableProjectTime == other.billableProjectTime &&
             nonBillableProjectTime == other.nonBillableProjectTime &&
+            miscTime == other.miscTime &&
             date == other.date &&
             createdAt == other.createdAt &&
             updatedAt == other.updatedAt

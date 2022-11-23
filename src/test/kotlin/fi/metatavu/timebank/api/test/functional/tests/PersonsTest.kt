@@ -145,6 +145,23 @@ class PersonsTest: AbstractTest() {
     }
 
     /**
+     * Tests /v1/persons/1/total -endpoint
+     * timespan default to ALL_TIME
+     */
+    @Test
+    fun listPersonTotalTimeForTestAAllTime() {
+        createTestBuilder().use { testBuilder ->
+            val personTotalTimes = testBuilder.manager.persons.getPersonTotal(
+                personId = 1,
+                timespan = null
+            )
+
+            assertEquals(1, personTotalTimes.size)
+            assertEquals(120, personTotalTimes[0].miscTime)
+        }
+    }
+
+    /**
      * Tests /v1/persons/2/total -endpoint
      * timespan defaults to ALL_TIME
      */

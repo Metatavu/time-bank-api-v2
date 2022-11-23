@@ -12,6 +12,7 @@ import org.slf4j.Logger
 import java.time.LocalDate
 import javax.enterprise.context.RequestScoped
 import javax.inject.Inject
+import org.eclipse.microprofile.config.ConfigProvider
 
 /**
  * Service for accessing Forecast API
@@ -106,5 +107,10 @@ class ForecastService {
             doRequest("/v4/tasks?pageSize=1000&pageNumber=$pageNumber"),
             ForecastTaskResponse::class.java
         )
+    }
+
+    companion object {
+        val VACATION_ID = ConfigProvider.getConfig().getValue("forecast.vacation.id", Int::class.java) ?: 228255
+        val MISC_ID = ConfigProvider.getConfig().getValue("forecast.misc.id", Int::class.java) ?: 258738
     }
 }

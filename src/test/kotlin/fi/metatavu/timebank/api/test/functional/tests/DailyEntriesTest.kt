@@ -92,8 +92,11 @@ class DailyEntriesTest: AbstractTest() {
                 after = LocalDate.now().toString(),
                 vacation = false
             )
-
+            personA.forEach { println(it.internalTime) }
             assertEquals(daysBetweenMonth.toInt(), personA.size)
+            assertTrue(personA.find {
+                it.miscTime == 120 && it.internalTime == 240
+            } != null)
             assertEquals(1, personB.size)
             assertEquals(1, personC.size)
             assertEquals(1, personD.size)

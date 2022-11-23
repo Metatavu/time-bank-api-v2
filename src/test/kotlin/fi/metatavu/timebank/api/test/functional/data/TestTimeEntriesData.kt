@@ -193,6 +193,26 @@ class TestTimeEntriesData {
                     date = getSixtyDaysAgo().toString(),
                     createdAt = getODT(getSixtyDaysAgo().atStartOfDay()),
                     updatedAt = getODT(getSixtyDaysAgo().atStartOfDay())
+                ),
+                createTestTimeEntry(
+                    id = 17,
+                    person = 1,
+                    task = null,
+                    nonProjectTime = 258738,
+                    timeRegistered = 120,
+                    date = LocalDate.now().toString(),
+                    createdAt = getODT(LocalDate.now().atStartOfDay()),
+                    updatedAt = getODT(LocalDate.now().atStartOfDay())
+                ),
+                createTestTimeEntry(
+                    id = 18,
+                    person = 1,
+                    task = null,
+                    nonProjectTime = 1239,
+                    timeRegistered = 120,
+                    date = LocalDate.now().toString(),
+                    createdAt = getODT(LocalDate.now().atStartOfDay()),
+                    updatedAt = getODT(LocalDate.now().atStartOfDay())
                 )
             )
         }
