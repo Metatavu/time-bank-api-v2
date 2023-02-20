@@ -2,6 +2,7 @@ package fi.metatavu.timebank.api.impl
 
 import fi.metatavu.timebank.api.controllers.TimeEntryController
 import fi.metatavu.timebank.api.impl.translate.TimeEntryTranslator
+import fi.metatavu.timebank.model.TimeEntryDeletedEvent
 import javax.enterprise.context.RequestScoped
 import fi.metatavu.timebank.spec.TimeEntriesApi
 import java.time.LocalDate
@@ -26,6 +27,12 @@ class TimeEntriesApi: TimeEntriesApi, AbstractApi() {
         if (!isAdmin()) return createUnauthorized(message = "Only admin is allowed to delete timeEntries!")
 
         timeEntryController.deleteEntry(id = id)
+
+        return createNoContent()
+    }
+
+    override suspend fun timeEntriesDeleteWebhook(timeEntryDeletedEvent: TimeEntryDeletedEvent): Response {
+        timeEntryController.deleteEntry(forecastId = timeEntryDeletedEvent.resourceId)
 
         return createNoContent()
     }
