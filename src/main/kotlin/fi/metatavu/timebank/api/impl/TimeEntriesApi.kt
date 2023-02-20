@@ -2,7 +2,7 @@ package fi.metatavu.timebank.api.impl
 
 import fi.metatavu.timebank.api.controllers.TimeEntryController
 import fi.metatavu.timebank.api.impl.translate.TimeEntryTranslator
-import fi.metatavu.timebank.model.TimeEntryDeletedEvent
+import fi.metatavu.timebank.model.WebhookEvent
 import javax.enterprise.context.RequestScoped
 import fi.metatavu.timebank.spec.TimeEntriesApi
 import java.time.LocalDate
@@ -31,8 +31,8 @@ class TimeEntriesApi: TimeEntriesApi, AbstractApi() {
         return createNoContent()
     }
 
-    override suspend fun timeEntriesDeleteWebhook(timeEntryDeletedEvent: TimeEntryDeletedEvent): Response {
-        timeEntryController.deleteEntry(forecastId = timeEntryDeletedEvent.resourceId)
+    override suspend fun timeEntriesDeleteWebhook(webhookEvent: WebhookEvent): Response {
+        timeEntryController.deleteEntry(forecastId = webhookEvent.`object`!!.id)
 
         return createNoContent()
     }
