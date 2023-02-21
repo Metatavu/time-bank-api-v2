@@ -33,7 +33,7 @@ class KeycloakController {
 
     /**
      * Gets minimumBillableRate attribute for Person
-     * If not set will set and return default value of 50 (%)
+     * If not set will set and return default value of 75 (%)
      *
      * @param user UserRepresentation
      * @return Int minimumBillableRate
@@ -43,8 +43,8 @@ class KeycloakController {
         return try {
             user.attributes["minimumBillableRate"]!!.first()!!.toInt()
         } catch (e: Exception) {
-            updateUsersMinimumBillableRate(user, 50)
-            50
+            updateUsersMinimumBillableRate(user, 75)
+            75
         }
     }
 
