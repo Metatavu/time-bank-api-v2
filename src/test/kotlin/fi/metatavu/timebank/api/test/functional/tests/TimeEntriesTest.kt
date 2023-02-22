@@ -4,9 +4,13 @@ import fi.metatavu.timebank.api.test.functional.data.TestDateUtils.Companion.get
 import fi.metatavu.timebank.api.test.functional.resources.LocalTestProfile
 import fi.metatavu.timebank.api.test.functional.resources.TestMySQLResource
 import fi.metatavu.timebank.api.test.functional.resources.TestWiremockResource
+import fi.metatavu.timebank.test.client.models.ForecastDeleteWebhookEvent
+import fi.metatavu.timebank.test.client.models.ForecastDeleteWebhookObject
+import fi.metatavu.timebank.test.client.models.ForecastDeleteWebhookPerson
 import io.quarkus.test.common.QuarkusTestResource
 import io.quarkus.test.junit.QuarkusTest
 import io.quarkus.test.junit.TestProfile
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -49,6 +53,37 @@ class TimeEntriesTest: AbstractTest() {
 
             assertEquals(expected.toInt(), timeEntries.size)
             assertEquals(2, vacations.size)
+            testBuilder.userA.timeEntries.assertDeleteFail(401, timeEntries[0].id)
+            timeEntries.forEach { timeEntry ->
+                testBuilder.manager.timeEntries.clean(timeEntry)
+            }
+        }
+    }
+
+    /**
+     * Tests /v1/timeEntriesDelete/webhook -endpoint
+     */
+    @Test
+    fun testTimeEntriesDeleteWebhook() {
+        createTestBuilder().use { testBuilder ->
+            testBuilder.manager.synchronization.synchronizeEntries(
+                    before = null,
+                    after = getThirtyDaysAgo().toString()
+            )
+
+            testBuilder.manager.timeEntries.forecastTimeEntriesDeleteWebhook(
+                    forecastDeleteWebhookEvent = ForecastDeleteWebhookEvent(
+                            timestamp = "2023-02-21T15:42:00",
+                            event = "Time_entry_deleted",
+                            `object` = ForecastDeleteWebhookObject(id = 1),
+                            person = ForecastDeleteWebhookPerson(id = 1)
+                    )
+            )
+
+            val timeEntries = testBuilder.manager.timeEntries.getTimeEntries()
+
+            Assertions.assertFalse(timeEntries.find { it.forecastId == 1 } != null)
+
             testBuilder.userA.timeEntries.assertDeleteFail(401, timeEntries[0].id)
             timeEntries.forEach { timeEntry ->
                 testBuilder.manager.timeEntries.clean(timeEntry)
