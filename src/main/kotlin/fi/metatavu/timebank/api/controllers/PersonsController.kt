@@ -127,7 +127,7 @@ class PersonsController {
 
         persons.forEach { forecastPerson ->
             val keycloakUser = keycloakUsers.find { it.email == forecastPerson.email.lowercase() }
-            val minimumBillableRate = if (keycloakUser == null) 50 else keycloakController.getUsersMinimumBillableRate(keycloakUser)
+            val minimumBillableRate = if (keycloakUser == null) 75 else keycloakController.getUsersMinimumBillableRate(keycloakUser)
             val vacationAmounts = vacationUtils.getPersonsVacations(forecastPerson)
             forecastPerson.unspentVacations = vacationAmounts.first
             forecastPerson.spentVacations = vacationAmounts.second

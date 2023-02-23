@@ -115,7 +115,7 @@ class PersonsTest: AbstractTest() {
                 active = person.active,
                 unspentVacations = person.unspentVacations,
                 spentVacations = person.spentVacations,
-                minimumBillableRate = 50,
+                minimumBillableRate = 75,
                 language = person.language,
                 startDate = person.startDate
             )
@@ -125,7 +125,7 @@ class PersonsTest: AbstractTest() {
             )
 
             assertEquals(25,person .minimumBillableRate)
-            assertEquals(50, updatedPerson.minimumBillableRate)
+            assertEquals(75, updatedPerson.minimumBillableRate)
             testBuilder.userA.persons.assertUpdateFail(
                 person = newPerson,
                 expectedStatus = 401
