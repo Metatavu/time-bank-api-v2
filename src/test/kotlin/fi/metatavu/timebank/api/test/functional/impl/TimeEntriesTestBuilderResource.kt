@@ -8,7 +8,6 @@ import fi.metatavu.timebank.test.client.infrastructure.ApiClient
 import fi.metatavu.timebank.test.client.infrastructure.ClientException
 import fi.metatavu.timebank.test.client.models.ForecastDeleteWebhookEvent
 import fi.metatavu.timebank.test.client.models.TimeEntry
-
 import org.junit.Assert
 import java.util.UUID
 
@@ -50,12 +49,14 @@ class TimeEntriesTestBuilderResource(
 
     /**
      * delete time entry
+     * @param X_FORECAST_API_KEY api key for accessing the endpoint
+     * @param forecastDeleteWebhookEvent test webhook content
      */
 
-    fun forecastTimeEntriesDeleteWebhook(forecastDeleteWebhookEvent: ForecastDeleteWebhookEvent) {
+    fun forecastTimeEntriesDeleteWebhook(key: String,forecastDeleteWebhookEvent: ForecastDeleteWebhookEvent) {
         return api.forecastTimeEntriesDeleteWebhook(
+                X_FORECAST_API_KEY = key,
                 forecastDeleteWebhookEvent = forecastDeleteWebhookEvent
-
         )
     }
 
