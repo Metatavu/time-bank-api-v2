@@ -31,8 +31,7 @@ class TimeEntriesApi: TimeEntriesApi, AbstractApi() {
         return createNoContent()
     }
 
-    override suspend fun forecastTimeEntriesDeleteWebhook(X_FORECAST_API_KEY: String, forecastDeleteWebhookEvent: ForecastDeleteWebhookEvent): Response {
-        println(X_FORECAST_API_KEY)
+    override suspend fun forecastTimeEntriesDeleteWebhook(forecastDeleteWebhookEvent: ForecastDeleteWebhookEvent): Response {
         println(forecastDeleteWebhookEvent)
         return createNoContent()
     }
