@@ -18,9 +18,11 @@
 
 ### Developing the application
 
-1. Clone the repository with `git clone --resuce-submodules git@github.com:Metatavu/time-bank-api-v2.git`
-2. Start a MySQL database with Docker or whatever
-3. Ask for environment variables from someone who has worked with the project
-4. Run `quarkus dev`
-5. Look up [Quarkus guides](https://quarkus.io/guides/)
-6. **Enjoy!**
+1. Clone the repository with `git clone --recurse-submodules git@github.com:Metatavu/time-bank-api-v2.git`
+2. If you are using Linux, check Linux post-install guide for Docker
+3. Gradle JVM should be at least SKD/JDK 11
+4. Build the application with `./gradlew generateApiSpec` & `./gradlew generateApiClient`
+5. Ask for environment variables from someone who has worked with the project
+6. Run `quarkus dev`
+7. Look up [Quarkus guides](https://quarkus.io/guides/)
+8. **Enjoy!**
