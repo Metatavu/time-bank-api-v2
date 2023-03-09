@@ -10,14 +10,12 @@ import fi.metatavu.timebank.test.client.models.ForecastDeleteWebhookPerson
 import io.quarkus.test.common.QuarkusTestResource
 import io.quarkus.test.junit.QuarkusTest
 import io.quarkus.test.junit.TestProfile
-import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import javax.enterprise.context.RequestScoped
 
 /**
  * Tests for TimeEntries API
@@ -29,11 +27,7 @@ import javax.enterprise.context.RequestScoped
 )
 @TestProfile(LocalTestProfile::class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@RequestScoped
 class TimeEntriesTest: AbstractTest() {
-
-    @ConfigProperty(name = "FORECAST_API_KEY")
-    lateinit var forecastApiKey: String
 
     /**
      * Resets Wiremock scenario states before each test
@@ -68,7 +62,7 @@ class TimeEntriesTest: AbstractTest() {
     }
 
     /**
-     * Tests /v1/timeEntriesDelete/webhook endpoint
+     * Tests /v1/ForecastTimeEntriesDelete/webhook endpoint
      */
     @Test
     fun testForecastTimeEntriesDeleteWebhook() {
@@ -79,7 +73,6 @@ class TimeEntriesTest: AbstractTest() {
             )
 
             testBuilder.manager.timeEntries.forecastTimeEntriesDeleteWebhook(
-                    key = forecastApiKey,
                     forecastDeleteWebhookEvent = ForecastDeleteWebhookEvent(
                             timestamp = "2023-02-21T15:42:00",
                             event = "Time_entry_deleted",
@@ -88,8 +81,6 @@ class TimeEntriesTest: AbstractTest() {
                     )
             )
             val timeEntries = testBuilder.manager.timeEntries.getTimeEntries()
-
-            timeEntries.forEach { println(it) }
 
             assertFalse(timeEntries.find { it.forecastId == 5 } != null)
             assertTrue(timeEntries.find { it.forecastId == 2 } != null)

@@ -95,4 +95,20 @@ class SynchronizeTest: AbstractTest() {
 
         }
     }
+
+    /**
+     * Tests /v1/synchronizeDeletions -endpoint
+     * with mock Forecast data from past 30
+     */
+    @Test
+    fun testDeletedSynchronization() {
+        createTestBuilder().use { testBuilder ->
+            testBuilder.manager.synchronization.synchronizeEntries(
+                    before = null,
+                    after = getThirtyDaysAgo().toString()
+            )
+
+            testBuilder.manager.synchronization.synchronizeDeletedEntries()
+        }
+    }
 }

@@ -37,4 +37,7 @@ class SynchronizeTestBuilderResource(
             after = after
         )
     }
+    fun synchronizeDeletedEntries(before: String? = null, after: String? = null) {
+        api.synchronizeDeletedTimeEntries()
+    }
 }

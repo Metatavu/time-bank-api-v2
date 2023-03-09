@@ -49,13 +49,12 @@ class TimeEntriesTestBuilderResource(
 
     /**
      * delete time entry
-     * @param X_FORECAST_API_KEY api key for accessing the endpoint
+     *
      * @param forecastDeleteWebhookEvent test webhook content
      */
 
-    fun forecastTimeEntriesDeleteWebhook(key: String,forecastDeleteWebhookEvent: ForecastDeleteWebhookEvent) {
+    fun forecastTimeEntriesDeleteWebhook(forecastDeleteWebhookEvent: ForecastDeleteWebhookEvent) {
         return api.forecastTimeEntriesDeleteWebhook(
-                X_FORECAST_API_KEY = key,
                 forecastDeleteWebhookEvent = forecastDeleteWebhookEvent
         )
     }

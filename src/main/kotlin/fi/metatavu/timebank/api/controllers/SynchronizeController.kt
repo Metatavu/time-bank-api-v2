@@ -140,6 +140,31 @@ class SynchronizeController {
     }
 
     /**
+     * check deleted
+     *
+     *
+     */
+    suspend fun synchronizeDeletions(personId: Int?=null, before: LocalDate?=null, after: LocalDate?=null, vacation: Boolean?=null) {
+        var forecastPersons = personsController.getPersonsFromForecast()
+        forecastPersons = personsController.filterPersons(forecastPersons)
+
+        val forecastTimeEntries = retrieveAllEntries(after = after, forecastPersons = forecastPersons)
+        val timeBankTimeEntries = timeEntryController.getEntries(personId = personId, before = before, after = after, vacation = vacation)
+        var deletedEntries = 0
+        var synchronizedEntries = 0
+
+        timeBankTimeEntries.forEachIndexed { idx, timeEntry ->
+            if(forecastTimeEntries.none { it.id == timeEntry.forecastId }){
+                timeEntryController.deleteEntry(timeEntry.id)
+                logger.info("deleted persisted entry ${timeEntry.id}")
+                deletedEntries ++
+            }
+            synchronizedEntries++
+        }
+        logger.info("Went through $synchronizedEntries entries. Deleted $deletedEntries entries")
+    }
+
+    /**
      * Checks if each Person has TimeEntry for each day of synchronization.
      * If not, creates TimeEntry with zero logged
      *
