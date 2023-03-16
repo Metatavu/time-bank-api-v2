@@ -53,9 +53,10 @@ class TimeEntriesTestBuilderResource(
      * @param forecastDeleteWebhookEvent test webhook content
      */
 
-    fun forecastTimeEntriesDeleteWebhook(forecastDeleteWebhookEvent: ForecastDeleteWebhookEvent) {
+    fun forecastTimeEntriesDeleteWebhook(forecastDeleteWebhookEvent: ForecastDeleteWebhookEvent, forecastDeleteWebhookKey: String) {
         return api.forecastTimeEntriesDeleteWebhook(
-                forecastDeleteWebhookEvent = forecastDeleteWebhookEvent
+                forecastDeleteWebhookEvent = forecastDeleteWebhookEvent,
+                forecastDeleteWebhookKey = forecastDeleteWebhookKey
         )
     }
 

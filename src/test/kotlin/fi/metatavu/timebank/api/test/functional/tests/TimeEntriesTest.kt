@@ -10,12 +10,14 @@ import fi.metatavu.timebank.test.client.models.ForecastDeleteWebhookPerson
 import io.quarkus.test.common.QuarkusTestResource
 import io.quarkus.test.junit.QuarkusTest
 import io.quarkus.test.junit.TestProfile
+import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import javax.enterprise.context.RequestScoped
 
 /**
  * Tests for TimeEntries API
@@ -27,7 +29,13 @@ import org.junit.jupiter.api.TestInstance
 )
 @TestProfile(LocalTestProfile::class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+
+
+@RequestScoped
 class TimeEntriesTest: AbstractTest() {
+
+    @ConfigProperty(name = "webhook_key")
+    lateinit var forecastWebhookKey: String
 
     /**
      * Resets Wiremock scenario states before each test
@@ -78,7 +86,8 @@ class TimeEntriesTest: AbstractTest() {
                             event = "Time_entry_deleted",
                             `object` = ForecastDeleteWebhookObject(id = 5),
                             person = ForecastDeleteWebhookPerson(id = 1)
-                    )
+                    ),
+                    forecastDeleteWebhookKey = forecastWebhookKey
             )
             val timeEntries = testBuilder.manager.timeEntries.getTimeEntries()
 
