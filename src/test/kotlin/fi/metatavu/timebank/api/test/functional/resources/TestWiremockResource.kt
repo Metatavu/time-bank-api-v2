@@ -166,6 +166,12 @@ class TestWiremockResource: QuarkusTestResourceLifecycleManager {
                     after = getSixtyDaysAgo()
                 )), 200))
         )
+        wireMockServer.stubFor(
+            get(urlPathEqualTo("/v4/time_registrations"))
+                .inScenario(TIMES_SCENARIO)
+                .whenScenarioStateIs("delete")
+                .willReturn(jsonResponse(objectMapper.writeValueAsString(TestData.getForecastTimeEntryResponse()), 200))
+        )
     }
 
     /**

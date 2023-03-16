@@ -21,6 +21,7 @@ class SynchronizeTestBuilderResource(
     }
 
     override fun getApi(): SynchronizeApi {
+        apiClient
         ApiClient.accessToken = accessTokenProvider?.accessToken
         return SynchronizeApi(ApiTestSettings.apiBasePath)
     }
@@ -37,7 +38,17 @@ class SynchronizeTestBuilderResource(
             after = after
         )
     }
-    fun synchronizeDeletedEntries(before: String? = null, after: String? = null) {
-        api.synchronizeDeletedTimeEntries()
+
+    /**
+     * Synchronizes deleted time entries
+     *
+     * @param personId optional personId
+     * @param before optional before date
+     * @param after optional after date
+     * @param vacation optional vacation filter
+     */
+
+    fun synchronizeDeletedEntries(personId: Int?=null, before: String?=null, after: String?=null, vacation: Boolean?=null) {
+        api.synchronizeDeletedTimeEntries(personId = personId, before = before, after = after, vacation = vacation)
     }
 }

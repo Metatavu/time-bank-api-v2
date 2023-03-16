@@ -140,9 +140,12 @@ class SynchronizeController {
     }
 
     /**
-     * check deleted
+     * check deleted time entries
      *
-     *
+     * @param personId optional personId
+     * @param before optional before date
+     * @param after optional after date
+     * @param vacation optional vacation filter
      */
     suspend fun synchronizeDeletions(personId: Int?=null, before: LocalDate?=null, after: LocalDate?=null, vacation: Boolean?=null) {
         var forecastPersons = personsController.getPersonsFromForecast()
@@ -154,14 +157,16 @@ class SynchronizeController {
         var synchronizedEntries = 0
 
         timeBankTimeEntries.forEachIndexed { idx, timeEntry ->
-            if(forecastTimeEntries.none { it.id == timeEntry.forecastId }){
+            if (timeEntry.forecastId !=null) {
+            if (forecastTimeEntries.none { it.id == timeEntry.forecastId }) {
                 timeEntryController.deleteEntry(timeEntry.id)
                 logger.info("deleted persisted entry ${timeEntry.id}")
                 deletedEntries ++
+                }
             }
             synchronizedEntries++
         }
-        logger.info("Went through $synchronizedEntries entries. Deleted $deletedEntries entries")
+        logger.info("Went through $synchronizedEntries entries. Deleted entries: $deletedEntries")
     }
 
     /**

@@ -26,6 +26,8 @@ class ScheduledSynchronization {
     @Scheduled(cron = "0 15 3 * * ?")
     fun scheduledSynchronization(){
         runBlocking {
+            val synchronizeDeletedTimeEntries = synchronizeController.synchronizeDeletions()
+            logger.info("Went through $synchronizeDeletedTimeEntries entries.")
             val afterDate = LocalDate.now().minusDays(1)
             logger.info("[${LocalDate.now()}] Scheduled synchronization starting with...")
             val synchronizedEntries = synchronizeController.synchronize(afterDate)

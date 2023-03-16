@@ -103,12 +103,16 @@ class SynchronizeTest: AbstractTest() {
     @Test
     fun testDeletedSynchronization() {
         createTestBuilder().use { testBuilder ->
-            testBuilder.manager.synchronization.synchronizeEntries(
-                    before = null,
-                    after = getThirtyDaysAgo().toString()
+            testBuilder.manager.synchronization.synchronizeEntries()
+
+            setScenario(
+                scenario = TIMES_SCENARIO,
+                state = "delete"
             )
 
             testBuilder.manager.synchronization.synchronizeDeletedEntries()
+            val timeBankTimeEntries = testBuilder.manager.timeEntries.getTimeEntries()
+            timeBankTimeEntries.forEach { testBuilder.manager.timeEntries.clean(it) }
         }
     }
 }

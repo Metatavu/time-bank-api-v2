@@ -53,6 +53,21 @@ class TestData {
         }
 
         /**
+         * Gets mock Forecast API response to /v4/time_registrations
+         *
+         * @return ForecastTimeEntryResponse - 1 entry
+         */
+        fun getForecastTimeEntryResponse(): ForecastTimeEntryResponse {
+            val entries =  TestTimeEntriesData.getForecastTimeEntries()
+            val pageContents = entries.subList(0, entries.size - 1)
+            return createForecastTimeEntryResponse(
+                pageContents = pageContents,
+                pageSize = pageContents.size,
+                totalObjectCount = pageContents.size
+            )
+        }
+
+        /**
          * Gets mock Forecast API response to /v4/tasks
          *
          * @return ForecastTaskResponse

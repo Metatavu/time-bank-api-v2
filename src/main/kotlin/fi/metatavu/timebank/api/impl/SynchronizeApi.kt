@@ -15,8 +15,8 @@ class SynchronizeApi: SynchronizeApi, AbstractApi() {
 
     @Inject
     lateinit var synchronizeController: SynchronizeController
-    override suspend fun synchronizeDeletedTimeEntries(): Response {
-        synchronizeController.synchronizeDeletions()
+    override suspend fun synchronizeDeletedTimeEntries(personId: Int?, before: LocalDate?, after: LocalDate?, vacation: Boolean?): Response {
+        synchronizeController.synchronizeDeletions(personId = personId, before = before, after = after, vacation = vacation)
         return createNoContent()
     }
 
