@@ -30,7 +30,6 @@ import javax.enterprise.context.RequestScoped
 @TestProfile(LocalTestProfile::class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 
-
 @RequestScoped
 class TimeEntriesTest: AbstractTest() {
 
@@ -81,21 +80,19 @@ class TimeEntriesTest: AbstractTest() {
             )
 
             testBuilder.manager.timeEntries.forecastTimeEntriesDeleteWebhook(
-                    forecastDeleteWebhookEvent = ForecastDeleteWebhookEvent(
-                            timestamp = "2023-02-21T15:42:00",
-                            event = "Time_entry_deleted",
-                            `object` = ForecastDeleteWebhookObject(id = 5),
-                            person = ForecastDeleteWebhookPerson(id = 1)
-                    ),
-                    forecastDeleteWebhookKey = forecastWebhookKey
+                forecastDeleteWebhookEvent = ForecastDeleteWebhookEvent(
+                    timestamp = "2023-02-21T15:42:00",
+                    event = "Time_entry_deleted",
+                    `object` = ForecastDeleteWebhookObject(id = 5),
+                    person = ForecastDeleteWebhookPerson(id = 1)
+                ),
+                forecastDeleteWebhookKey = forecastWebhookKey
             )
             val timeEntries = testBuilder.manager.timeEntries.getTimeEntries()
 
             assertFalse(timeEntries.find { it.forecastId == 5 } != null)
             assertTrue(timeEntries.find { it.forecastId == 2 } != null)
-            timeEntries.forEach { timeEntry ->
-                testBuilder.manager.timeEntries.clean(timeEntry)
-            }
+            timeEntries.forEach { timeEntry -> testBuilder.manager.timeEntries.clean(timeEntry) }
         }
     }
 }
