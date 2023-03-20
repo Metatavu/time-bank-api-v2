@@ -21,7 +21,7 @@ class SynchronizeTestBuilderResource(
     }
 
     override fun getApi(): SynchronizeApi {
-        apiClient
+        super.getApiClient()
         ApiClient.accessToken = accessTokenProvider?.accessToken
         return SynchronizeApi(ApiTestSettings.apiBasePath)
     }
