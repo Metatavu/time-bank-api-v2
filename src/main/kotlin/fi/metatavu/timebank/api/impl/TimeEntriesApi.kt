@@ -17,7 +17,7 @@ import javax.ws.rs.core.Response
 @RequestScoped
 class TimeEntriesApi: TimeEntriesApi, AbstractApi() {
 
-    @ConfigProperty(name = "forecast_webhook_key")
+    @ConfigProperty(name = "forecast.webhook.key")
     lateinit var forecastWebhookKey: String
 
     @Inject

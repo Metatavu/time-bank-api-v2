@@ -13,7 +13,8 @@ class LocalTestProfile: QuarkusTestProfile {
             "keycloak.admin.password" to "admin",
             "keycloak.client.id" to "admin-cli",
             "keycloak.client.secret" to "secret",
-            "keycloak.realm" to "timebank"
+            "keycloak.realm" to "timebank",
+            "forecast.webhook.key" to "forecastKey"
         )
     }
 
