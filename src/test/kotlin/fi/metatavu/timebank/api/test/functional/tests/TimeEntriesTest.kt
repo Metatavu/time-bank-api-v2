@@ -33,7 +33,7 @@ import javax.enterprise.context.RequestScoped
 @RequestScoped
 class TimeEntriesTest: AbstractTest() {
 
-    @ConfigProperty(name = "webhook_key")
+    @ConfigProperty(name = "forecast_webhook_key")
     lateinit var forecastWebhookKey: String
 
     /**
