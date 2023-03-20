@@ -80,6 +80,11 @@ class TimeEntryController {
         timeEntryRepository.deleteEntry(id = id)
     }
 
+    /**
+     * Deletes given persisted TimeEntry
+     *
+     * @param forecastId forecastId
+     */
     suspend fun deleteEntry(forecastId: Int) {
         timeEntryRepository.deleteEntry(forecastId = forecastId)
     }

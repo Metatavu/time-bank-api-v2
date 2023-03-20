@@ -54,6 +54,7 @@ class TestData {
 
         /**
          * Gets mock Forecast API response to /v4/time_registrations
+         * Used to test synchronizationDeletedTimeEntries -endpoint
          *
          * @return ForecastTimeEntryResponse - 1 entry
          */

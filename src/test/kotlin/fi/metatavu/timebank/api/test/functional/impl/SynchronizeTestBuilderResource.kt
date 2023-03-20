@@ -48,7 +48,7 @@ class SynchronizeTestBuilderResource(
      * @param vacation optional vacation filter
      */
 
-    fun synchronizeDeletedEntries(personId: Int?=null, before: String?=null, after: String?=null, vacation: Boolean?=null) {
+    fun synchronizeDeletedEntries(personId: Int? = null, before: String? = null, after: String? = null, vacation: Boolean? = null) {
         api.synchronizeDeletedTimeEntries(personId = personId, before = before, after = after, vacation = vacation)
     }
 }

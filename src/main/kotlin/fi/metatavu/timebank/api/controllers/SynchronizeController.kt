@@ -74,6 +74,38 @@ class SynchronizeController {
     }
 
     /**
+     * Check deleted time entries
+     *
+     * @param personId optional personId
+     * @param before optional before date
+     * @param after optional after date
+     * @param vacation optional vacation filter
+     */
+    suspend fun synchronizeDeletions(personId: Int? = null, before: LocalDate? = null, after: LocalDate? = null, vacation: Boolean? = null) {
+        var forecastPersons = personsController.getPersonsFromForecast()
+
+        forecastPersons = personsController.filterPersons(forecastPersons)
+
+        val forecastTimeEntries = retrieveAllEntries(after = after, forecastPersons = forecastPersons)
+        val timeBankTimeEntries = timeEntryController.getEntries(personId = personId, before = before, after = after, vacation = vacation)
+
+        var deletedEntries = 0
+        var synchronizedEntries = 0
+
+        timeBankTimeEntries.forEachIndexed { idx, timeEntry ->
+            if (timeEntry.forecastId != null) {
+                if (forecastTimeEntries.none { it.id == timeEntry.forecastId }) {
+                    timeEntryController.deleteEntry(timeEntry.id)
+                    logger.info("Deleted persisted entry ${timeEntry.id}")
+                    deletedEntries ++
+                }
+            }
+            synchronizedEntries++
+        }
+        logger.info("Went through $synchronizedEntries entries. Deleted entries: $deletedEntries")
+    }
+
+    /**
      * Loops through paginated API responses of varying sizes from Forecast API
      * and translates the received ForecastTimeEntries to TimeEntries.
      *
@@ -137,36 +169,6 @@ class SynchronizeController {
         }
 
         return forecastTasks
-    }
-
-    /**
-     * check deleted time entries
-     *
-     * @param personId optional personId
-     * @param before optional before date
-     * @param after optional after date
-     * @param vacation optional vacation filter
-     */
-    suspend fun synchronizeDeletions(personId: Int?=null, before: LocalDate?=null, after: LocalDate?=null, vacation: Boolean?=null) {
-        var forecastPersons = personsController.getPersonsFromForecast()
-        forecastPersons = personsController.filterPersons(forecastPersons)
-
-        val forecastTimeEntries = retrieveAllEntries(after = after, forecastPersons = forecastPersons)
-        val timeBankTimeEntries = timeEntryController.getEntries(personId = personId, before = before, after = after, vacation = vacation)
-        var deletedEntries = 0
-        var synchronizedEntries = 0
-
-        timeBankTimeEntries.forEachIndexed { idx, timeEntry ->
-            if (timeEntry.forecastId !=null) {
-            if (forecastTimeEntries.none { it.id == timeEntry.forecastId }) {
-                timeEntryController.deleteEntry(timeEntry.id)
-                logger.info("deleted persisted entry ${timeEntry.id}")
-                deletedEntries ++
-                }
-            }
-            synchronizedEntries++
-        }
-        logger.info("Went through $synchronizedEntries entries. Deleted entries: $deletedEntries")
     }
 
     /**

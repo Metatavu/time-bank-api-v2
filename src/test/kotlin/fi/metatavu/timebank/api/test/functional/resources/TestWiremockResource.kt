@@ -13,6 +13,7 @@ import fi.metatavu.timebank.api.test.functional.tests.AbstractTest.Companion.UPD
 import fi.metatavu.timebank.api.test.functional.tests.AbstractTest.Companion.UPDATE_STATE_TWO
 import fi.metatavu.timebank.api.test.functional.data.TestDateUtils.Companion.getSixtyDaysAgo
 import fi.metatavu.timebank.api.test.functional.data.TestDateUtils.Companion.getThirtyDaysAgo
+import fi.metatavu.timebank.api.test.functional.tests.AbstractTest.Companion.DELETE_STATE
 import fi.metatavu.timebank.api.test.functional.tests.AbstractTest.Companion.TASKS_SCENARIO
 import fi.metatavu.timebank.api.test.functional.tests.AbstractTest.Companion.YEAR_STATE
 import io.quarkus.test.common.QuarkusTestResourceLifecycleManager
@@ -169,7 +170,7 @@ class TestWiremockResource: QuarkusTestResourceLifecycleManager {
         wireMockServer.stubFor(
             get(urlPathEqualTo("/v4/time_registrations"))
                 .inScenario(TIMES_SCENARIO)
-                .whenScenarioStateIs("delete")
+                .whenScenarioStateIs(DELETE_STATE)
                 .willReturn(jsonResponse(objectMapper.writeValueAsString(TestData.getForecastTimeEntryResponse()), 200))
         )
     }

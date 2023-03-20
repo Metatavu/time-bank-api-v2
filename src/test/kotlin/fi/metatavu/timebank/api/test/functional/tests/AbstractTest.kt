@@ -118,5 +118,6 @@ abstract class AbstractTest {
         const val UPDATE_STATE_ONE = "updateStateOne"
         const val UPDATE_STATE_TWO = "updateStateTwo"
         const val YEAR_STATE = "yearState"
+        const val DELETE_STATE = "delete"
     }
 }

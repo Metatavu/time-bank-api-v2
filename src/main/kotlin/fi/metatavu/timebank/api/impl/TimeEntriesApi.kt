@@ -36,9 +36,11 @@ class TimeEntriesApi: TimeEntriesApi, AbstractApi() {
     }
 
     override suspend fun forecastTimeEntriesDeleteWebhook(forecastDeleteWebhookEvent: ForecastDeleteWebhookEvent, forecastDeleteWebhookKey: String?): Response {
-            if (forecastDeleteWebhookKey != forecastWebhookKey) {return createUnauthorized(message = "Invalid key!")}
-                timeEntryController.deleteEntry(forecastId = forecastDeleteWebhookEvent.`object`!!.id)
-                return createNoContent()
+        if (forecastDeleteWebhookKey != forecastWebhookKey) {return createUnauthorized(message = "Invalid key!")}
+
+        timeEntryController.deleteEntry(forecastId = forecastDeleteWebhookEvent.`object`!!.id)
+
+        return createNoContent()
     }
 
     override suspend fun listTimeEntries(personId: Int?, before: LocalDate?, after: LocalDate?, vacation: Boolean?): Response {

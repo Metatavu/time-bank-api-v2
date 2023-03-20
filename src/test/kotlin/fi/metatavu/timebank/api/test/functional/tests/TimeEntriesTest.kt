@@ -63,7 +63,7 @@ class TimeEntriesTest: AbstractTest() {
     }
 
     /**
-     * Tests /v1/ForecastTimeEntriesDelete/webhook endpoint
+     * Tests /v1/ForecastTimeEntriesDeleteWebhook -endpoint
      */
     @Test
     fun testForecastTimeEntriesDeleteWebhook() {
@@ -72,6 +72,9 @@ class TimeEntriesTest: AbstractTest() {
                     before = null,
                     after = getThirtyDaysAgo().toString()
             )
+            var timeEntries = testBuilder.manager.timeEntries.getTimeEntries()
+
+            assertTrue(timeEntries.find { it.forecastId == 5 } != null)
 
             testBuilder.manager.timeEntries.forecastTimeEntriesDeleteWebhook(
                 forecastDeleteWebhookEvent = ForecastDeleteWebhookEvent(
@@ -82,7 +85,7 @@ class TimeEntriesTest: AbstractTest() {
                 ),
                 forecastDeleteWebhookKey = forecastKey
             )
-            val timeEntries = testBuilder.manager.timeEntries.getTimeEntries()
+            timeEntries = testBuilder.manager.timeEntries.getTimeEntries()
 
             assertFalse(timeEntries.find { it.forecastId == 5 } != null)
             assertTrue(timeEntries.find { it.forecastId == 2 } != null)
