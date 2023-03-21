@@ -248,7 +248,7 @@ class PersonsTest: AbstractTest() {
     /**
      * Test /v1/persons?active=false without access token
      */
-     @Test
+    @Test
     fun listPersonsWithNullToken() {
         createTestBuilder().use { testBuilder ->
             testBuilder.userWithNullToken.persons.assertListFailWithNullToken(expectedStatus = 401)
@@ -258,7 +258,7 @@ class PersonsTest: AbstractTest() {
     /**
      * Tests /v1/persons -endpoint when Forecast API persons -endpoint responses with an error
      */
-     @Test
+    @Test
     fun testPersonsWithForecastError() {
         setScenario(
             scenario = PERSONS_SCENARIO,
@@ -266,6 +266,16 @@ class PersonsTest: AbstractTest() {
         )
         createTestBuilder().use { testBuilder ->
             testBuilder.manager.persons.assertListFail(expectedStatus = 400)
+        }
+    }
+    /**
+     * Tests if person has no vacations returns empty list
+     */
+    @Test
+    fun getVacationsIfEmptyReturnsEmptyList() {
+        createTestBuilder().use {testBuilder ->
+            val vacations = testBuilder.manager.timeEntries.getTimeEntries(personId = 12, vacation = true)
+            assertEquals(0,vacations.size)
         }
     }
 }
