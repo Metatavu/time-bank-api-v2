@@ -162,4 +162,14 @@ class DailyEntriesTest: AbstractTest() {
             assertTrue(secondEntries.find{ it.expected == 217} != null)
         }
     }
+    /**
+     * Tests if person has no vacations returns empty list
+     */
+    @Test
+    fun getVacationsIfEmptyReturnsEmptyList() {
+        createTestBuilder().use {testBuilder ->
+            val vacations = testBuilder.manager.timeEntries.getTimeEntries(personId = 12, vacation = true)
+            assertEquals(0,vacations.size)
+        }
+    }
 }
