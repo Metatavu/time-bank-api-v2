@@ -40,6 +40,10 @@ class TimeEntriesApi: TimeEntriesApi, AbstractApi() {
             vacation = vacation
         )
 
+        if (entries.isEmpty()) {
+            return createNotFound()
+        }
+
         return createOk(
             entity = timeEntryTranslator.translate(entries)
         )
