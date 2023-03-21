@@ -27,7 +27,6 @@ import org.junit.jupiter.api.TestInstance
 )
 @TestProfile(LocalTestProfile::class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-
 class TimeEntriesTest: AbstractTest() {
 
     /**

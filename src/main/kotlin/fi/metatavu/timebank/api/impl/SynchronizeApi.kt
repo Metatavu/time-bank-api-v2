@@ -16,8 +16,12 @@ class SynchronizeApi: SynchronizeApi, AbstractApi() {
     @Inject
     lateinit var synchronizeController: SynchronizeController
 
-    override suspend fun synchronizeDeletedTimeEntries(personId: Int?, before: LocalDate?, after: LocalDate?, vacation: Boolean?): Response {
-        synchronizeController.synchronizeDeletions(personId = personId, before = before, after = after, vacation = vacation)
+    override suspend fun synchronizeDeletedTimeEntries(before: LocalDate?, after: LocalDate?): Response {
+        synchronizeController.startSynchronization(
+            after = after,
+            syncDeletedEntries = true
+        )
+
         return createNoContent()
     }
 
@@ -25,7 +29,10 @@ class SynchronizeApi: SynchronizeApi, AbstractApi() {
         loggedUserId ?: return createUnauthorized(message = "Invalid token!")
 
         return try {
-            synchronizeController.synchronize(after)
+            synchronizeController.startSynchronization(
+                after = after,
+                syncEntries = true
+            )
 
             createNoContent()
         } catch (e: Error) {

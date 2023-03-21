@@ -48,11 +48,11 @@ class TimeEntriesTestBuilderResource(
     }
 
     /**
-     * Delete time entry
+     * Delete time entry in the webhook from time bank
      *
      * @param forecastDeleteWebhookEvent test webhook content
+     * @param forecastDeleteWebhookKey Test key to verify origin of request
      */
-
     fun forecastTimeEntriesDeleteWebhook(forecastDeleteWebhookEvent: ForecastDeleteWebhookEvent, forecastDeleteWebhookKey: String) {
         return api.forecastTimeEntriesDeleteWebhook(
             forecastDeleteWebhookEvent = forecastDeleteWebhookEvent,

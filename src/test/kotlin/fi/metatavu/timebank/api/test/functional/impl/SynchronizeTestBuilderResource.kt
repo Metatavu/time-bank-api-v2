@@ -42,13 +42,13 @@ class SynchronizeTestBuilderResource(
     /**
      * Synchronizes deleted time entries
      *
-     * @param personId optional personId
-     * @param before optional before date
-     * @param after optional after date
-     * @param vacation optional vacation filter
+     * @param before before date
+     * @param after after date
      */
-
-    fun synchronizeDeletedEntries(personId: Int? = null, before: String? = null, after: String? = null, vacation: Boolean? = null) {
-        api.synchronizeDeletedTimeEntries(personId = personId, before = before, after = after, vacation = vacation)
+    fun synchronizeDeletedEntries(before: String? = null, after: String? = null) {
+        api.synchronizeDeletedTimeEntries(
+            before = before,
+            after = after
+        )
     }
 }
