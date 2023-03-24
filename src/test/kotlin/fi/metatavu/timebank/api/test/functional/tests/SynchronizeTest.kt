@@ -114,7 +114,7 @@ class SynchronizeTest: AbstractTest() {
                 state = DELETE_STATE
             )
 
-            testBuilder.manager.synchronization.synchronizeDeletedEntries()
+            testBuilder.manager.synchronization.synchronizeEntries(syncDeleted = true)
             timeBankTimeEntries = testBuilder.manager.timeEntries.getTimeEntries()
             timeBankTimeEntries.forEach { testBuilder.manager.timeEntries.clean(it) }
 

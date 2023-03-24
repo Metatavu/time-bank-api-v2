@@ -1,6 +1,7 @@
 package fi.metatavu.timebank.api.impl
 
 import io.quarkus.security.identity.SecurityIdentity
+import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.eclipse.microprofile.jwt.JsonWebToken
 import java.util.*
 import javax.enterprise.context.RequestScoped
@@ -14,6 +15,9 @@ import javax.ws.rs.core.Response
  */
 @RequestScoped
 abstract class AbstractApi {
+
+    @ConfigProperty(name = "forecast.webhook.key")
+    lateinit var forecastWebhookKey: String
 
     @Inject
     lateinit var jsonWebToken: JsonWebToken
@@ -41,6 +45,17 @@ abstract class AbstractApi {
      */
     protected fun isAdmin(): Boolean {
         return identity.hasRole("admin")
+    }
+
+    /**
+     * Checks if key is correct
+     *
+     * @return true if key is correct else false
+     */
+    protected fun checkWebhookKey(key: String?): Boolean {
+        if (key == forecastWebhookKey) return true
+
+        return false
     }
 
     /**

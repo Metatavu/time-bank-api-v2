@@ -2,10 +2,8 @@ package fi.metatavu.timebank.api.impl
 
 import fi.metatavu.timebank.api.controllers.TimeEntryController
 import fi.metatavu.timebank.api.impl.translate.TimeEntryTranslator
-import fi.metatavu.timebank.model.ForecastDeleteWebhookEvent
 import javax.enterprise.context.RequestScoped
 import fi.metatavu.timebank.spec.TimeEntriesApi
-import org.eclipse.microprofile.config.inject.ConfigProperty
 import java.time.LocalDate
 import java.util.*
 import javax.inject.Inject
@@ -16,9 +14,6 @@ import javax.ws.rs.core.Response
  */
 @RequestScoped
 class TimeEntriesApi: TimeEntriesApi, AbstractApi() {
-
-    @ConfigProperty(name = "forecast.webhook.key")
-    lateinit var forecastWebhookKey: String
 
     @Inject
     lateinit var timeEntryController: TimeEntryController
@@ -31,14 +26,6 @@ class TimeEntriesApi: TimeEntriesApi, AbstractApi() {
         if (!isAdmin()) return createUnauthorized(message = "Only admin is allowed to delete timeEntries!")
 
         timeEntryController.deleteEntry(id = id)
-
-        return createNoContent()
-    }
-
-    override suspend fun forecastTimeEntriesDeleteWebhook(forecastDeleteWebhookEvent: ForecastDeleteWebhookEvent, forecastDeleteWebhookKey: String?): Response {
-        if (forecastDeleteWebhookKey != forecastWebhookKey) {return createUnauthorized(message = "Invalid key!")}
-
-        timeEntryController.deleteEntry(forecastId = forecastDeleteWebhookEvent.`object`!!.id)
 
         return createNoContent()
     }

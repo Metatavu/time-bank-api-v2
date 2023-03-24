@@ -29,9 +29,8 @@ class ScheduledSynchronization {
             val afterDate = LocalDate.now().minusDays(1)
             logger.info("[${LocalDate.now()}] Scheduled synchronization starting with...")
 
-            synchronizeController.startSynchronization(
+            synchronizeController.synchronize(
                 after = afterDate,
-                syncEntries = true,
                 syncDeletedEntries = true
             )
         }

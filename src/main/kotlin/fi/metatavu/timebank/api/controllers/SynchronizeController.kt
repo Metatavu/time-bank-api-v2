@@ -35,51 +35,25 @@ class SynchronizeController {
     private val oldestSyncDate = LocalDate.parse("2021-07-30")
 
     /**
-     * Begins synchronization
+     * Synchronizes time entries from Forecast to Time-bank
      *
      * @param after YYYY-MM-DD LocalDate
-     * @param syncEntries run synchronization fun
-     * @param syncDeletedEntries run synchronizeDeletions fun
+     * @param syncDeletedEntries boolean if true synchronize deleted time entries between forecast and time bank
      */
-    suspend fun startSynchronization(after: LocalDate? = oldestSyncDate, syncEntries: Boolean = false, syncDeletedEntries: Boolean = false) {
+    suspend fun synchronize(after: LocalDate? = oldestSyncDate, syncDeletedEntries: Boolean? = false) {
         var forecastPersons = personsController.getPersonsFromForecast()
 
         forecastPersons.forEach { worktimeCalendarController.checkWorktimeCalendar(it) }
 
         forecastPersons = personsController.filterPersons(forecastPersons)
 
-        val entries = retrieveAllEntries(
+        val forecastTimeEntries = retrieveAllEntries(
             after = after,
             forecastPersons = forecastPersons
         )
+        val forecastTasks = retrieveAllTasks()
 
-        if (syncEntries) {
-            synchronize(
-                after = after,
-                forecastPersons = forecastPersons,
-                forecastTimeEntries = entries
-            )
-        }
-        if (syncDeletedEntries) {
-            synchronizeDeletions(
-                after = after,
-                forecastPersons = forecastPersons,
-                forecastTimeEntries = entries
-            )
-        }
-    }
-
-    /**
-     * Synchronizes time entries from Forecast to Time-bank
-     *
-     * @param after YYYY-MM-DD LocalDate
-     * @param forecastPersons list of ForecastPersons
-     * @param forecastTimeEntries list of ForecastTimeEntries
-     */
-    suspend fun synchronize(after: LocalDate? = oldestSyncDate, forecastPersons: List<ForecastPerson>, forecastTimeEntries: List<ForecastTimeEntry>) {
         try {
-            val forecastTasks = retrieveAllTasks()
-
             var synchronized = 0
             var duplicates = 0
 
@@ -97,37 +71,29 @@ class SynchronizeController {
                 }
             }
             logger.info("Finished synchronization with: $synchronized entries synchronized... $duplicates entries NOT synchronized...")
+
+            if (syncDeletedEntries!!) {
+                val timeBankTimeEntries = timeEntryController.getEntries(personId = null, before = null, after = after, vacation = false)
+
+                var deletedEntries = 0
+                var synchronizedEntries = 0
+
+                timeBankTimeEntries.forEachIndexed { idx, timeEntry ->
+                    if (timeEntry.forecastId != null) {
+                        if (forecastTimeEntries.none { it.id == timeEntry.forecastId }) {
+                            timeEntryController.deleteEntry(timeEntry.id)
+                            logger.info("Deleted persisted entry ${timeEntry.id}")
+                            deletedEntries++
+                        }
+                    }
+                    synchronizedEntries++
+                }
+                logger.info("Went through $synchronizedEntries entries. Deleted entries: $deletedEntries")
+            }
         } catch (e: Error) {
             logger.error("Error during synchronization: ${e.localizedMessage}")
             throw Error(e.localizedMessage)
         }
-    }
-
-    /**
-     * Synchronizes deleted time entries from Forecast to Time-bank
-     *
-     * @param after YYYY-MM-DD LocalDate
-     * @param forecastPersons list of ForecastPersons
-     * @param forecastTimeEntries list of ForecastTimeEntries
-     */
-    suspend fun synchronizeDeletions(after: LocalDate? = oldestSyncDate, forecastPersons: List<ForecastPerson>, forecastTimeEntries: List<ForecastTimeEntry>) {
-
-        val timeBankTimeEntries = timeEntryController.getEntries(personId = null, before = null, after = after, vacation = false)
-
-        var deletedEntries = 0
-        var synchronizedEntries = 0
-
-        timeBankTimeEntries.forEachIndexed { idx, timeEntry ->
-            if (timeEntry.forecastId != null) {
-                if (forecastTimeEntries.none { it.id == timeEntry.forecastId }) {
-                    timeEntryController.deleteEntry(timeEntry.id)
-                    logger.info("Deleted persisted entry ${timeEntry.id}")
-                    deletedEntries ++
-                }
-            }
-            synchronizedEntries++
-        }
-        logger.info("Went through $synchronizedEntries entries. Deleted entries: $deletedEntries")
     }
 
     /**
