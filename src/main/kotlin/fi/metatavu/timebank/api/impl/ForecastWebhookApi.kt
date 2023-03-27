@@ -24,11 +24,11 @@ class ForecastWebhookApi: ForecastWebhookApi, AbstractApi() {
             logger.info("Forecast Webhook Key: $forecastWebhookKey")
             logger.info("Forecast Webhook Event:")
             logger.info(forecastWebhookEvent.toString())
-            if (!checkWebhookKey(forecastWebhookKey)) return createUnauthorized(message = "Invalid key!")
-
-            if (forecastWebhookEvent.event == "time_reg_deleted") {
-                timeEntryController.deleteEntry(forecastId = forecastWebhookEvent.`object`!!.id)
-            }
+//            if (!checkWebhookKey(forecastWebhookKey)) return createUnauthorized(message = "Invalid key!")
+//
+//            if (forecastWebhookEvent.event == "time_registration_deleted") {
+//                timeEntryController.deleteEntry(forecastId = forecastWebhookEvent.`object`!!.id)
+//            }
             return createNoContent()
         }
     }
