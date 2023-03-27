@@ -46,9 +46,7 @@ class WebhookTest: AbstractTest() {
                     before = null,
                     after = getThirtyDaysAgo().toString()
             )
-            var timeEntries = testBuilder.manager.timeEntries.getTimeEntries()
-
-            assertTrue(timeEntries.find { it.forecastId == 5 } != null)
+            val firstTimeEntries = testBuilder.manager.timeEntries.getTimeEntries()
 
             testBuilder.manager.forecastWebhooks.forecastWebhook(
                 forecastWebhookEvent = ForecastWebhookEvent(
@@ -59,11 +57,14 @@ class WebhookTest: AbstractTest() {
                 ),
                 forecastWebhookKey = forecastKey
             )
-            timeEntries = testBuilder.manager.timeEntries.getTimeEntries()
+            val secondTimeEntries = testBuilder.manager.timeEntries.getTimeEntries()
 
-            assertFalse(timeEntries.find { it.forecastId == 5 } != null)
-            assertTrue(timeEntries.find { it.forecastId == 2 } != null)
-            timeEntries.forEach { timeEntry -> testBuilder.manager.timeEntries.clean(timeEntry) }
+            assertTrue(firstTimeEntries.find { it.forecastId == 5 } != null)
+            assertFalse(secondTimeEntries.find { it.forecastId == 5 } != null)
+            assertTrue(firstTimeEntries.find { it.forecastId == 2 } != null)
+            assertTrue(secondTimeEntries.find { it.forecastId == 2 } != null)
+            firstTimeEntries.forEach { timeEntry -> testBuilder.manager.timeEntries.clean(timeEntry) }
+            secondTimeEntries.forEach { timeEntry -> testBuilder.manager.timeEntries.clean(timeEntry) }
         }
     }
 }

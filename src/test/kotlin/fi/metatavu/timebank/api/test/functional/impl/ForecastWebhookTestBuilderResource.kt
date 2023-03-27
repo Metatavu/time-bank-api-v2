@@ -26,10 +26,10 @@ class ForecastWebhookTestBuilderResource(
     }
 
     /**
-     * Delete time entry in the webhook from time bank
+     * Test forecast webhook
      *
      * @param forecastWebhookEvent test webhook content
-     * @param forecastWebhookKey Test key to verify origin of request
+     * @param forecastWebhookKey Test key to authenticate incoming webhooks
      */
     fun forecastWebhook(forecastWebhookEvent: ForecastWebhookEvent, forecastWebhookKey: String) {
         return api.forecastWebhook(

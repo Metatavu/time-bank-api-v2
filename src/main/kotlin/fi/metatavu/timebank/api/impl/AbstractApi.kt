@@ -52,7 +52,7 @@ abstract class AbstractApi {
      *
      * @return true if key is correct else false
      */
-    protected fun checkWebhookKey(key: String?): Boolean {
+    protected fun checkWebhookKey(key: String): Boolean {
         if (key == forecastWebhookKey) return true
 
         return false

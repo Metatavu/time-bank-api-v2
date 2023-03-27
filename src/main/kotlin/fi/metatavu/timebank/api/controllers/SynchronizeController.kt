@@ -40,7 +40,7 @@ class SynchronizeController {
      * @param after YYYY-MM-DD LocalDate
      * @param syncDeletedEntries boolean if true synchronize deleted time entries between forecast and time bank
      */
-    suspend fun synchronize(after: LocalDate? = oldestSyncDate, syncDeletedEntries: Boolean? = false) {
+    suspend fun synchronize(after: LocalDate? = oldestSyncDate, syncDeletedEntries: Boolean = false) {
         var forecastPersons = personsController.getPersonsFromForecast()
 
         forecastPersons.forEach { worktimeCalendarController.checkWorktimeCalendar(it) }
@@ -72,7 +72,7 @@ class SynchronizeController {
             }
             logger.info("Finished synchronization with: $synchronized entries synchronized... $duplicates entries NOT synchronized...")
 
-            if (syncDeletedEntries!!) {
+            if (syncDeletedEntries) {
                 val timeBankTimeEntries = timeEntryController.getEntries(personId = null, before = null, after = after, vacation = false)
 
                 var deletedEntries = 0

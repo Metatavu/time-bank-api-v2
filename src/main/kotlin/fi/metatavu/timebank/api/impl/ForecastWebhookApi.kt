@@ -8,7 +8,7 @@ import javax.inject.Inject
 import javax.ws.rs.core.Response
 
 /**
- * API implementation for TimeEntries API
+ * API implementation for ForecastWebhook API
  */
 @RequestScoped
 class ForecastWebhookApi: ForecastWebhookApi, AbstractApi() {
@@ -16,7 +16,7 @@ class ForecastWebhookApi: ForecastWebhookApi, AbstractApi() {
     @Inject
     lateinit var timeEntryController: TimeEntryController
 
-        override suspend fun forecastWebhook(forecastWebhookEvent: ForecastWebhookEvent, forecastWebhookKey: String?): Response {
+        override suspend fun forecastWebhook(forecastWebhookKey: String, forecastWebhookEvent: ForecastWebhookEvent): Response {
             if (!checkWebhookKey(forecastWebhookKey)) return createUnauthorized(message = "Invalid key!")
 
             if (forecastWebhookEvent.event == "time_registration_deleted") {
