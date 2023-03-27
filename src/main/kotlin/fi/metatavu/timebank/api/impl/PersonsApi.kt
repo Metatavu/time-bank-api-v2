@@ -5,6 +5,7 @@ import fi.metatavu.timebank.api.impl.translate.PersonsTranslator
 import fi.metatavu.timebank.model.Person
 import fi.metatavu.timebank.model.Timespan
 import fi.metatavu.timebank.spec.PersonsApi
+import java.time.LocalDate
 import javax.enterprise.context.RequestScoped
 import javax.inject.Inject
 import javax.ws.rs.core.Response
@@ -21,12 +22,14 @@ class PersonsApi: PersonsApi, AbstractApi() {
     @Inject
     lateinit var personsTranslator: PersonsTranslator
 
-    override suspend fun listPersonTotalTime(personId: Int, timespan: Timespan?): Response {
+    override suspend fun listPersonTotalTime(personId: Int, timespan: Timespan?, before: LocalDate?, after: LocalDate?): Response {
         loggedUserId ?: return createUnauthorized("Invalid token!")
 
         val entries = personsController.makePersonTotal(
             personId = personId,
-            timespan = timespan ?: Timespan.ALL_TIME
+            timespan = timespan ?: Timespan.ALL_TIME,
+            before = before,
+            after = after
         ) ?: return createNotFound("Cannot calculate totals for given person")
 
         return createOk(entity = entries)

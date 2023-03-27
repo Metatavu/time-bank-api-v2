@@ -115,7 +115,7 @@ class PersonsTest: AbstractTest() {
                 active = person.active,
                 unspentVacations = person.unspentVacations,
                 spentVacations = person.spentVacations,
-                minimumBillableRate = 50,
+                minimumBillableRate = 75,
                 language = person.language,
                 startDate = person.startDate
             )
@@ -125,7 +125,7 @@ class PersonsTest: AbstractTest() {
             )
 
             assertEquals(25,person .minimumBillableRate)
-            assertEquals(50, updatedPerson.minimumBillableRate)
+            assertEquals(75, updatedPerson.minimumBillableRate)
             testBuilder.userA.persons.assertUpdateFail(
                 person = newPerson,
                 expectedStatus = 401
@@ -154,6 +154,25 @@ class PersonsTest: AbstractTest() {
             val personTotalTimes = testBuilder.manager.persons.getPersonTotal(
                 personId = 2,
                 timespan = null
+            )
+
+            assertEquals(1, personTotalTimes.size)
+            assertEquals(213, personTotalTimes[0].internalTime)
+            assertEquals(1500, personTotalTimes[0].billableProjectTime)
+            assertEquals(1713, personTotalTimes[0].logged)
+        }
+    }
+
+    /**
+     * Tests /v1/persons/2/total?timespan=ALL_TIME&before=yyyy-mm-dd
+     */
+    @Test
+    fun listPersonTotalTimeForTesterBAllTimeWithoutToday() {
+        createTestBuilder().use { testBuilder ->
+            val personTotalTimes = testBuilder.manager.persons.getPersonTotal(
+                    personId = 2,
+                    timespan = Timespan.ALL_TIME,
+                    before = LocalDate.now().minusDays(1).toString()
             )
 
             assertEquals(1, personTotalTimes.size)

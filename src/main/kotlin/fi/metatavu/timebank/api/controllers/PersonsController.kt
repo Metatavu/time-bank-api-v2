@@ -127,7 +127,7 @@ class PersonsController {
 
         persons.forEach { forecastPerson ->
             val keycloakUser = keycloakUsers.find { it.email == forecastPerson.email.lowercase() }
-            val minimumBillableRate = if (keycloakUser == null) 50 else keycloakController.getUsersMinimumBillableRate(keycloakUser)
+            val minimumBillableRate = if (keycloakUser == null) 75 else keycloakController.getUsersMinimumBillableRate(keycloakUser)
             val vacationAmounts = vacationUtils.getPersonsVacations(forecastPerson)
             forecastPerson.unspentVacations = vacationAmounts.first
             forecastPerson.spentVacations = vacationAmounts.second
@@ -148,11 +148,11 @@ class PersonsController {
      * @param timespan Timespan
      * @return List of PersonTotalTimes
      */
-    suspend fun makePersonTotal(personId: Int, timespan: Timespan): List<PersonTotalTime>? {
+    suspend fun makePersonTotal(personId: Int, timespan: Timespan, before: LocalDate?, after: LocalDate?): List<PersonTotalTime>? {
         val dailyEntries = dailyEntryController.makeDailyEntries(
             personId = personId,
-            before = null,
-            after = null,
+            before = before,
+            after = after,
             vacation = null
         ) ?: return null
 

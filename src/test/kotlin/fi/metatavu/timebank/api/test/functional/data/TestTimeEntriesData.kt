@@ -11,8 +11,8 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 /**
- * Class for test time entries mock data
- */
+* Class for test time entries mock data
+*/
 class TestTimeEntriesData {
 
     companion object {
@@ -23,7 +23,7 @@ class TestTimeEntriesData {
          * @return List of ForecastTimeEntries
          */
         fun getForecastTimeEntries(): List<ForecastTimeEntry> {
-            return listOf(
+            val entries = mutableListOf(
                 createTestTimeEntry(
                     id = 0,
                     person = 2,
@@ -195,6 +195,9 @@ class TestTimeEntriesData {
                     updatedAt = getODT(getSixtyDaysAgo().atStartOfDay())
                 )
             )
+            entries.addAll(createTodaysEntries(entries.last().id!!))
+
+            return entries
         }
 
         /**
@@ -238,6 +241,30 @@ class TestTimeEntriesData {
                 )
             )
         }
+
+        /**
+         * Makes a mock ForecastTimeEntry for each active person for current day
+         *
+         * @return List of mock ForecastTimeEntries
+         */
+        private fun createTodaysEntries(highestId: Int): List<ForecastTimeEntry> {
+            val persons = TestPersonsData.getPersons().filter { it.active && !it.isSystemUser }
+
+            return persons.mapIndexed { index, person ->
+                val currentId = highestId + index + 1
+                createTestTimeEntry(
+                    id = currentId,
+                    person = person.id,
+                    task = 123,
+                    nonProjectTime = null,
+                    timeRegistered = 300,
+                    date = LocalDate.now().toString(),
+                    createdAt = getODT(LocalDate.now().atStartOfDay()),
+                    updatedAt = getODT(LocalDate.now().atStartOfDay().plusHours(1))
+                )
+            }
+        }
+
 
         /**
          * Helper method for simplifying creating of ForecastTimeEntry objects

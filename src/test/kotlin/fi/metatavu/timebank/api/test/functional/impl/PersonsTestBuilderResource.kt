@@ -49,10 +49,12 @@ class PersonsTestBuilderResource(
      * @param timespan timespan
      * @return person's total time
      */
-    fun getPersonTotal(personId: Int, timespan: Timespan? = Timespan.ALL_TIME): Array<PersonTotalTime> {
+    fun getPersonTotal(personId: Int, timespan: Timespan? = Timespan.ALL_TIME, before: String? = null, after: String? = null): Array<PersonTotalTime> {
         return api.listPersonTotalTime(
             personId = personId,
-            timespan = timespan
+            timespan = timespan,
+            before = before,
+            after = after
         )
     }
 
@@ -117,7 +119,9 @@ class PersonsTestBuilderResource(
         try {
             api.listPersonTotalTime(
                 personId = personId,
-                timespan = null
+                timespan = null,
+                before = null,
+                after = null
             )
             Assert.fail(String.format("Expected fail with status, $expectedStatus"))
         } catch (ex: ClientException) {
