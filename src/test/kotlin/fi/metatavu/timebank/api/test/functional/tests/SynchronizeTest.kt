@@ -14,6 +14,7 @@ import fi.metatavu.timebank.api.test.functional.data.TestDateUtils.Companion.get
 import java.time.LocalDate
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 
 /**
  * Tests for Synchronization API
@@ -93,6 +94,31 @@ class SynchronizeTest: AbstractTest() {
 
             assertFalse(synchronizedFirst.first() == synchronizedSecond.first())
 
+        }
+    }
+
+    /**
+     * Tests /v1/synchronizeDeletions -endpoint
+     */
+    @Test
+    fun testDeletedSynchronization() {
+        createTestBuilder().use { testBuilder ->
+            testBuilder.manager.synchronization.synchronizeEntries()
+
+            var timeBankTimeEntries = testBuilder.manager.timeEntries.getTimeEntries()
+
+            assertTrue(timeBankTimeEntries.find { it.forecastId == 20} != null)
+
+            setScenario(
+                scenario = TIMES_SCENARIO,
+                state = DELETE_STATE
+            )
+
+            testBuilder.manager.synchronization.synchronizeEntries(syncDeleted = true)
+            timeBankTimeEntries = testBuilder.manager.timeEntries.getTimeEntries()
+            timeBankTimeEntries.forEach { testBuilder.manager.timeEntries.clean(it) }
+
+            assertFalse(timeBankTimeEntries.find { it.forecastId == 20 } != null)
         }
     }
 }
