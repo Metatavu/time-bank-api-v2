@@ -4,6 +4,7 @@ import fi.metatavu.timebank.api.controllers.TimeEntryController
 import fi.metatavu.timebank.model.ForecastWebhookEvent
 import javax.enterprise.context.RequestScoped
 import fi.metatavu.timebank.spec.ForecastWebhookApi
+import org.slf4j.Logger
 import javax.inject.Inject
 import javax.ws.rs.core.Response
 
@@ -16,10 +17,16 @@ class ForecastWebhookApi: ForecastWebhookApi, AbstractApi() {
     @Inject
     lateinit var timeEntryController: TimeEntryController
 
+    @Inject
+    lateinit var logger: Logger
+
         override suspend fun forecastWebhook(forecastWebhookKey: String, forecastWebhookEvent: ForecastWebhookEvent): Response {
+            logger.info("Forecast Webhook Key: $forecastWebhookKey")
+            logger.info("Forecast Webhook Event:")
+            logger.info(forecastWebhookEvent.toString())
             if (!checkWebhookKey(forecastWebhookKey)) return createUnauthorized(message = "Invalid key!")
 
-            if (forecastWebhookEvent.event == "time_registration_deleted") {
+            if (forecastWebhookEvent.event == "time_reg_deleted") {
                 timeEntryController.deleteEntry(forecastId = forecastWebhookEvent.`object`!!.id)
             }
             return createNoContent()
