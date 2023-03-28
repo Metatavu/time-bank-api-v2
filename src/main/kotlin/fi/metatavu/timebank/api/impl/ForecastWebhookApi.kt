@@ -7,8 +7,7 @@ import fi.metatavu.timebank.spec.ForecastWebhookApi
 import org.slf4j.Logger
 import javax.inject.Inject
 import javax.ws.rs.core.Response
-import javax.ws.rs.Consumes
-import javax.ws.rs.Produces
+
 /**
  * API implementation for ForecastWebhook API
  */
@@ -21,10 +20,8 @@ class ForecastWebhookApi: ForecastWebhookApi, AbstractApi() {
     @Inject
     lateinit var logger: Logger
 
-    @Consumes ("*/*")
-    @Produces ("*/*")
     override suspend fun forecastWebhook(forecastWebhookKey: String, forecastWebhookEvent: ForecastWebhookEvent): Response {
-            logger.info("Forecast Webhook Event received")
+            logger.info("Forecast Webhook ${forecastWebhookEvent.event} event received")
             if (!checkWebhookKey(forecastWebhookKey)) return createUnauthorized(message = "Invalid key!")
 
             if (forecastWebhookEvent.event == "time_registration_deleted") {
