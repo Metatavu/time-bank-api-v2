@@ -24,14 +24,12 @@ class ForecastWebhookApi: ForecastWebhookApi, AbstractApi() {
     @Consumes ("*/*")
     @Produces ("*/*")
     override suspend fun forecastWebhook(forecastWebhookKey: String, forecastWebhookEvent: ForecastWebhookEvent): Response {
-        logger.info("Forecast Webhook Key: $forecastWebhookKey")
-        logger.info("Forecast Webhook Event:")
-        logger.info(forecastWebhookEvent.toString())
-//            if (!checkWebhookKey(forecastWebhookKey)) return createUnauthorized(message = "Invalid key!")
-//
-//            if (forecastWebhookEvent.event == "time_registration_deleted") {
-//                timeEntryController.deleteEntry(forecastId = forecastWebhookEvent.`object`!!.id)
-//            }
+            logger.info("Forecast Webhook Event received")
+            if (!checkWebhookKey(forecastWebhookKey)) return createUnauthorized(message = "Invalid key!")
+
+            if (forecastWebhookEvent.event == "time_registration_deleted") {
+                timeEntryController.deleteEntry(forecastId = forecastWebhookEvent.`object`!!.id)
+            }
         return createNoContent()
     }
 }
