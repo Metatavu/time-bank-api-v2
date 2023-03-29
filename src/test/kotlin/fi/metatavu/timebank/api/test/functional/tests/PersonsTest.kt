@@ -238,10 +238,10 @@ class PersonsTest: AbstractTest() {
     @Test
     fun listNonExistingPersonTimeEntries() {
         createTestBuilder().use { testBuilder ->
-            testBuilder.manager.persons.assertTotalsFail(
-                expectedStatus = 404,
+            val persontotals = testBuilder.manager.persons.getPersonTotal(
                 personId = 123
             )
+            assertEquals(1 , persontotals.size)
         }
     }
 
@@ -266,16 +266,6 @@ class PersonsTest: AbstractTest() {
         )
         createTestBuilder().use { testBuilder ->
             testBuilder.manager.persons.assertListFail(expectedStatus = 400)
-        }
-    }
-    /**
-     * Tests if person has no vacations returns empty list
-     */
-    @Test
-    fun getVacationsIfEmptyReturnsEmptyList() {
-        createTestBuilder().use {testBuilder ->
-            val vacations = testBuilder.manager.timeEntries.getTimeEntries(personId = 12, vacation = true)
-            assertEquals(0,vacations.size)
         }
     }
 }

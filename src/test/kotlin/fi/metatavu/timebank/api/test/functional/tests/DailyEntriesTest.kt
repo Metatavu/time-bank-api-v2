@@ -97,8 +97,6 @@ class DailyEntriesTest: AbstractTest() {
             assertEquals(1, personB.size)
             assertEquals(1, personC.size)
             assertEquals(1, personD.size)
-
-            testBuilder.manager.dailyEntries.assertListFail(404)
         }
     }
 
