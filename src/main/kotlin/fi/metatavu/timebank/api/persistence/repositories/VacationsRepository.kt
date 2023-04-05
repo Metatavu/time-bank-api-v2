@@ -66,7 +66,7 @@ class VacationsRepository: PanacheRepositoryBase<VacationRequest, UUID> {
             return if (existingRequest.first() == request) {
                 false
             } else {
-                deleteRequest(request.id)
+                deleteRequest(request.id!!)
                 Panache.withTransaction { persist(request) }.awaitSuspending()
                 true
             }

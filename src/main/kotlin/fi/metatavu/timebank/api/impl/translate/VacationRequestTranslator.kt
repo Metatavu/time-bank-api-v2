@@ -1,8 +1,6 @@
 package fi.metatavu.timebank.api.impl.translate
 
 import fi.metatavu.timebank.api.persistence.model.VacationRequest
-import fi.metatavu.timebank.model.RequestStatus
-import fi.metatavu.timebank.model.VacationType
 import javax.enterprise.context.ApplicationScoped
 
 /**
@@ -19,9 +17,9 @@ class VacationRequestTranslator: AbstractTranslator<VacationRequest, fi.metatavu
             endDate = entity.endDate!!,
             days = entity.days!!,
             message = entity.message!!,
-            type = VacationType.valueOf(entity.type!!),
-            projectManagerStatus = RequestStatus.valueOf(entity.projectManagerStatus!!),
-            hrManagerStatus = RequestStatus.valueOf(entity.hrManagerStatus!!),
+            type = entity.type!!,
+            projectManagerStatus = entity.projectManagerStatus!!,
+            hrManagerStatus = entity.hrManagerStatus!!,
             createdAt = entity.createdAt!!,
             updatedAt = entity.updatedAt!!
         )

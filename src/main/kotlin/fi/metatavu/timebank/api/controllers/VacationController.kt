@@ -39,19 +39,19 @@ class VacationController {
      * @return boolean whether operation was successful
      */
     suspend fun createVacationRequest(vacationRequest: VacationRequest): Boolean {
-        val newVacationRequest = fi.metatavu.timebank.api.persistence.model.VacationRequest()
-        newVacationRequest.id = vacationRequest.id ?: UUID.randomUUID()
-        newVacationRequest.person = vacationRequest.person
-        newVacationRequest.startDate = vacationRequest.startDate
-        newVacationRequest.endDate = vacationRequest.endDate
-        newVacationRequest.days = vacationRequest.days
-        newVacationRequest.type = vacationRequest.type.value
-        newVacationRequest.message = vacationRequest.message
-        newVacationRequest.projectManagerStatus = vacationRequest.projectManagerStatus.value
-        newVacationRequest.hrManagerStatus = vacationRequest.hrManagerStatus.value
-        newVacationRequest.createdAt = vacationRequest.createdAt
-        newVacationRequest.updatedAt = vacationRequest.updatedAt
-
+        val newVacationRequest = fi.metatavu.timebank.api.persistence.model.VacationRequest(
+            id = vacationRequest.id ?: UUID.randomUUID(),
+            person = vacationRequest.person,
+            startDate = vacationRequest.startDate,
+            endDate = vacationRequest.endDate,
+            days = vacationRequest.days,
+            type = vacationRequest.type,
+            message = vacationRequest.message,
+            projectManagerStatus = vacationRequest.projectManagerStatus,
+            hrManagerStatus = vacationRequest.hrManagerStatus,
+            createdAt = vacationRequest.createdAt,
+            updatedAt = vacationRequest.updatedAt
+        )
         return vacationsRepository.persistEntry(newVacationRequest)
     }
 

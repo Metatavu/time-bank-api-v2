@@ -1,49 +1,52 @@
 package fi.metatavu.timebank.api.persistence.model
 
+import fi.metatavu.timebank.model.RequestStatus
+import fi.metatavu.timebank.model.VacationType
 import java.time.LocalDate
 import java.time.OffsetDateTime
 import java.util.*
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
+import javax.persistence.*
 
 /**
  * Vacation JPA entity
  */
 @Entity
-class VacationRequest {
+class VacationRequest (
 
     @Id
     @Column
-    lateinit var id: UUID
+    var id: UUID? = null,
 
     @Column
-    var person: Int? = null
+    var person: Int? = null,
 
     @Column
-    var startDate: LocalDate? = null
+    var startDate: LocalDate? = null,
 
     @Column
-    var endDate: LocalDate? = null
+    var endDate: LocalDate? = null,
 
     @Column
-    var days: Int? = null
+    var days: Int? = null,
 
     @Column
-    var type: String? = null
+    @Enumerated(EnumType.STRING)
+    var type: VacationType? = null,
 
     @Column
-    var message: String? = null
+    var message: String? = null,
 
     @Column
-    var projectManagerStatus: String? = null
+    @Enumerated(EnumType.STRING)
+    var projectManagerStatus: RequestStatus? = null,
 
     @Column
-    var hrManagerStatus: String? = null
+    @Enumerated(EnumType.STRING)
+    var hrManagerStatus: RequestStatus? = null,
 
     @Column
-    var createdAt: OffsetDateTime? = null
+    var createdAt: OffsetDateTime? = null,
 
     @Column
     var updatedAt: OffsetDateTime? = null
-}
+)
