@@ -16,11 +16,11 @@ import javax.enterprise.context.ApplicationScoped
 class VacationsRepository: PanacheRepositoryBase<VacationRequest, UUID> {
 
     /**
-     * Lists TimeEntries based on given parameters
+     * Lists VacationRequests based on given parameters
      *
      * @param personId persons id in Forecast
-     * @param before LocalDate to retrieve entries before given date
-     * @param after LocalDate to retrieve entries after given date
+     * @param before LocalDate to retrieve requests before given date
+     * @param after LocalDate to retrieve requests after given date
      * @return List of VacationRequests
      */
     suspend fun getVacationRequest(personId: Int?, before: LocalDate?, after: LocalDate?): List<VacationRequest> {
@@ -33,15 +33,15 @@ class VacationsRepository: PanacheRepositoryBase<VacationRequest, UUID> {
         }
 
         if (before != null) {
-            stringBuilder.append(if (stringBuilder.isNotEmpty()) " and date <= :before" else "date <= :before")
+            stringBuilder.append(if (stringBuilder.isNotEmpty()) " and date <= :before" else "createdAt <= :before")
             parameters.and("before", before)
         }
 
         if (after != null) {
-            stringBuilder.append(if (stringBuilder.isNotEmpty()) " and date >= :after" else "date >= :after")
+            stringBuilder.append(if (stringBuilder.isNotEmpty()) " and date >= :after" else "createdAt >= :after")
             parameters.and("after", after)
         }
-        stringBuilder.append(" order by date DESC")
+        stringBuilder.append(" order by person DESC")
 
         return find(stringBuilder.toString(), parameters).list<VacationRequest>().awaitSuspending()
         }
@@ -56,17 +56,31 @@ class VacationsRepository: PanacheRepositoryBase<VacationRequest, UUID> {
      * @return true for persisted false for not persisted
      */
     suspend fun persistEntry(request: VacationRequest): Boolean {
-        Panache.withTransaction { persist(request) }.awaitSuspending()
-        return true
+        val existingRequest = find("id", request.id).list<VacationRequest>().awaitSuspending()
+        if (existingRequest.isEmpty()) {
+            Panache.withTransaction { persist(request) }.awaitSuspending()
+            return true
+        }
+
+        if (request.updatedAt!! > request.createdAt!!) {
+            return if (existingRequest.first() == request) {
+                false
+            } else {
+                deleteRequest(request.id)
+                Panache.withTransaction { persist(request) }.awaitSuspending()
+                true
+            }
+        }
+
+        return false
     }
 
-
     /**
-     * Deletes persisted VacationRequest based on entryId
+     * Deletes persisted VacationRequest based on requestId
      *
-     * @param id id of time registration
+     * @param id id of vacationRequest
      */
-    suspend fun deleteEntry(id: UUID) {
+    suspend fun deleteRequest(id: UUID) {
         Panache.withTransaction { deleteById(id) }.awaitSuspending()
     }
 }

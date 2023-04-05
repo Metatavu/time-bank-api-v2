@@ -1,0 +1,33 @@
+package fi.metatavu.timebank.api.impl.translate
+
+import fi.metatavu.timebank.api.persistence.model.VacationRequest
+import fi.metatavu.timebank.model.RequestStatus
+import fi.metatavu.timebank.model.VacationType
+import javax.enterprise.context.ApplicationScoped
+
+/**
+ * Translates VacationRequest objects
+ */
+@ApplicationScoped
+class VacationRequestTranslator: AbstractTranslator<VacationRequest, fi.metatavu.timebank.model.VacationRequest>() {
+
+    override fun translate(entity: VacationRequest): fi.metatavu.timebank.model.VacationRequest {
+        return fi.metatavu.timebank.model.VacationRequest(
+            id = entity.id,
+            person = entity.person!!,
+            startDate = entity.startDate!!,
+            endDate = entity.endDate!!,
+            days = entity.days!!,
+            message = entity.message!!,
+            type = VacationType.valueOf(entity.type!!),
+            projectManagerStatus = RequestStatus.valueOf(entity.projectManagerStatus!!),
+            hrManagerStatus = RequestStatus.valueOf(entity.hrManagerStatus!!),
+            createdAt = entity.createdAt!!,
+            updatedAt = entity.updatedAt!!
+        )
+    }
+
+    override fun translate(entities: List<VacationRequest>): List<fi.metatavu.timebank.model.VacationRequest> {
+        return entities.map(this::translate)
+    }
+}

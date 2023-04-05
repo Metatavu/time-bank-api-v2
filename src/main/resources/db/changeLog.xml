@@ -61,4 +61,21 @@
         <dropForeignKeyConstraint baseTableName="TimeEntry" constraintName="FK_TIME_ENTRY_WORKTIME_CALENDAR" />
         <dropColumn tableName="TimeEntry" columnName="worktimeCalendar_id" />
     </changeSet>
+    <changeSet id="vacationRequests" author="Veikko Vilpponen">
+        <createTable tableName="VacationRequest">
+            <column name="id" type="binary(16)">
+                <constraints primaryKey="true" />
+            </column>
+            <column name="person" type="integer" />
+            <column name="startDate" type="date" />
+            <column name="endDate" type="date" />
+            <column name="days" type="integer" />
+            <column name="type" type="varchar(20)" />
+            <column name="message" type="varchar(100)" />
+            <column name="projectManagerStatus" type="varchar(20)" />
+            <column name="hrManagerStatus" type="varchar(20)" />
+            <column name="createdAt" type="datetime" />
+            <column name="updatedAt" type="datetime" />
+        </createTable>
+    </changeSet>
 </databaseChangeLog>

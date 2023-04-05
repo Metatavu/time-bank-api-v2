@@ -1,10 +1,12 @@
 package fi.metatavu.timebank.api.impl
 
 import fi.metatavu.timebank.api.controllers.VacationController
+import fi.metatavu.timebank.api.impl.translate.VacationRequestTranslator
 import fi.metatavu.timebank.model.VacationRequest
 import javax.enterprise.context.RequestScoped
 import fi.metatavu.timebank.spec.VacationsApi
 import java.time.LocalDate
+import java.util.*
 import javax.inject.Inject
 import javax.ws.rs.core.Response
 
@@ -17,12 +19,26 @@ class VacationsApi: VacationsApi, AbstractApi() {
     @Inject
     lateinit var vacationController: VacationController
 
-    override suspend fun newVacationRequest(vacationRequest: VacationRequest): Response {
+    @Inject
+    lateinit var vacationRequestTranslator: VacationRequestTranslator
+
+    override suspend fun deleteVacationRequest(id: UUID): Response {
         loggedUserId ?: return createUnauthorized(message = "Invalid token!")
+
+        vacationController.deleteRequest(id = id)
+
         return createNoContent()
     }
 
-    override suspend fun vacationRequests(personId: Int?, before: LocalDate?, after: LocalDate?): Response {
+    override suspend fun createVacationRequest(vacationRequest: VacationRequest): Response {
+        loggedUserId ?: return createUnauthorized(message = "Invalid token!")
+
+        vacationController.createVacationRequest(vacationRequest = vacationRequest)
+
+        return createNoContent()
+    }
+
+    override suspend fun listVacationRequests(personId: Int?, before: LocalDate?, after: LocalDate?): Response {
         loggedUserId ?: return createUnauthorized(message = "Invalid token!")
 
         val vacationRequests = vacationController.getVacationRequests(
@@ -31,12 +47,8 @@ class VacationsApi: VacationsApi, AbstractApi() {
             after = after
         )
 
-        if (vacationRequests.isEmpty()) {
-            return createNotFound()
-        }
-
         return createOk(
-
+            entity = vacationRequestTranslator.translate(vacationRequests)
         )
     }
 

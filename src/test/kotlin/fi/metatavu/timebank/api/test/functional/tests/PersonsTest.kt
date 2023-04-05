@@ -84,8 +84,8 @@ class PersonsTest: AbstractTest() {
 
             assertEquals(4, persons.size)
             assertEquals("TesterA", persons[0].firstName)
-            assertEquals(29, persons[0].unspentVacations)
-            assertEquals(1, persons[0].spentVacations)
+            assertEquals(30, persons[0].unspentVacations)
+            assertEquals(0, persons[0].spentVacations)
             assertEquals(10, persons[0].minimumBillableRate)
             assertEquals(25, persons[1].minimumBillableRate)
             testBuilder.notValid.persons.assertListFail(401)
