@@ -38,35 +38,58 @@ class SynchronizeController {
      * Synchronizes time entries from Forecast to Time-bank
      *
      * @param after YYYY-MM-DD LocalDate
+     * @param syncDeletedEntries boolean if true synchronize deleted time entries between forecast and time bank
      */
-    suspend fun synchronize(after: LocalDate? = oldestSyncDate) {
+    suspend fun synchronize(after: LocalDate? = oldestSyncDate, syncDeletedEntries: Boolean = false) {
+        var forecastPersons = personsController.getPersonsFromForecast()
+
+        forecastPersons.forEach { worktimeCalendarController.checkWorktimeCalendar(it) }
+
+        forecastPersons = personsController.filterPersons(forecastPersons)
+
+        val forecastTimeEntries = retrieveAllEntries(
+            after = after,
+            forecastPersons = forecastPersons
+        )
+        val forecastTasks = retrieveAllTasks()
+
         try {
-            var forecastPersons = personsController.getPersonsFromForecast()
-
-            forecastPersons.forEach { worktimeCalendarController.checkWorktimeCalendar(it) }
-
-            forecastPersons = personsController.filterPersons(forecastPersons)
-
-            val tasks = retrieveAllTasks()
-            val entries = retrieveAllEntries(after = after, forecastPersons = forecastPersons)
-
             var synchronized = 0
             var duplicates = 0
 
-            entries.forEachIndexed { idx, timeEntry ->
+            forecastTimeEntries.forEachIndexed { idx, timeEntry ->
                 val person = forecastPersons.find { person -> person.id == timeEntry.person }
                 val personName = "${person?.lastName}, ${person?.firstName}"
-                logger.info("Synchronizing TimeEntry ${idx + 1}/${entries.size} of $personName...")
+                logger.info("Synchronizing TimeEntry ${idx + 1}/${forecastTimeEntries.size} of $personName...")
 
-                if (timeEntryController.createEntry(timeEntry, tasks)) {
+                if (timeEntryController.createEntry(timeEntry, forecastTasks)) {
                     synchronized++
                     logger.info("Synchronized TimeEntry #${idx + 1}!")
                 } else {
                     duplicates++
-                    logger.warn("Time Entry ${idx + 1}/${entries.size} already synchronized!")
+                    logger.warn("Time Entry ${idx + 1}/${forecastTimeEntries.size} already synchronized!")
                 }
             }
             logger.info("Finished synchronization with: $synchronized entries synchronized... $duplicates entries NOT synchronized...")
+
+            if (syncDeletedEntries) {
+                val timeBankTimeEntries = timeEntryController.getEntries(personId = null, before = null, after = after, vacation = false)
+
+                var deletedEntries = 0
+                var synchronizedEntries = 0
+
+                timeBankTimeEntries.forEachIndexed { idx, timeEntry ->
+                    if (timeEntry.forecastId != null) {
+                        if (forecastTimeEntries.none { it.id == timeEntry.forecastId }) {
+                            timeEntryController.deleteEntry(timeEntry.id)
+                            logger.info("Deleted persisted entry ${timeEntry.id}")
+                            deletedEntries++
+                        }
+                    }
+                    synchronizedEntries++
+                }
+                logger.info("Went through $synchronizedEntries entries. Deleted entries: $deletedEntries")
+            }
         } catch (e: Error) {
             logger.error("Error during synchronization: ${e.localizedMessage}")
             throw Error(e.localizedMessage)

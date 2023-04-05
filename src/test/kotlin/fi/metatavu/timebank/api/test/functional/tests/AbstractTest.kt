@@ -19,6 +19,7 @@ abstract class AbstractTest {
     val daysBetweenMonth = ChronoUnit.DAYS.between(TestDateUtils.getThirtyDaysAgo(), LocalDate.now().plusDays(1))
     val daysBetweenTwoMonths = ChronoUnit.DAYS.between(TestDateUtils.getSixtyDaysAgo(), LocalDate.now().plusDays(1))
     val daysBetweenYear = ChronoUnit.DAYS.between(TestDateUtils.getSixtyDaysAgo(), LocalDate.now().plusDays(1))
+    val forecastKey = "forecastKey"
 
     private var devServicesContext: DevServicesContext? = null
 
@@ -117,5 +118,6 @@ abstract class AbstractTest {
         const val UPDATE_STATE_ONE = "updateStateOne"
         const val UPDATE_STATE_TWO = "updateStateTwo"
         const val YEAR_STATE = "yearState"
+        const val DELETE_STATE = "delete"
     }
 }
