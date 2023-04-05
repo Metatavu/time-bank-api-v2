@@ -3,10 +3,7 @@ package fi.metatavu.timebank.api.test.functional.auth
 import fi.metatavu.jaxrs.test.functional.builder.auth.AccessTokenProvider
 import fi.metatavu.jaxrs.test.functional.builder.auth.AccessTokenTestBuilderAuthentication
 import fi.metatavu.timebank.api.test.functional.TestBuilder
-import fi.metatavu.timebank.api.test.functional.impl.DailyEntriesTestBuilderResource
-import fi.metatavu.timebank.api.test.functional.impl.PersonsTestBuilderResource
-import fi.metatavu.timebank.api.test.functional.impl.SynchronizeTestBuilderResource
-import fi.metatavu.timebank.api.test.functional.impl.TimeEntriesTestBuilderResource
+import fi.metatavu.timebank.api.test.functional.impl.*
 import fi.metatavu.timebank.api.test.functional.settings.ApiTestSettings
 import fi.metatavu.timebank.test.client.infrastructure.ApiClient
 
