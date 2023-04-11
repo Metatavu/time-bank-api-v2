@@ -8,7 +8,7 @@ import java.util.*
 import javax.persistence.*
 
 /**
- * Vacation JPA entity
+ * VacationRequest JPA entity
  */
 @Entity
 class VacationRequest (

@@ -16,9 +16,9 @@ class VacationRequestTestBuilderResource(
     private val accessTokenProvider: AccessTokenProvider?,
     apiClient: ApiClient
 ): ApiTestBuilderResource<VacationRequest, ApiClient?>(testBuilder, apiClient) {
+
     override fun clean(t: VacationRequest?) {
     }
-
 
     override fun getApi(): VacationsApi {
         ApiClient.accessToken = accessTokenProvider?.accessToken
@@ -46,9 +46,7 @@ class VacationRequestTestBuilderResource(
      * @param vacationRequest vacationRequest body
      */
     fun createVacationRequests(vacationRequest: VacationRequest) {
-        return api.createVacationRequest(
-            vacationRequest = vacationRequest
-        )
+        return api.createVacationRequest(vacationRequest = vacationRequest)
     }
 
     /**
@@ -57,8 +55,6 @@ class VacationRequestTestBuilderResource(
      * @param id request id
      */
     fun deleteVacationRequests(id: UUID) {
-        return api.deleteVacationRequest(
-            id = id
-        )
+        return api.deleteVacationRequest(id = id)
     }
 }

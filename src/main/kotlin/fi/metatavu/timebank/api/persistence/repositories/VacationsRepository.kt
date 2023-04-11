@@ -10,7 +10,7 @@ import java.util.UUID
 import javax.enterprise.context.ApplicationScoped
 
 /**
- * Manages TimeEntry JPA entity
+ * Manages VacationRequest JPA entity
  */
 @ApplicationScoped
 class VacationsRepository: PanacheRepositoryBase<VacationRequest, UUID> {
@@ -45,8 +45,6 @@ class VacationsRepository: PanacheRepositoryBase<VacationRequest, UUID> {
 
         return find(stringBuilder.toString(), parameters).list<VacationRequest>().awaitSuspending()
         }
-
-
 
     /**
      * Persists new VacationRequest
