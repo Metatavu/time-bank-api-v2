@@ -6,6 +6,7 @@ import fi.metatavu.timebank.api.test.functional.settings.ApiTestSettings
 import fi.metatavu.timebank.test.client.apis.VacationsApi
 import fi.metatavu.timebank.test.client.infrastructure.ApiClient
 import fi.metatavu.timebank.test.client.models.VacationRequest
+import java.util.UUID
 
 /**
  * Test builder resource for Vacations API
@@ -32,7 +33,7 @@ class VacationRequestTestBuilderResource(
      * @param before optional before date
      * @param after optional after date
      */
-    fun getVacationRequests(personId: Int? = null, before: String? = null, after: String? = null): Array<VacationRequest> {
+    fun listVacationRequests(personId: Int? = null, before: String? = null, after: String? = null): Array<VacationRequest> {
         return api.listVacationRequests(
             personId = personId,
             before =  before,
@@ -45,10 +46,21 @@ class VacationRequestTestBuilderResource(
      *
      * @param vacationRequest vacationRequest body
      */
-    fun newVacationRequests(vacationRequest: VacationRequest) {
+    fun createVacationRequests(vacationRequest: VacationRequest) {
         return api.createVacationRequest(
             vacationRequest = vacationRequest
         )
-
     }
+
+    /**
+     * Delete persisted Vacation request
+     *
+     * @param id request id
+     */
+    fun deleteVacationRequests(id: UUID) {
+        return api.deleteVacationRequest(
+            id = id
+        )
+    }
+
 }
