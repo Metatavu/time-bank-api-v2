@@ -17,7 +17,6 @@ class VacationRequestTestBuilderResource(
     apiClient: ApiClient
 ): ApiTestBuilderResource<VacationRequest, ApiClient?>(testBuilder, apiClient) {
     override fun clean(t: VacationRequest?) {
-
     }
 
 
@@ -62,5 +61,4 @@ class VacationRequestTestBuilderResource(
             id = id
         )
     }
-
 }

@@ -51,7 +51,4 @@ class VacationsApi: VacationsApi, AbstractApi() {
             entity = vacationRequestTranslator.translate(vacationRequests)
         )
     }
-
-
-
 }
