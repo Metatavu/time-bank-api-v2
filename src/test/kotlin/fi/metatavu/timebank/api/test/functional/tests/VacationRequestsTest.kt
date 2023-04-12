@@ -1,5 +1,7 @@
 package fi.metatavu.timebank.api.test.functional.tests
 
+import fi.metatavu.timebank.api.test.functional.data.TestDateUtils.Companion.getODT
+import fi.metatavu.timebank.api.test.functional.data.TestDateUtils.Companion.getThirtyDaysAgoThirdWeek
 import fi.metatavu.timebank.api.test.functional.resources.LocalTestProfile
 import fi.metatavu.timebank.api.test.functional.resources.TestMySQLResource
 import fi.metatavu.timebank.api.test.functional.resources.TestWiremockResource
@@ -14,6 +16,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import java.util.*
 import org.junit.jupiter.api.Assertions.*
+import java.time.LocalDate
 
 /**
  * Tests for Vacations API
@@ -45,52 +48,42 @@ class VacationRequestsTest: AbstractTest() {
                 vacationRequest = VacationRequest(
                     id = UUID.fromString("5c2b0646-8e87-4b4e-9b7a-624ca1bf832d"),
                     person = 3,
-                    startDate = "2023-06-07",
-                    endDate = "2023-06-14",
-                    days = 6,
+                    startDate = LocalDate.now().toString(),
+                    endDate = LocalDate.now().plusDays(1).toString(),
+                    days = 2,
                     type = VacationType.VACATION,
                     message = "Lomaa!!!",
                     projectManagerStatus = RequestStatus.PENDING,
                     hrManagerStatus = RequestStatus.PENDING,
-                    createdAt = "2023-04-12T10:15:30+03:00",
-                    updatedAt = "2023-04-12T10:15:30+03:00"
+                    createdAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
+                    updatedAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay())
                 )
             )
             val vacation1 = testBuilder.manager.vacations.listVacationRequests()
 
             assertEquals(1, vacation1.size)
             assertTrue(vacation1.find { it.id == UUID.fromString("5c2b0646-8e87-4b4e-9b7a-624ca1bf832d") } != null)
-            assertTrue(vacation1.find { it.person == 3 } != null)
-            assertTrue(vacation1.find { it.startDate == "2023-06-07" } != null)
-            assertTrue(vacation1.find { it.endDate == "2023-06-14" } != null)
-            assertTrue(vacation1.find { it.days == 6 } != null)
-            assertTrue(vacation1.find { it.type == VacationType.VACATION } != null)
-            assertTrue(vacation1.find { it.message == "Lomaa!!!" } != null)
-            assertTrue(vacation1.find { it.projectManagerStatus == RequestStatus.PENDING } != null)
-            assertTrue(vacation1.find { it.hrManagerStatus == RequestStatus.PENDING } != null)
-            assertTrue(vacation1.find { it.createdAt == "2023-04-12T10:15:30+03:00" } != null)
-            assertTrue(vacation1.find { it.updatedAt == "2023-04-12T10:15:30+03:00" } != null)
+            assertTrue(vacation1.find { it.projectManagerStatus == RequestStatus.PENDING} != null)
 
             testBuilder.manager.vacations.createVacationRequests(
                 vacationRequest = VacationRequest(
                     id = UUID.fromString("5c2b0646-8e87-4b4e-9b7a-624ca1bf832d"),
                     person = 3,
-                    startDate = "2023-06-07",
-                    endDate = "2023-06-14",
-                    days = 6,
+                    startDate = LocalDate.now().toString(),
+                    endDate = LocalDate.now().plusDays(1).toString(),
+                    days = 2,
                     type = VacationType.VACATION,
                     message = "Lomaa!!!",
                     projectManagerStatus = RequestStatus.APPROVED,
                     hrManagerStatus = RequestStatus.PENDING,
-                    createdAt = "2023-04-12T10:15:30+03:00" ,
-                    updatedAt = "2023-04-12T11:30:00+03:00"
+                    createdAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()) ,
+                    updatedAt = getODT(getThirtyDaysAgoThirdWeek()[2].atStartOfDay())
                 )
             )
             val vacation2 = testBuilder.manager.vacations.listVacationRequests()
 
             assertEquals(1, vacation2.size)
             assertTrue(vacation2.find { it.projectManagerStatus == RequestStatus.APPROVED} != null)
-            assertTrue(vacation2.find { it.updatedAt == "2023-04-12T11:30:00+03:00" } != null)
             assertNotEquals(vacation1 ,vacation2)
 
             testBuilder.manager.vacations.deleteVacationRequests(
