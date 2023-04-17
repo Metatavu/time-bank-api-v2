@@ -61,12 +61,12 @@ class VacationsRepository: PanacheRepositoryBase<VacationRequest, UUID> {
         }
 
         if (request.updatedAt!! > request.createdAt!!) {
-            return if (existingRequest.first() == request) {
-                false
+            if (existingRequest.first() == request) {
+                return false
             } else {
                 deleteRequest(request.id!!)
                 Panache.withTransaction { persist(request) }.awaitSuspending()
-                true
+                return true
             }
         }
 

@@ -46,7 +46,7 @@ class VacationRequestTestBuilderResource(
      * @param vacationRequest vacationRequest body
      */
     fun createVacationRequests(vacationRequest: VacationRequest) {
-        return api.createVacationRequest(vacationRequest = vacationRequest)
+        return api.createVacationRequest(vacationRequest)
     }
 
     /**
@@ -55,6 +55,6 @@ class VacationRequestTestBuilderResource(
      * @param id request id
      */
     fun deleteVacationRequests(id: UUID) {
-        return api.deleteVacationRequest(id = id)
+        return api.deleteVacationRequest(id)
     }
 }

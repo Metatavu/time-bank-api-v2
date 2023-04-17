@@ -8,7 +8,7 @@ import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 
 /**
- * Controller for timeEntry objects
+ * Controller for vacationRequest objects
  */
 @ApplicationScoped
 class VacationController {
@@ -56,11 +56,11 @@ class VacationController {
     }
 
     /**
-     * Deletes given persisted VacationRequest
+     * Deletes given VacationRequest
      *
      * @param id id
      */
     suspend fun deleteRequest(id: UUID) {
-        vacationsRepository.deleteRequest(id = id)
+        vacationsRepository.deleteRequest(id)
     }
 }
