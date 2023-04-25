@@ -30,12 +30,12 @@ class VacationsRequestsRepository: AbstractRepository<VacationRequest, UUID>() {
         }
 
         if (before != null) {
-            stringBuilder.append(if (stringBuilder.isNotEmpty()) " and date <= :before" else "createdAt <= :before")
+            stringBuilder.append(if (stringBuilder.isNotEmpty()) " and endDate <= :before" else "endDate <= :before")
             parameters.and("before", before)
         }
 
         if (after != null) {
-            stringBuilder.append(if (stringBuilder.isNotEmpty()) " and date >= :after" else "createdAt >= :after")
+            stringBuilder.append(if (stringBuilder.isNotEmpty()) " and startDate >= :after" else "startDate >= :after")
             parameters.and("after", after)
         }
 
