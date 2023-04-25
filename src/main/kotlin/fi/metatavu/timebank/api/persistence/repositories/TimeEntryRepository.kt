@@ -2,7 +2,6 @@ package fi.metatavu.timebank.api.persistence.repositories
 
 import fi.metatavu.timebank.api.persistence.model.TimeEntry
 import io.quarkus.hibernate.reactive.panache.Panache
-import io.quarkus.hibernate.reactive.panache.PanacheRepositoryBase
 import io.quarkus.panache.common.Parameters
 import io.smallrye.mutiny.coroutines.awaitSuspending
 import java.time.LocalDate
@@ -13,7 +12,7 @@ import javax.enterprise.context.ApplicationScoped
  * Manages TimeEntry JPA entity
  */
 @ApplicationScoped
-class TimeEntryRepository: PanacheRepositoryBase<TimeEntry, UUID> {
+class TimeEntryRepository: AbstractRepository<TimeEntry, UUID>() {
 
     /**
      * Lists TimeEntries based on given parameters
@@ -50,7 +49,7 @@ class TimeEntryRepository: PanacheRepositoryBase<TimeEntry, UUID> {
 
         stringBuilder.append(" order by date DESC")
 
-        return find(stringBuilder.toString(), parameters).list<TimeEntry>().awaitSuspending()
+        return listWithParameters(stringBuilder.toString(), parameters)
     }
 
     /**

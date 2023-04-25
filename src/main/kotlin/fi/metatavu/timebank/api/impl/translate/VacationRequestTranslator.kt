@@ -21,7 +21,9 @@ class VacationRequestTranslator: AbstractTranslator<VacationRequest, fi.metatavu
             projectManagerStatus = entity.projectManagerStatus!!,
             hrManagerStatus = entity.hrManagerStatus!!,
             createdAt = entity.createdAt!!,
-            updatedAt = entity.updatedAt!!
+            createdBy = entity.createdBy!!,
+            updatedAt = entity.updatedAt!!,
+            lastModifiedBy = entity.lastModifiedBy!!
         )
     }
 

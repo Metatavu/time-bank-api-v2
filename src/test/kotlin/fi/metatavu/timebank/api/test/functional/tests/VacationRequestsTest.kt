@@ -5,7 +5,7 @@ import fi.metatavu.timebank.api.test.functional.data.TestDateUtils.Companion.get
 import fi.metatavu.timebank.api.test.functional.resources.LocalTestProfile
 import fi.metatavu.timebank.api.test.functional.resources.TestMySQLResource
 import fi.metatavu.timebank.api.test.functional.resources.TestWiremockResource
-import fi.metatavu.timebank.test.client.models.RequestStatus
+import fi.metatavu.timebank.test.client.models.VacationRequestStatus
 import fi.metatavu.timebank.test.client.models.VacationRequest
 import fi.metatavu.timebank.test.client.models.VacationType
 import io.quarkus.test.common.QuarkusTestResource
@@ -43,55 +43,58 @@ class VacationRequestsTest: AbstractTest() {
      */
     @Test
     fun testVacationRequest() {
-        createTestBuilder().use { testBuilder ->
-            testBuilder.manager.vacations.createVacationRequests(
+        val id = UUID.fromString("5c2b0646-8e87-4b4e-9b7a-624ca1bf832d")
+            createTestBuilder().use { testBuilder ->
+            testBuilder.manager.vacationRequests.createVacationRequests(
                 vacationRequest = VacationRequest(
-                    id = UUID.fromString("5c2b0646-8e87-4b4e-9b7a-624ca1bf832d"),
+                    id = id,
                     person = 3,
                     startDate = LocalDate.now().toString(),
                     endDate = LocalDate.now().plusDays(1).toString(),
                     days = 2,
                     type = VacationType.VACATION,
                     message = "Lomaa!!!",
-                    projectManagerStatus = RequestStatus.PENDING,
-                    hrManagerStatus = RequestStatus.PENDING,
+                    projectManagerStatus = VacationRequestStatus.PENDING,
+                    hrManagerStatus = VacationRequestStatus.PENDING,
                     createdAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
-                    updatedAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay())
+                    createdBy = UUID.randomUUID(),
+                    updatedAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
+                    lastModifiedBy = UUID.randomUUID()
                 )
             )
-            val vacation1 = testBuilder.manager.vacations.listVacationRequests()
+            var vacations = testBuilder.manager.vacationRequests.listVacationRequests()
 
-            assertEquals(1, vacation1.size)
-            assertTrue(vacation1.find { it.id == UUID.fromString("5c2b0646-8e87-4b4e-9b7a-624ca1bf832d") } != null)
-            assertTrue(vacation1.find { it.projectManagerStatus == RequestStatus.PENDING} != null)
+            assertEquals(1, vacations.size)
+            assertTrue(vacations.find { it.id == id } != null)
+            assertTrue(vacations.find { it.projectManagerStatus == VacationRequestStatus.PENDING} != null)
 
-            testBuilder.manager.vacations.createVacationRequests(
+            testBuilder.manager.vacationRequests.updateVacationRequests(
+                id = id,
                 vacationRequest = VacationRequest(
-                    id = UUID.fromString("5c2b0646-8e87-4b4e-9b7a-624ca1bf832d"),
+                    id = id,
                     person = 3,
                     startDate = LocalDate.now().toString(),
                     endDate = LocalDate.now().plusDays(1).toString(),
                     days = 2,
                     type = VacationType.VACATION,
                     message = "Lomaa!!!",
-                    projectManagerStatus = RequestStatus.APPROVED,
-                    hrManagerStatus = RequestStatus.PENDING,
-                    createdAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()) ,
-                    updatedAt = getODT(getThirtyDaysAgoThirdWeek()[2].atStartOfDay())
+                    projectManagerStatus = VacationRequestStatus.APPROVED,
+                    hrManagerStatus = VacationRequestStatus.PENDING,
+                    createdAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
+                    createdBy = UUID.randomUUID(),
+                    updatedAt = getODT(getThirtyDaysAgoThirdWeek()[2].atStartOfDay()),
+                    lastModifiedBy = UUID.randomUUID()
                 )
             )
-            val vacation2 = testBuilder.manager.vacations.listVacationRequests()
+            vacations = testBuilder.manager.vacationRequests.listVacationRequests()
 
-            assertEquals(1, vacation2.size)
-            assertTrue(vacation2.find { it.projectManagerStatus == RequestStatus.APPROVED} != null)
-            assertNotEquals(vacation1 ,vacation2)
+            assertEquals(1, vacations.size)
+            assertTrue(vacations.find { it.id == id } != null)
+            assertTrue(vacations.find { it.projectManagerStatus == VacationRequestStatus.APPROVED } != null)
 
-            testBuilder.manager.vacations.deleteVacationRequests(
-                id = UUID.fromString("5c2b0646-8e87-4b4e-9b7a-624ca1bf832d")
-            )
-            val vacation3 = testBuilder.manager.vacations.listVacationRequests()
-
-            assertEquals(0, vacation3.size)
+            vacations.forEach { vacation ->
+                testBuilder.manager.vacationRequests.clean(vacation)
+            }
         }
     }
 }

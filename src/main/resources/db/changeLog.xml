@@ -64,18 +64,44 @@
     <changeSet id="vacationRequests" author="Veikko Vilpponen">
         <createTable tableName="VacationRequest">
             <column name="id" type="binary(16)">
-                <constraints primaryKey="true" />
+                <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="person" type="integer" />
-            <column name="startDate" type="date" />
-            <column name="endDate" type="date" />
-            <column name="days" type="integer" />
-            <column name="type" type="varchar(20)" />
-            <column name="message" type="varchar(100)" />
-            <column name="projectManagerStatus" type="varchar(20)" />
-            <column name="hrManagerStatus" type="varchar(20)" />
-            <column name="createdAt" type="datetime" />
-            <column name="updatedAt" type="datetime" />
+            <column name="person" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="startDate" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="endDate" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="days" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="message" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="projectManagerStatus" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hrManagerStatus" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="createdAt" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="createdBy" type="binary(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updatedAt" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lastModifiedBy" type="binary(16)">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
 </databaseChangeLog>

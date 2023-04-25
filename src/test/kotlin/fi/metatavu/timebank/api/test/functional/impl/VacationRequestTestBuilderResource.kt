@@ -3,10 +3,10 @@ package fi.metatavu.timebank.api.test.functional.impl
 import fi.metatavu.jaxrs.test.functional.builder.auth.AccessTokenProvider
 import fi.metatavu.timebank.api.test.functional.TestBuilder
 import fi.metatavu.timebank.api.test.functional.settings.ApiTestSettings
-import fi.metatavu.timebank.test.client.apis.VacationsApi
+import fi.metatavu.timebank.test.client.apis.VacationRequestsApi
 import fi.metatavu.timebank.test.client.infrastructure.ApiClient
 import fi.metatavu.timebank.test.client.models.VacationRequest
-import java.util.UUID
+import java.util.*
 
 /**
  * Test builder resource for Vacations API
@@ -17,12 +17,13 @@ class VacationRequestTestBuilderResource(
     apiClient: ApiClient
 ): ApiTestBuilderResource<VacationRequest, ApiClient?>(testBuilder, apiClient) {
 
-    override fun clean(t: VacationRequest?) {
+    override fun clean(v: VacationRequest) {
+        api.deleteVacationRequest(v.id!!)
     }
 
-    override fun getApi(): VacationsApi {
+    override fun getApi(): VacationRequestsApi {
         ApiClient.accessToken = accessTokenProvider?.accessToken
-        return VacationsApi(ApiTestSettings.apiBasePath)
+        return VacationRequestsApi (ApiTestSettings.apiBasePath)
     }
 
     /**
@@ -31,6 +32,7 @@ class VacationRequestTestBuilderResource(
      * @param personId optional personId
      * @param before optional before date
      * @param after optional after date
+     * @return List of VacationRequests
      */
     fun listVacationRequests(personId: Int? = null, before: String? = null, after: String? = null): Array<VacationRequest> {
         return api.listVacationRequests(
@@ -44,17 +46,19 @@ class VacationRequestTestBuilderResource(
      * Create a new vacation request
      *
      * @param vacationRequest vacationRequest body
+     * @return Created vacationRequest
      */
-    fun createVacationRequests(vacationRequest: VacationRequest) {
+    fun createVacationRequests(vacationRequest: VacationRequest): VacationRequest {
         return api.createVacationRequest(vacationRequest)
     }
 
     /**
-     * Delete persisted Vacation request
+     * Create a new vacation request
      *
-     * @param id request id
+     * @param vacationRequest vacationRequest body
+     * @return Created vacationRequest
      */
-    fun deleteVacationRequests(id: UUID) {
-        return api.deleteVacationRequest(id)
+    fun updateVacationRequests(id: UUID, vacationRequest: VacationRequest): VacationRequest {
+        return api.updateVacationRequest(id, vacationRequest)
     }
 }

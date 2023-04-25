@@ -1,6 +1,6 @@
 package fi.metatavu.timebank.api.persistence.model
 
-import fi.metatavu.timebank.model.RequestStatus
+import fi.metatavu.timebank.model.VacationRequestStatus
 import fi.metatavu.timebank.model.VacationType
 import java.time.LocalDate
 import java.time.OffsetDateTime
@@ -11,7 +11,7 @@ import javax.persistence.*
  * VacationRequest JPA entity
  */
 @Entity
-class VacationRequest (
+class VacationRequest(
 
     @Id
     @Column
@@ -38,15 +38,21 @@ class VacationRequest (
 
     @Column
     @Enumerated(EnumType.STRING)
-    var projectManagerStatus: RequestStatus? = null,
+    var projectManagerStatus: VacationRequestStatus? = null,
 
     @Column
     @Enumerated(EnumType.STRING)
-    var hrManagerStatus: RequestStatus? = null,
+    var hrManagerStatus: VacationRequestStatus? = null,
 
     @Column
     var createdAt: OffsetDateTime? = null,
 
     @Column
-    var updatedAt: OffsetDateTime? = null
+    var createdBy: UUID? = null,
+
+    @Column
+    var updatedAt: OffsetDateTime? = null,
+
+    @Column
+    var lastModifiedBy: UUID? = null
 )

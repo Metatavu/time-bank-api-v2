@@ -27,7 +27,7 @@ class TestBuilderAuthentication(
     val timeEntries = TimeEntriesTestBuilderResource(testBuilder, this.accessTokenProvider, createClient())
     val dailyEntries = DailyEntriesTestBuilderResource(testBuilder, this.accessTokenProvider, createClient())
     val forecastWebhooks = ForecastWebhookTestBuilderResource(testBuilder, this.accessTokenProvider, createClient())
-    val vacations = VacationRequestTestBuilderResource(testBuilder, this.accessTokenProvider, createClient())
+    val vacationRequests = VacationRequestTestBuilderResource(testBuilder, this.accessTokenProvider, createClient())
 
     /**
      * Creates an API client
