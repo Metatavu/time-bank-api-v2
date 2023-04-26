@@ -62,7 +62,7 @@ class VacationRequestController {
      * Persists updated VacationRequest
      *
      * @param existingVacationRequest already persisted VacationRequest
-     * @param vacationRequest VacationRequest
+     * @param vacationRequest updated VacationRequest
      * @return persisted VacationRequest
      */
     suspend fun updateVacationRequest(existingVacationRequest: VacationRequest, vacationRequest: fi.metatavu.timebank.model.VacationRequest): VacationRequest {

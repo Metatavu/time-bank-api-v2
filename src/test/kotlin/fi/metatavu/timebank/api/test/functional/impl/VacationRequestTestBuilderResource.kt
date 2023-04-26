@@ -53,12 +53,16 @@ class VacationRequestTestBuilderResource(
     }
 
     /**
-     * Create a new vacation request
+     * Update vacation request
      *
-     * @param vacationRequest vacationRequest body
-     * @return Created vacationRequest
+     * @param id id of vacationRequest being updated
+     * @param vacationRequest updated vacationRequest
+     * @return Updated vacationRequest
      */
     fun updateVacationRequests(id: UUID, vacationRequest: VacationRequest): VacationRequest {
-        return api.updateVacationRequest(id, vacationRequest)
+        return api.updateVacationRequest(
+            id = id,
+            vacationRequest = vacationRequest
+        )
     }
 }

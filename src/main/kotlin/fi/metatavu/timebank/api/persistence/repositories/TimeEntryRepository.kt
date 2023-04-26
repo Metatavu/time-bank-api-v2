@@ -31,14 +31,17 @@ class TimeEntryRepository: AbstractRepository<TimeEntry, UUID>() {
             stringBuilder.append("person = :personId")
             parameters.and("personId", personId)
         }
+
         if (before != null) {
             stringBuilder.append(if (stringBuilder.isNotEmpty()) " and date <= :before" else "date <= :before")
             parameters.and("before", before)
         }
+
         if (after != null) {
             stringBuilder.append(if (stringBuilder.isNotEmpty()) " and date >= :after" else "date >= :after")
             parameters.and("after", after)
         }
+
         if (vacation != null) {
             stringBuilder.append(if (stringBuilder.isNotEmpty()) " and isVacation = :vacation" else "isVacation = :vacation")
             parameters.and("vacation", vacation)

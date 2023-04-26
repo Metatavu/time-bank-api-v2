@@ -97,6 +97,7 @@ class VacationRequestsTest: AbstractTest() {
             assertEquals(1, vacations.size)
             assertTrue(vacations.find { it.id == id } != null)
             assertTrue(vacations.find { it.projectManagerStatus == VacationRequestStatus.APPROVED } != null)
+            assertTrue(vacations.find { it.hrManagerStatus == VacationRequestStatus.PENDING } != null)
 
             vacations.forEach { vacation ->
                 testBuilder.manager.vacationRequests.clean(vacation)
