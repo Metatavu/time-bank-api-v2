@@ -22,17 +22,4 @@ abstract class AbstractRepository<T, E>: PanacheRepositoryBase<T, E,> {
     suspend fun findSuspending(id: E): T {
         return Panache.withTransaction { findById(id)}.awaitSuspending()
     }
-
-    protected suspend fun queryBuilder(strings: Map<String, String>, params: Map<String, Any>, order: String): List<T>{
-        val stringBuilder = StringBuilder()
-        val parameters = Parameters()
-        strings.entries.forEach {
-            stringBuilder.append(it.value)
-            parameters.and(it.key, params[it.key])
-        }
-
-        stringBuilder.append(order)
-
-        return find(stringBuilder.toString(), parameters).list<T>().awaitSuspending()
-    }
 }
