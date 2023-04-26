@@ -31,6 +31,8 @@ class VacationRequestsApi: VacationRequestsApi, AbstractApi() {
     }
 
     override suspend fun findVacationRequest(id: UUID): Response {
+        loggedUserId ?: return createUnauthorized("Invalid token!")
+
         return try {
             return createOk(vacationRequestController.findVacationRequest(id))
         } catch (e: Error) {

@@ -44,7 +44,7 @@ class VacationRequestsTest: AbstractTest() {
     @Test
     fun testVacationRequest() {
         val id = UUID.fromString("5c2b0646-8e87-4b4e-9b7a-624ca1bf832d")
-            createTestBuilder().use { testBuilder ->
+        createTestBuilder().use { testBuilder ->
             testBuilder.manager.vacationRequests.createVacationRequests(
                 vacationRequest = VacationRequest(
                     id = id,
@@ -62,7 +62,10 @@ class VacationRequestsTest: AbstractTest() {
                     lastModifiedBy = UUID.randomUUID()
                 )
             )
-            var vacations = testBuilder.manager.vacationRequests.listVacationRequests(personId = 3, after = LocalDate.now().toString())
+            var vacations = testBuilder.manager.vacationRequests.listVacationRequests(
+                personId = 3,
+                after = LocalDate.now().toString()
+            )
 
             assertEquals(1, vacations.size)
             assertTrue(vacations.find { it.id == id } != null)
@@ -86,7 +89,10 @@ class VacationRequestsTest: AbstractTest() {
                     lastModifiedBy = UUID.randomUUID()
                 )
             )
-            vacations = testBuilder.manager.vacationRequests.listVacationRequests(personId = 3, after = LocalDate.now().toString())
+            vacations = testBuilder.manager.vacationRequests.listVacationRequests(
+                personId = 3,
+                after = LocalDate.now().toString()
+            )
 
             assertEquals(1, vacations.size)
             assertTrue(vacations.find { it.id == id } != null)
