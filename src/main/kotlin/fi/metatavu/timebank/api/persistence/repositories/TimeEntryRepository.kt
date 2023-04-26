@@ -2,7 +2,6 @@ package fi.metatavu.timebank.api.persistence.repositories
 
 import fi.metatavu.timebank.api.persistence.model.TimeEntry
 import io.quarkus.hibernate.reactive.panache.Panache
-import io.quarkus.panache.common.Parameters
 import io.smallrye.mutiny.coroutines.awaitSuspending
 import java.time.LocalDate
 import java.util.UUID
@@ -24,32 +23,31 @@ class TimeEntryRepository: AbstractRepository<TimeEntry, UUID>() {
      * @return List of TimeEntries
      */
     suspend fun getEntries(personId: Int?, before: LocalDate?, after: LocalDate?, vacation: Boolean?): List<TimeEntry> {
-        val stringBuilder = StringBuilder()
-        val parameters = Parameters()
+        val strings = mutableMapOf<String, String>()
+        val params = mutableMapOf<String, Any>()
+        val order = " order by date DESC"
 
         if (personId != null) {
-            stringBuilder.append("person = :personId")
-            parameters.and("personId", personId)
+            strings["personId"] = "person = :personId"
+            params["personId"] = personId
         }
 
         if (before != null) {
-            stringBuilder.append(if (stringBuilder.isNotEmpty()) " and date <= :before" else "date <= :before")
-            parameters.and("before", before)
+            strings["before"] = if (strings.isNotEmpty()) " and date <= :before" else "date <= :before"
+            params["before"] = before
         }
 
         if (after != null) {
-            stringBuilder.append(if (stringBuilder.isNotEmpty()) " and date >= :after" else "date >= :after")
-            parameters.and("after", after)
+            strings["after"] = if (strings.isNotEmpty()) " and date >= :after" else "date >= :after"
+            params["after"] = after
         }
 
         if (vacation != null) {
-            stringBuilder.append(if (stringBuilder.isNotEmpty()) " and isVacation = :vacation" else "isVacation = :vacation")
-            parameters.and("vacation", vacation)
+            strings["vacation"] = if (strings.isNotEmpty()) " and isVacation = :vacation" else "isVacation = :vacation"
+            params["vacation"] = vacation
         }
 
-        stringBuilder.append(" order by date DESC")
-
-        return listWithParameters(stringBuilder.toString(), parameters)
+        return queryBuilder(strings, params, order)
     }
 
     /**

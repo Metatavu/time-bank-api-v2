@@ -1,7 +1,6 @@
 package fi.metatavu.timebank.api.persistence.repositories
 
 import fi.metatavu.timebank.api.persistence.model.VacationRequest
-import io.quarkus.panache.common.Parameters
 import java.time.LocalDate
 import java.util.UUID
 import javax.enterprise.context.ApplicationScoped
@@ -21,26 +20,25 @@ class VacationsRequestsRepository: AbstractRepository<VacationRequest, UUID>() {
      * @return List of VacationRequests
      */
     suspend fun listVacationRequest(personId: Int?, before: LocalDate?, after: LocalDate?): List<VacationRequest> {
-        val stringBuilder = StringBuilder()
-        val parameters = Parameters()
+        val strings = mutableMapOf<String, String>()
+        val params = mutableMapOf<String, Any>()
+        val order = " order by startDate DESC"
 
         if (personId != null) {
-            stringBuilder.append("person = :personId")
-            parameters.and("personId", personId)
+            strings["personId"] = "person = :personId"
+            params["personId"] = personId
         }
 
         if (before != null) {
-            stringBuilder.append(if (stringBuilder.isNotEmpty()) " and endDate <= :before" else "endDate <= :before")
-            parameters.and("before", before)
+            strings["before"] = if (strings.isNotEmpty()) " and endDate <= :before" else "endDate <= :before"
+            params["before"] = before
         }
 
         if (after != null) {
-            stringBuilder.append(if (stringBuilder.isNotEmpty()) " and startDate >= :after" else "startDate >= :after")
-            parameters.and("after", after)
+            strings["after"] = if (strings.isNotEmpty()) " and startDate >= :after" else "startDate >= :after"
+            params["after"] = after
         }
 
-        stringBuilder.append(" order by startDate DESC")
-
-        return listWithParameters(stringBuilder.toString(), parameters)
+        return queryBuilder(strings, params, order)
     }
 }
