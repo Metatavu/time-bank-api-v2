@@ -62,7 +62,7 @@ class VacationRequestsTest: AbstractTest() {
                     lastModifiedBy = UUID.randomUUID()
                 )
             )
-            var vacations = testBuilder.manager.vacationRequests.listVacationRequests()
+            var vacations = testBuilder.manager.vacationRequests.listVacationRequests(personId = 3, after = LocalDate.now().toString())
 
             assertEquals(1, vacations.size)
             assertTrue(vacations.find { it.id == id } != null)
@@ -86,7 +86,7 @@ class VacationRequestsTest: AbstractTest() {
                     lastModifiedBy = UUID.randomUUID()
                 )
             )
-            vacations = testBuilder.manager.vacationRequests.listVacationRequests()
+            vacations = testBuilder.manager.vacationRequests.listVacationRequests(personId = 3, after = LocalDate.now().toString())
 
             assertEquals(1, vacations.size)
             assertTrue(vacations.find { it.id == id } != null)
