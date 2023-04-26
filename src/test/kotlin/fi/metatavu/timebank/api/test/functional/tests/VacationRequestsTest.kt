@@ -43,12 +43,10 @@ class VacationRequestsTest: AbstractTest() {
      */
     @Test
     fun testVacationRequest() {
-        val id = UUID.fromString("5c2b0646-8e87-4b4e-9b7a-624ca1bf832d")
         createTestBuilder().use { testBuilder ->
-            testBuilder.manager.vacationRequests.createVacationRequests(
+            testBuilder.userA.vacationRequests.createVacationRequests(
                 vacationRequest = VacationRequest(
-                    id = id,
-                    person = 3,
+                    person = 1,
                     startDate = LocalDate.now().toString(),
                     endDate = LocalDate.now().plusDays(1).toString(),
                     days = 2,
@@ -57,25 +55,25 @@ class VacationRequestsTest: AbstractTest() {
                     projectManagerStatus = VacationRequestStatus.PENDING,
                     hrManagerStatus = VacationRequestStatus.PENDING,
                     createdAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
-                    createdBy = UUID.randomUUID(),
                     updatedAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
-                    lastModifiedBy = UUID.randomUUID()
                 )
             )
             var vacations = testBuilder.manager.vacationRequests.listVacationRequests(
-                personId = 3,
+                personId = 1,
                 after = LocalDate.now().toString()
             )
+
+            val id = vacations[0].id!!
 
             assertEquals(1, vacations.size)
             assertTrue(vacations.find { it.id == id } != null)
             assertTrue(vacations.find { it.projectManagerStatus == VacationRequestStatus.PENDING} != null)
+            assertTrue(vacations.find { it.lastModifiedBy == UUID.fromString("7276979e-2f08-4d52-9541-0d10aa3806fe") } != null)
 
             testBuilder.manager.vacationRequests.updateVacationRequests(
                 id = id,
                 vacationRequest = VacationRequest(
-                    id = id,
-                    person = 3,
+                    person = 1,
                     startDate = LocalDate.now().toString(),
                     endDate = LocalDate.now().plusDays(1).toString(),
                     days = 2,
@@ -84,13 +82,11 @@ class VacationRequestsTest: AbstractTest() {
                     projectManagerStatus = VacationRequestStatus.APPROVED,
                     hrManagerStatus = VacationRequestStatus.PENDING,
                     createdAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
-                    createdBy = UUID.randomUUID(),
                     updatedAt = getODT(getThirtyDaysAgoThirdWeek()[2].atStartOfDay()),
-                    lastModifiedBy = UUID.randomUUID()
                 )
             )
             vacations = testBuilder.manager.vacationRequests.listVacationRequests(
-                personId = 3,
+                personId = 1,
                 after = LocalDate.now().toString()
             )
 
@@ -98,6 +94,7 @@ class VacationRequestsTest: AbstractTest() {
             assertTrue(vacations.find { it.id == id } != null)
             assertTrue(vacations.find { it.projectManagerStatus == VacationRequestStatus.APPROVED } != null)
             assertTrue(vacations.find { it.hrManagerStatus == VacationRequestStatus.PENDING } != null)
+            assertTrue(vacations.find { it.lastModifiedBy == UUID.fromString("50bd84bc-d7f7-445f-b98c-4f6a5d27fb55") } != null)
 
             vacations.forEach { vacation ->
                 testBuilder.manager.vacationRequests.clean(vacation)

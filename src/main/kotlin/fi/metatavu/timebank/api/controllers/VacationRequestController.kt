@@ -38,10 +38,10 @@ class VacationRequestController {
      * @param vacationRequest VacationRequest
      * @return persisted VacationRequest
      */
-    suspend fun createVacationRequest(vacationRequest: fi.metatavu.timebank.model.VacationRequest): VacationRequest {
+    suspend fun createVacationRequest(vacationRequest: fi.metatavu.timebank.model.VacationRequest, creatorsId: UUID): VacationRequest {
         return vacationsRequestsRepository.persistSuspending(
             VacationRequest(
-                id = vacationRequest.id ?: UUID.randomUUID(),
+                id = UUID.randomUUID(),
                 person = vacationRequest.person,
                 startDate = vacationRequest.startDate,
                 endDate = vacationRequest.endDate,
@@ -51,23 +51,21 @@ class VacationRequestController {
                 projectManagerStatus = vacationRequest.projectManagerStatus,
                 hrManagerStatus = vacationRequest.hrManagerStatus,
                 createdAt = vacationRequest.createdAt,
-                createdBy = vacationRequest.createdBy,
+                createdBy = creatorsId,
                 updatedAt = vacationRequest.updatedAt,
-                lastModifiedBy = vacationRequest.lastModifiedBy
+                lastModifiedBy = creatorsId
             )
         )
     }
 
     /**
-     * Persists updated VacationRequest
+     * Updates persisted VacationRequest
      *
      * @param existingVacationRequest already persisted VacationRequest
      * @param vacationRequest updated VacationRequest
      * @return persisted VacationRequest
      */
-    suspend fun updateVacationRequest(existingVacationRequest: VacationRequest, vacationRequest: fi.metatavu.timebank.model.VacationRequest): VacationRequest {
-        existingVacationRequest.id = vacationRequest.id!!
-        existingVacationRequest.person = vacationRequest.person
+    suspend fun updateVacationRequest(existingVacationRequest: VacationRequest, vacationRequest: fi.metatavu.timebank.model.VacationRequest, modifiersId: UUID): VacationRequest {
         existingVacationRequest.startDate = vacationRequest.startDate
         existingVacationRequest.endDate = vacationRequest.endDate
         existingVacationRequest.days = vacationRequest.days
@@ -75,10 +73,8 @@ class VacationRequestController {
         existingVacationRequest.message = vacationRequest.message
         existingVacationRequest.projectManagerStatus = vacationRequest.projectManagerStatus
         existingVacationRequest.hrManagerStatus = vacationRequest.hrManagerStatus
-        existingVacationRequest.createdAt = vacationRequest.createdAt
-        existingVacationRequest.createdBy = vacationRequest.createdBy
         existingVacationRequest.updatedAt = vacationRequest.updatedAt
-        existingVacationRequest.lastModifiedBy = vacationRequest.lastModifiedBy
+        existingVacationRequest.lastModifiedBy = modifiersId
 
         return vacationsRequestsRepository.persistSuspending(existingVacationRequest)
     }

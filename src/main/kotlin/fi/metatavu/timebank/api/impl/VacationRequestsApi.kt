@@ -45,7 +45,11 @@ class VacationRequestsApi: VacationRequestsApi, AbstractApi() {
 
         val existingVacationRequest = vacationRequestController.findVacationRequest(id)
 
-        val updatedVacationRequest = vacationRequestController.updateVacationRequest(existingVacationRequest, vacationRequest)
+        val updatedVacationRequest = vacationRequestController.updateVacationRequest(
+            existingVacationRequest = existingVacationRequest,
+            vacationRequest = vacationRequest,
+            modifiersId = loggedUserId!!
+        )
 
         return try {
             return createOk(entity = vacationRequestTranslator.translate(updatedVacationRequest))
@@ -57,7 +61,10 @@ class VacationRequestsApi: VacationRequestsApi, AbstractApi() {
     override suspend fun createVacationRequest(vacationRequest: VacationRequest): Response {
         loggedUserId ?: return createUnauthorized("Invalid token!")
 
-        val newVacationRequest = vacationRequestController.createVacationRequest(vacationRequest)
+        val newVacationRequest = vacationRequestController.createVacationRequest(
+            vacationRequest = vacationRequest,
+            creatorsId = loggedUserId!!
+        )
 
         return try {
             return createCreated(entity = vacationRequestTranslator.translate(newVacationRequest))
