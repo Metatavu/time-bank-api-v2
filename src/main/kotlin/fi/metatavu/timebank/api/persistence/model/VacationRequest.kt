@@ -54,5 +54,5 @@ class VacationRequest(
     var updatedAt: OffsetDateTime? = null,
 
     @Column
-    var lastModifiedBy: UUID? = null
+    var lastUpdatedBy: UUID? = null
 )

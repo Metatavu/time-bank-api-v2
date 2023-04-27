@@ -68,7 +68,7 @@ class VacationRequestsTest: AbstractTest() {
             assertEquals(1, vacations.size)
             assertTrue(vacations.find { it.id == id } != null)
             assertTrue(vacations.find { it.projectManagerStatus == VacationRequestStatus.PENDING} != null)
-            assertTrue(vacations.find { it.lastModifiedBy == UUID.fromString("7276979e-2f08-4d52-9541-0d10aa3806fe") } != null)
+            assertTrue(vacations.find { it.lastUpdatedBy == UUID.fromString("7276979e-2f08-4d52-9541-0d10aa3806fe") } != null)
 
             testBuilder.manager.vacationRequests.updateVacationRequests(
                 id = id,
@@ -94,7 +94,7 @@ class VacationRequestsTest: AbstractTest() {
             assertTrue(vacations.find { it.id == id } != null)
             assertTrue(vacations.find { it.projectManagerStatus == VacationRequestStatus.APPROVED } != null)
             assertTrue(vacations.find { it.hrManagerStatus == VacationRequestStatus.PENDING } != null)
-            assertTrue(vacations.find { it.lastModifiedBy == UUID.fromString("50bd84bc-d7f7-445f-b98c-4f6a5d27fb55") } != null)
+            assertTrue(vacations.find { it.lastUpdatedBy == UUID.fromString("50bd84bc-d7f7-445f-b98c-4f6a5d27fb55") } != null)
 
             vacations.forEach { vacation ->
                 testBuilder.manager.vacationRequests.clean(vacation)

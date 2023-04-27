@@ -99,7 +99,7 @@
             <column name="updatedAt" type="datetime">
                 <constraints nullable="false"/>
             </column>
-            <column name="lastModifiedBy" type="binary(16)">
+            <column name="lastUpdatedBy" type="binary(16)">
                 <constraints nullable="false"/>
             </column>
         </createTable>

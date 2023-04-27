@@ -53,7 +53,7 @@ class VacationRequestController {
                 createdAt = vacationRequest.createdAt,
                 createdBy = creatorsId,
                 updatedAt = vacationRequest.updatedAt,
-                lastModifiedBy = creatorsId
+                lastUpdatedBy = creatorsId
             )
         )
     }
@@ -74,7 +74,7 @@ class VacationRequestController {
         existingVacationRequest.projectManagerStatus = vacationRequest.projectManagerStatus
         existingVacationRequest.hrManagerStatus = vacationRequest.hrManagerStatus
         existingVacationRequest.updatedAt = vacationRequest.updatedAt
-        existingVacationRequest.lastModifiedBy = modifiersId
+        existingVacationRequest.lastUpdatedBy = modifiersId
 
         return vacationsRequestsRepository.persistSuspending(existingVacationRequest)
     }
