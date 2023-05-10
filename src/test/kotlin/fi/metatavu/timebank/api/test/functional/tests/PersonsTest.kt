@@ -196,12 +196,14 @@ class PersonsTest: AbstractTest() {
                 personId = 3,
                 timespan = Timespan.MONTH
             )
+            val billableprojectTime = personTotalTimes[0].billableProjectTime+ personTotalTimes[1].billableProjectTime
+            val loggedProjectTime = personTotalTimes[0].loggedProjectTime + personTotalTimes[1].loggedProjectTime
 
             assertEquals(amountOfMonths.toInt(), personTotalTimes.size)
             assertTrue(personTotalTimes.find { it.nonBillableProjectTime == 122 } != null)
             assertTrue(personTotalTimes.find { it.internalTime == 750 } != null)
-            assertEquals(personTotalTimes[0].billableProjectTime+ personTotalTimes[1].billableProjectTime, 474)
-            assertEquals(personTotalTimes[0].loggedProjectTime + personTotalTimes[1].loggedProjectTime, 596)
+            assertEquals(billableprojectTime, 474)
+            assertEquals(loggedProjectTime, 596)
             assertTrue(personTotalTimes.all { it.balance < 0 } )
         }
     }

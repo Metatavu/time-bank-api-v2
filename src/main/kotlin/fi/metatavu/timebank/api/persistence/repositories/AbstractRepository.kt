@@ -7,7 +7,7 @@ import io.smallrye.mutiny.coroutines.awaitSuspending
 
 abstract class AbstractRepository<T, E>: PanacheRepositoryBase<T, E,> {
 
-    protected suspend fun listWithParameters(queryString: String, parameters: Parameters): List<T>{
+    suspend fun listWithParameters(queryString: String, parameters: Parameters): List<T>{
         return find(queryString, parameters).list<T>().awaitSuspending()
     }
 

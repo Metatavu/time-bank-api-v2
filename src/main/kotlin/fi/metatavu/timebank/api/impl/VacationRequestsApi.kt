@@ -25,9 +25,15 @@ class VacationRequestsApi: VacationRequestsApi, AbstractApi() {
     override suspend fun deleteVacationRequest(id: UUID): Response {
         loggedUserId ?: return createUnauthorized("Invalid token!")
 
-        vacationRequestController.deleteVacationRequest(id)
+        val existingVacationRequest = vacationRequestController.findVacationRequest(id)
 
-        return createNoContent()
+        if(isAdmin() || loggedUserId == existingVacationRequest.createdBy) {
+
+            vacationRequestController.deleteVacationRequest(id)
+
+            return createNoContent()
+        }
+        return createUnauthorized("Permission missing")
     }
 
     override suspend fun findVacationRequest(id: UUID): Response {
@@ -42,20 +48,22 @@ class VacationRequestsApi: VacationRequestsApi, AbstractApi() {
 
     override suspend fun updateVacationRequest(id: UUID, vacationRequest: VacationRequest): Response {
         loggedUserId ?: return createUnauthorized("Invalid token!")
+        if(isAdmin() || loggedUserId == vacationRequest.createdBy) {
+            val existingVacationRequest = vacationRequestController.findVacationRequest(id)
 
-        val existingVacationRequest = vacationRequestController.findVacationRequest(id)
+            val updatedVacationRequest = vacationRequestController.updateVacationRequest(
+                existingVacationRequest = existingVacationRequest,
+                vacationRequest = vacationRequest,
+                modifiersId = loggedUserId!!
+            )
 
-        val updatedVacationRequest = vacationRequestController.updateVacationRequest(
-            existingVacationRequest = existingVacationRequest,
-            vacationRequest = vacationRequest,
-            modifiersId = loggedUserId!!
-        )
-
-        return try {
-            return createOk(entity = vacationRequestTranslator.translate(updatedVacationRequest))
-        } catch (e: Error) {
-            createInternalServerError(e.localizedMessage)
+            return try {
+                return createOk(entity = vacationRequestTranslator.translate(updatedVacationRequest))
+            } catch (e: Error) {
+                createInternalServerError(e.localizedMessage)
+            }
         }
+        return createUnauthorized("Permission missing")
     }
 
     override suspend fun createVacationRequest(vacationRequest: VacationRequest): Response {
