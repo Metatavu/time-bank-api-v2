@@ -52,7 +52,7 @@ class VacationRequestsTest: AbstractTest() {
     )
 
     /**
-     * Tests /v1/createVacationRequest -endpoint
+     * Tests /v1/vacationRequest -endpoint POST method
      */
     @Test
     fun testCreateVacationRequests() {
@@ -74,7 +74,7 @@ class VacationRequestsTest: AbstractTest() {
     }
 
     /**
-     * Tests /v1/listVacationRequest -endpoint
+     * Tests /v1/vacationRequest -endpoint GET method
      */
     @Test
     fun testListVacationRequests() {
@@ -97,7 +97,7 @@ class VacationRequestsTest: AbstractTest() {
     }
 
     /**
-     * Tests /v1/updateVacationRequest -endpoint
+     * Tests /v1/vacationRequest -endpoint PUT method
      */
     @Test
     fun testUpdateVacationRequests() {
@@ -110,18 +110,7 @@ class VacationRequestsTest: AbstractTest() {
 
             testBuilder.manager.vacationRequests.updateVacationRequests(
                 id = vacations1[0].id!!,
-                vacationRequest = VacationRequest(
-                    person = 1,
-                    startDate = LocalDate.now().toString(),
-                    endDate = LocalDate.now().plusDays(1).toString(),
-                    days = 2,
-                    type = VacationType.VACATION,
-                    message = "Lomaa!!!",
-                    projectManagerStatus = VacationRequestStatus.APPROVED,
-                    hrManagerStatus = VacationRequestStatus.PENDING,
-                    createdAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
-                    updatedAt = getODT(getThirtyDaysAgoThirdWeek()[2].atStartOfDay()),
-                )
+                vacationRequest = testVacationRequest.copy(projectManagerStatus = VacationRequestStatus.APPROVED)
             )
 
             val vacations2 = testBuilder.manager.vacationRequests.listVacationRequests()
@@ -132,7 +121,7 @@ class VacationRequestsTest: AbstractTest() {
     }
 
     /**
-     * Tests /v1/deleteVacationRequest -endpoint
+     * Tests /v1/vacationRequest{id} -endpoint DELETE method
      */
     @Test
     fun testDeleteVacationRequests() {
@@ -152,7 +141,7 @@ class VacationRequestsTest: AbstractTest() {
     }
 
     /**
-     * Tests /v1/deleteVacationRequest -endpoint
+     * Tests Tests /v1/vacationRequest -endpoint PUT method fail
      */
     @Test
     fun testUpdateVacationRequestsFail() {
@@ -165,7 +154,7 @@ class VacationRequestsTest: AbstractTest() {
     }
 
     /**
-     * Tests /v1/deleteVacationRequest -endpoint
+     * Tests /v1/vacationRequest{id} -endpoint DELETE method fail
      */
     @Test
     fun testDeleteVacationRequestsFail() {

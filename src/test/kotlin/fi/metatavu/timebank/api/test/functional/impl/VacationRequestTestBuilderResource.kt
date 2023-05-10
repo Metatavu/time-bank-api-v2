@@ -44,7 +44,6 @@ class VacationRequestTestBuilderResource(
         )
     }
 
-
     /**
      * Find a VacationRequest
      *
@@ -89,7 +88,6 @@ class VacationRequestTestBuilderResource(
         remove(id)
     }
 
-
     /**
      * Removes closable
      *
@@ -104,7 +102,6 @@ class VacationRequestTestBuilderResource(
             closable.id!! == vacationRequestId
         }
     }
-
 
     /**
      * Asserts that deleting VacationRequest fails with given status

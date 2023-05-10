@@ -27,7 +27,7 @@ class VacationRequestsApi: VacationRequestsApi, AbstractApi() {
 
         val existingVacationRequest = vacationRequestController.findVacationRequest(id)
 
-        if(isAdmin() || loggedUserId == existingVacationRequest.createdBy) {
+        if (isAdmin() || loggedUserId == existingVacationRequest.createdBy) {
 
             vacationRequestController.deleteVacationRequest(id)
 
@@ -48,13 +48,16 @@ class VacationRequestsApi: VacationRequestsApi, AbstractApi() {
 
     override suspend fun updateVacationRequest(id: UUID, vacationRequest: VacationRequest): Response {
         loggedUserId ?: return createUnauthorized("Invalid token!")
-        if(isAdmin() || loggedUserId == vacationRequest.createdBy) {
+
+        val userId = loggedUserId ?: return createUnauthorized("Invalid token!")
+
+        if (isAdmin() || loggedUserId == vacationRequest.createdBy) {
             val existingVacationRequest = vacationRequestController.findVacationRequest(id)
 
             val updatedVacationRequest = vacationRequestController.updateVacationRequest(
                 existingVacationRequest = existingVacationRequest,
                 vacationRequest = vacationRequest,
-                modifiersId = loggedUserId!!
+                modifiersId = userId
             )
 
             return try {
@@ -69,9 +72,10 @@ class VacationRequestsApi: VacationRequestsApi, AbstractApi() {
     override suspend fun createVacationRequest(vacationRequest: VacationRequest): Response {
         loggedUserId ?: return createUnauthorized("Invalid token!")
 
+        val userId = loggedUserId ?: return createUnauthorized("Invalid token!")
         val newVacationRequest = vacationRequestController.createVacationRequest(
             vacationRequest = vacationRequest,
-            creatorsId = loggedUserId!!
+            creatorsId = userId
         )
 
         return try {
