@@ -78,16 +78,16 @@
             <column name="days" type="integer">
                 <constraints nullable="false"/>
             </column>
-            <column name="type" type="varchar(20)">
+            <column name="type" type="varchar(191)">
                 <constraints nullable="false"/>
             </column>
-            <column name="message" type="varchar(100)">
+            <column name="message" type="varchar(191)">
                 <constraints nullable="false"/>
             </column>
-            <column name="projectManagerStatus" type="varchar(20)">
+            <column name="projectManagerStatus" type="varchar(191)">
                 <constraints nullable="false"/>
             </column>
-            <column name="hrManagerStatus" type="varchar(20)">
+            <column name="hrManagerStatus" type="varchar(191)">
                 <constraints nullable="false"/>
             </column>
             <column name="createdAt" type="datetime">
