@@ -1,8 +1,11 @@
 package fi.metatavu.timebank.api.impl.translate
 
 import fi.metatavu.timebank.api.forecast.models.ForecastPerson
+import fi.metatavu.timebank.api.keycloak.KeycloakController
 import fi.metatavu.timebank.model.Person
+import java.util.*
 import javax.enterprise.context.ApplicationScoped
+import javax.inject.Inject
 
 /**
  * Translates ForecastPerson object to Person object
@@ -10,7 +13,14 @@ import javax.enterprise.context.ApplicationScoped
 @ApplicationScoped
 class PersonsTranslator: AbstractTranslator<ForecastPerson, Person>() {
 
+    @Inject
+    lateinit var keycloakController: KeycloakController
+
+
     override fun translate(entity: ForecastPerson): Person {
+        val keycloakUser = keycloakController.findUserByEmail(entity.email)
+        val minimumBillableRate = if (keycloakUser == null) 75 else keycloakController.getUsersMinimumBillableRate(keycloakUser)
+
         return Person(
             id = entity.id,
             firstName = entity.firstName,
@@ -28,7 +38,8 @@ class PersonsTranslator: AbstractTranslator<ForecastPerson, Person>() {
             language = entity.language,
             unspentVacations = entity.unspentVacations,
             spentVacations = entity.spentVacations,
-            minimumBillableRate = entity.minimumBillableRate
+            minimumBillableRate = minimumBillableRate,
+            keycloakId = if (keycloakUser != null) {UUID.fromString(keycloakUser.id)} else null
         )
     }
 
