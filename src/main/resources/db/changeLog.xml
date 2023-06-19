@@ -104,4 +104,31 @@
             </column>
         </createTable>
     </changeSet>
+
+    <changeSet author="Veikko Vilpponen" id="remove_status_columns">
+        <dropColumn tableName="VacationRequest" columnName="projectManagerStatus"/>
+        <dropColumn tableName="VacationRequest" columnName="hrManagerStatus"/>
+        <dropColumn tableName="VacationRequest" columnName="lastUpdatedBy"/>
+    </changeSet>
+
+    <changeSet id="vacationRequestsStatus" author="Veikko Vilpponen">
+        <createTable tableName="vacationrequeststatus">
+            <column name="id" type="binary(16)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="vacationRequestId" type="binary(16)">
+                <constraints foreignKeyName="FK_vacation_request_id" referencedTableName="vacationRequest" referencedColumnNames="id" deleteCascade="true"/>
+            </column>
+            <column name="person" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(191)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="message" type="varchar(191)"/>
+            <column name="updatedAt" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>

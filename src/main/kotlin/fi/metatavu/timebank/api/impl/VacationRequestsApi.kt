@@ -49,15 +49,12 @@ class VacationRequestsApi: VacationRequestsApi, AbstractApi() {
     override suspend fun updateVacationRequest(id: UUID, vacationRequest: VacationRequest): Response {
         loggedUserId ?: return createUnauthorized("Invalid token!")
 
-        val userId = loggedUserId ?: return createUnauthorized("Invalid token!")
-
         if (isAdmin() || loggedUserId == vacationRequest.createdBy) {
             val existingVacationRequest = vacationRequestController.findVacationRequest(id)
 
             val updatedVacationRequest = vacationRequestController.updateVacationRequest(
                 existingVacationRequest = existingVacationRequest,
                 vacationRequest = vacationRequest,
-                modifiersId = userId
             )
 
             return try {
@@ -84,7 +81,6 @@ class VacationRequestsApi: VacationRequestsApi, AbstractApi() {
             createInternalServerError(e.localizedMessage)
         }
     }
-
 
     override suspend fun listVacationRequests(personId: Int?, before: LocalDate?, after: LocalDate?): Response {
         loggedUserId ?: return createUnauthorized("Invalid token!")

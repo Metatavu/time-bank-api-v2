@@ -1,6 +1,5 @@
 package fi.metatavu.timebank.api.persistence.model
 
-import fi.metatavu.timebank.model.VacationRequestStatus
 import fi.metatavu.timebank.model.VacationType
 import java.time.LocalDate
 import java.time.OffsetDateTime
@@ -37,14 +36,6 @@ class VacationRequest(
     var message: String? = null,
 
     @Column
-    @Enumerated(EnumType.STRING)
-    var projectManagerStatus: VacationRequestStatus? = null,
-
-    @Column
-    @Enumerated(EnumType.STRING)
-    var hrManagerStatus: VacationRequestStatus? = null,
-
-    @Column
     var createdAt: OffsetDateTime? = null,
 
     @Column
@@ -52,7 +43,4 @@ class VacationRequest(
 
     @Column
     var updatedAt: OffsetDateTime? = null,
-
-    @Column
-    var lastUpdatedBy: UUID? = null
 )

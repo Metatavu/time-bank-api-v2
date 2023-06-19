@@ -48,12 +48,9 @@ class VacationRequestController {
                 days = vacationRequest.days,
                 type = vacationRequest.type,
                 message = vacationRequest.message,
-                projectManagerStatus = vacationRequest.projectManagerStatus,
-                hrManagerStatus = vacationRequest.hrManagerStatus,
                 createdAt = vacationRequest.createdAt,
                 createdBy = creatorsId,
                 updatedAt = vacationRequest.updatedAt,
-                lastUpdatedBy = creatorsId
             )
         )
     }
@@ -65,16 +62,13 @@ class VacationRequestController {
      * @param vacationRequest updated VacationRequest
      * @return persisted VacationRequest
      */
-    suspend fun updateVacationRequest(existingVacationRequest: VacationRequest, vacationRequest: fi.metatavu.timebank.model.VacationRequest, modifiersId: UUID): VacationRequest {
+    suspend fun updateVacationRequest(existingVacationRequest: VacationRequest, vacationRequest: fi.metatavu.timebank.model.VacationRequest): VacationRequest {
         existingVacationRequest.startDate = vacationRequest.startDate
         existingVacationRequest.endDate = vacationRequest.endDate
         existingVacationRequest.days = vacationRequest.days
         existingVacationRequest.type = vacationRequest.type
         existingVacationRequest.message = vacationRequest.message
-        existingVacationRequest.projectManagerStatus = vacationRequest.projectManagerStatus
-        existingVacationRequest.hrManagerStatus = vacationRequest.hrManagerStatus
         existingVacationRequest.updatedAt = vacationRequest.updatedAt
-        existingVacationRequest.lastUpdatedBy = modifiersId
 
         return vacationsRequestsRepository.persistSuspending(existingVacationRequest)
     }
