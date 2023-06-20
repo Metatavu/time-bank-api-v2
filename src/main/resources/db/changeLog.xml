@@ -108,6 +108,7 @@
     <changeSet author="Veikko Vilpponen" id="remove_status_columns">
         <dropColumn tableName="VacationRequest" columnName="projectManagerStatus"/>
         <dropColumn tableName="VacationRequest" columnName="hrManagerStatus"/>
+        <dropColumn tableName="VacationRequest" columnName="createdBy"/>
         <dropColumn tableName="VacationRequest" columnName="lastUpdatedBy"/>
     </changeSet>
 

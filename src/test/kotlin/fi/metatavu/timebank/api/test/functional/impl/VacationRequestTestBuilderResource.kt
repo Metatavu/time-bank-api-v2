@@ -20,7 +20,7 @@ class VacationRequestTestBuilderResource(
 ): ApiTestBuilderResource<VacationRequest, ApiClient?>(testBuilder, apiClient) {
 
     override fun clean(v: VacationRequest) {
-        api.deleteVacationRequest(v.id!!)
+        api.deleteVacationRequest(v.id!!, personId = v.person)
     }
 
     override fun getApi(): VacationRequestsApi {
@@ -83,8 +83,8 @@ class VacationRequestTestBuilderResource(
      *
      * @param id id of the vacationRequest
      */
-    fun deleteVacationRequests(id: UUID) {
-        api.deleteVacationRequest(id)
+    fun deleteVacationRequests(id: UUID, personId: Int) {
+        api.deleteVacationRequest(id = id, personId = personId)
         remove(id)
     }
 
@@ -109,9 +109,9 @@ class VacationRequestTestBuilderResource(
      * @param expectedStatus expected status code
      * @param id entryId
      */
-    fun assertDeleteFail(expectedStatus: Int, id: UUID) {
+    fun assertDeleteFail(expectedStatus: Int, id: UUID, personId: Int) {
         try {
-            api.deleteVacationRequest(id = id)
+            api.deleteVacationRequest(id = id, personId = personId)
             Assert.fail(String.format("Expected fail with status, $expectedStatus"))
         } catch (ex: ClientException) {
             assertClientExceptionStatus(expectedStatus, ex)

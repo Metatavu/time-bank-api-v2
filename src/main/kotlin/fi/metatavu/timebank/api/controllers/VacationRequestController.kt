@@ -38,7 +38,7 @@ class VacationRequestController {
      * @param vacationRequest VacationRequest
      * @return persisted VacationRequest
      */
-    suspend fun createVacationRequest(vacationRequest: fi.metatavu.timebank.model.VacationRequest, creatorsId: UUID): VacationRequest {
+    suspend fun createVacationRequest(vacationRequest: fi.metatavu.timebank.model.VacationRequest): VacationRequest {
         return vacationsRequestsRepository.persistSuspending(
             VacationRequest(
                 id = UUID.randomUUID(),
@@ -49,7 +49,6 @@ class VacationRequestController {
                 type = vacationRequest.type,
                 message = vacationRequest.message,
                 createdAt = vacationRequest.createdAt,
-                createdBy = creatorsId,
                 updatedAt = vacationRequest.updatedAt,
             )
         )

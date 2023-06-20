@@ -23,6 +23,7 @@ class VacationRequestStatusApi: VacationRequestStatusApi, AbstractApi() {
 
     override suspend fun listVacationRequestStatuses(vacationRequestId: UUID?, personId: Int?): Response {
         loggedUserId ?: return createUnauthorized("Invalid token!")
+
         val statuses = vacationRequestStatusController.listVacationRequestStatus(vacationRequestId = vacationRequestId, personId = personId)
 
         return createOk(entity = vacationRequestStatusTranslator.translate(statuses))
@@ -31,9 +32,9 @@ class VacationRequestStatusApi: VacationRequestStatusApi, AbstractApi() {
     override suspend fun updateVacationRequestStatus(id: UUID, vacationRequestStatus: VacationRequestStatus): Response {
         loggedUserId ?: return createUnauthorized("Invalid token!")
 
-        if (isAdmin()) {
-            val existingStatus = vacationRequestStatusController.findVacationRequestStatus(id)
+        val existingStatus = vacationRequestStatusController.findVacationRequestStatus(id)
 
+        if (vacationRequestStatus.person == existingStatus.person) {
             val updatedStatus = vacationRequestStatusController.updateVacationRequestStatus(
                 existingStatus = existingStatus,
                 vacationRequestStatus = vacationRequestStatus,
@@ -63,10 +64,13 @@ class VacationRequestStatusApi: VacationRequestStatusApi, AbstractApi() {
         return createUnauthorized("Permission missing")
     }
 
-    override suspend fun deleteVacationRequestStatus(id: UUID): Response {
+    override suspend fun deleteVacationRequestStatus(id: UUID, personId: Int): Response {
         loggedUserId ?: return createUnauthorized("Invalid token!")
 
-        if (isAdmin()) {
+        val existingStatus = vacationRequestStatusController.findVacationRequestStatus(id)
+
+        if (personId == existingStatus.person) {
+
             vacationRequestStatusController.deleteVacationRequestStatus(id)
 
             return createNoContent()

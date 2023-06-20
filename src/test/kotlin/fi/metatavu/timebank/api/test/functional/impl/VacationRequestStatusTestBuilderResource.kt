@@ -5,7 +5,6 @@ import fi.metatavu.timebank.api.test.functional.TestBuilder
 import fi.metatavu.timebank.api.test.functional.settings.ApiTestSettings
 import fi.metatavu.timebank.test.client.apis.VacationRequestStatusApi
 import fi.metatavu.timebank.test.client.infrastructure.ApiClient
-import fi.metatavu.timebank.test.client.models.VacationRequest
 import fi.metatavu.timebank.test.client.models.VacationRequestStatus
 import java.util.*
 
@@ -19,7 +18,7 @@ class VacationRequestStatusTestBuilderResource(
 ): ApiTestBuilderResource<VacationRequestStatus, ApiClient?>(testBuilder, apiClient) {
 
     override fun clean(v: VacationRequestStatus) {
-        api.deleteVacationRequestStatus(v.id!!)
+        api.deleteVacationRequestStatus(v.id!!, v.person)
     }
 
     override fun getApi(): VacationRequestStatusApi {
@@ -76,7 +75,7 @@ class VacationRequestStatusTestBuilderResource(
      */
     private fun remove(vacationRequestStatusId: UUID) {
         removeCloseable { closable ->
-            if (closable !is VacationRequest) {
+            if (closable !is VacationRequestStatus) {
                 return@removeCloseable false
             }
 
@@ -89,8 +88,8 @@ class VacationRequestStatusTestBuilderResource(
      *
      * @param id id of the vacationRequestStatus
      */
-    fun deleteVacationRequestStatus(id: UUID) {
-        api.deleteVacationRequestStatus(id)
+    fun deleteVacationRequestStatus(id: UUID, personId: Int) {
+        api.deleteVacationRequestStatus(id = id, personId = personId)
         remove(id)
     }
 

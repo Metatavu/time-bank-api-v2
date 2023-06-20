@@ -130,7 +130,7 @@ class VacationRequestStatusTest: AbstractTest() {
             testBuilder.manager.vacationRequestStatus.updateVacationRequestStatus(
                 id = status.id!!,
                 vacationRequestStatus = VacationRequestStatus(
-                person = 1,
+                person = 123456,
                 vacationRequestId = request.id,
                 status = VacationRequestStatuses.APPROVED,
                 message = "Mene lomalle",
@@ -163,9 +163,10 @@ class VacationRequestStatusTest: AbstractTest() {
             val vacations1 = testBuilder.manager.vacationRequestStatus.listVacationRequestStatus()
             assertEquals(1, vacations1.size)
 
-            testBuilder.manager.vacationRequestStatus.deleteVacationRequestStatus(status.id!!)
+            testBuilder.manager.vacationRequestStatus.deleteVacationRequestStatus(status.id!!, status.person)
 
             val vacations2 = testBuilder.manager.vacationRequestStatus.listVacationRequestStatus()
+
             assertEquals(0, vacations2.size)
         }
     }

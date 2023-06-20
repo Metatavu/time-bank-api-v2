@@ -39,8 +39,5 @@ class VacationRequest(
     var createdAt: OffsetDateTime? = null,
 
     @Column
-    var createdBy: UUID? = null,
-
-    @Column
     var updatedAt: OffsetDateTime? = null,
 )

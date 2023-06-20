@@ -22,12 +22,12 @@ class VacationRequestsApi: VacationRequestsApi, AbstractApi() {
     @Inject
     lateinit var vacationRequestTranslator: VacationRequestTranslator
 
-    override suspend fun deleteVacationRequest(id: UUID): Response {
+    override suspend fun deleteVacationRequest(id: UUID, personId: Int): Response {
         loggedUserId ?: return createUnauthorized("Invalid token!")
 
         val existingVacationRequest = vacationRequestController.findVacationRequest(id)
 
-        if (isAdmin() || loggedUserId == existingVacationRequest.createdBy) {
+        if (personId == existingVacationRequest.person) {
 
             vacationRequestController.deleteVacationRequest(id)
 
@@ -49,9 +49,9 @@ class VacationRequestsApi: VacationRequestsApi, AbstractApi() {
     override suspend fun updateVacationRequest(id: UUID, vacationRequest: VacationRequest): Response {
         loggedUserId ?: return createUnauthorized("Invalid token!")
 
-        if (isAdmin() || loggedUserId == vacationRequest.createdBy) {
-            val existingVacationRequest = vacationRequestController.findVacationRequest(id)
+        val existingVacationRequest = vacationRequestController.findVacationRequest(id)
 
+        if (vacationRequest.person == existingVacationRequest.person) {
             val updatedVacationRequest = vacationRequestController.updateVacationRequest(
                 existingVacationRequest = existingVacationRequest,
                 vacationRequest = vacationRequest,
@@ -69,10 +69,8 @@ class VacationRequestsApi: VacationRequestsApi, AbstractApi() {
     override suspend fun createVacationRequest(vacationRequest: VacationRequest): Response {
         loggedUserId ?: return createUnauthorized("Invalid token!")
 
-        val userId = loggedUserId ?: return createUnauthorized("Invalid token!")
         val newVacationRequest = vacationRequestController.createVacationRequest(
-            vacationRequest = vacationRequest,
-            creatorsId = userId
+            vacationRequest = vacationRequest
         )
 
         return try {

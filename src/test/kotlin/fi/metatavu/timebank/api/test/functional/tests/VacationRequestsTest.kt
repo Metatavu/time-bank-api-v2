@@ -38,7 +38,7 @@ class VacationRequestsTest: AbstractTest() {
     }
 
     val testVacationRequest = VacationRequest(
-    person = 1,
+    person = 123456,
     startDate = LocalDate.now().toString(),
     endDate = LocalDate.now().plusDays(1).toString(),
     days = 2,
@@ -57,7 +57,7 @@ class VacationRequestsTest: AbstractTest() {
             val createdVacation = testBuilder.manager.vacationRequests.createVacationRequests(testVacationRequest)
             val vacations = testBuilder.manager.vacationRequests.findVacationRequests(createdVacation.id!!)
 
-            assertEquals(1, vacations.person)
+            assertEquals(123456, vacations.person)
             assertEquals(LocalDate.now().toString(), vacations.startDate)
             assertEquals(LocalDate.now().plusDays(1).toString(), vacations.endDate)
             assertEquals(2, vacations.days)
@@ -74,9 +74,9 @@ class VacationRequestsTest: AbstractTest() {
         createTestBuilder().use { testBuilder ->
             testBuilder.manager.vacationRequests.createVacationRequests(testVacationRequest)
 
-            val vacations = testBuilder.manager.vacationRequests.listVacationRequests(personId = 1)
+            val vacations = testBuilder.manager.vacationRequests.listVacationRequests(personId = 123456)
 
-            assertEquals(1, vacations[0].person)
+            assertEquals(123456, vacations[0].person)
             assertEquals(LocalDate.now().toString(), vacations[0].startDate)
             assertEquals(LocalDate.now().plusDays(1).toString(), vacations[0].endDate)
             assertEquals(2, vacations[0].days)
@@ -92,7 +92,7 @@ class VacationRequestsTest: AbstractTest() {
     fun testUpdateVacationRequests() {
         createTestBuilder().use { testBuilder ->
             testBuilder.userA.vacationRequests.createVacationRequests(testVacationRequest)
-            val vacations1 = testBuilder.manager.vacationRequests.listVacationRequests(personId = 1)
+            val vacations1 = testBuilder.manager.vacationRequests.listVacationRequests(personId = 123456)
 
             testBuilder.manager.vacationRequests.updateVacationRequests(
                 id = vacations1[0].id!!,
@@ -113,13 +113,13 @@ class VacationRequestsTest: AbstractTest() {
         createTestBuilder().use { testBuilder ->
             testBuilder.manager.vacationRequests.createVacationRequests(testVacationRequest)
 
-            val vacations1 = testBuilder.manager.vacationRequests.listVacationRequests(personId = 1)
+            val vacations1 = testBuilder.manager.vacationRequests.listVacationRequests(personId = 123456)
 
             assertEquals(1, vacations1.size)
 
-            testBuilder.manager.vacationRequests.deleteVacationRequests(vacations1[0].id!!)
+            testBuilder.manager.vacationRequests.deleteVacationRequests(vacations1[0].id!!, personId = vacations1[0].person)
 
-            val vacations2 = testBuilder.manager.vacationRequests.listVacationRequests(personId = 1)
+            val vacations2 = testBuilder.manager.vacationRequests.listVacationRequests(personId = 123456)
 
             assertEquals(0, vacations2.size)
         }
@@ -132,9 +132,18 @@ class VacationRequestsTest: AbstractTest() {
     fun testUpdateVacationRequestsFail() {
         createTestBuilder().use { testBuilder ->
             testBuilder.manager.vacationRequests.createVacationRequests(testVacationRequest)
-            val vacations1 = testBuilder.manager.vacationRequests.listVacationRequests(personId = 1)
+            val vacations1 = testBuilder.manager.vacationRequests.listVacationRequests(personId = 123456)
 
-            testBuilder.userA.vacationRequests.assertUpdateFail(401, vacations1[0].id!!, testVacationRequest )
+            testBuilder.userA.vacationRequests.assertUpdateFail(401, vacations1[0].id!!, VacationRequest(
+                person = 222222,
+                startDate = LocalDate.now().toString(),
+                endDate = LocalDate.now().plusDays(1).toString(),
+                days = 2,
+                type = VacationType.VACATION,
+                message = "Lomaa!!!",
+                createdAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
+                updatedAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
+            ) )
         }
     }
 
@@ -146,9 +155,9 @@ class VacationRequestsTest: AbstractTest() {
         createTestBuilder().use { testBuilder ->
             testBuilder.manager.vacationRequests.createVacationRequests(testVacationRequest)
 
-            val vacations = testBuilder.manager.vacationRequests.listVacationRequests(personId = 1)
+            val vacations = testBuilder.manager.vacationRequests.listVacationRequests(personId = 123456)
 
-            testBuilder.userA.vacationRequests.assertDeleteFail(401, vacations[0].id!!)
+            testBuilder.userA.vacationRequests.assertDeleteFail(401, vacations[0].id!!, personId = 222222)
         }
     }
 }
