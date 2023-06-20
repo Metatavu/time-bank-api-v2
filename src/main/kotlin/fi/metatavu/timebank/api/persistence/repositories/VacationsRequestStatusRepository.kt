@@ -36,7 +36,5 @@ class VacationsRequestStatusRepository: AbstractRepository<VacationRequestStatus
 
         return listWithParameters(stringBuilder.toString(), parameters)
     }
-
-
 }
 

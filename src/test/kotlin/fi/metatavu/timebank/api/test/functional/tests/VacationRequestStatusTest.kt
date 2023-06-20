@@ -57,7 +57,6 @@ class VacationRequestStatusTest: AbstractTest() {
     fun testCreateVacationRequestStatus() {
         createTestBuilder().use { testBuilder ->
             val request = testBuilder.manager.vacationRequests.createVacationRequests(testVacationRequest)
-
             val status = testBuilder.manager.vacationRequestStatus.createVacationRequestStatus(
                 VacationRequestStatus(
                     person = 123456,
@@ -74,7 +73,6 @@ class VacationRequestStatusTest: AbstractTest() {
             assertEquals(request.id, foundStatus.vacationRequestId)
             assertEquals(VacationRequestStatuses.APPROVED, foundStatus.status)
             assertEquals("Hyväksytty", foundStatus.message)
-
         }
     }
 
@@ -113,7 +111,6 @@ class VacationRequestStatusTest: AbstractTest() {
     fun testUpdateVacationRequestStatus() {
         createTestBuilder().use { testBuilder ->
             val request = testBuilder.manager.vacationRequests.createVacationRequests(testVacationRequest)
-
             val status = testBuilder.manager.vacationRequestStatus.createVacationRequestStatus(
                 VacationRequestStatus(
                     person = 123456,
@@ -149,7 +146,6 @@ class VacationRequestStatusTest: AbstractTest() {
     fun testDeleteVacationRequestStatus() {
         createTestBuilder().use { testBuilder ->
             val request = testBuilder.manager.vacationRequests.createVacationRequests(testVacationRequest)
-
             val status = testBuilder.manager.vacationRequestStatus.createVacationRequestStatus(
                 VacationRequestStatus(
                     person = 123456,
