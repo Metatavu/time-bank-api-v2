@@ -17,32 +17,16 @@ class VacationRequestController {
     lateinit var vacationsRequestsRepository: VacationsRequestsRepository
 
     /**
-     * Gets persisted VacationRequests
-     *
-     * @param personId personId
-     * @param before before
-     * @param after after
-     * @return List of VacationRequests
-     */
-    suspend fun listVacationRequests(personId: Int?, before: LocalDate?, after: LocalDate?): List<VacationRequest> {
-        return vacationsRequestsRepository.listVacationRequest(
-            personId = personId,
-            before = before,
-            after = after
-        )
-    }
-
-    /**
      * Creates and persists new VacationRequest
      *
      * @param vacationRequest VacationRequest
      * @return persisted VacationRequest
      */
-    suspend fun createVacationRequest(vacationRequest: fi.metatavu.timebank.model.VacationRequest): VacationRequest {
+    suspend fun createVacationRequest(vacationRequest: fi.metatavu.timebank.model.VacationRequest, creatorsId: UUID): VacationRequest {
         return vacationsRequestsRepository.persistSuspending(
             VacationRequest(
                 id = UUID.randomUUID(),
-                person = vacationRequest.person,
+                person = creatorsId,
                 startDate = vacationRequest.startDate,
                 endDate = vacationRequest.endDate,
                 days = vacationRequest.days,
@@ -52,6 +36,32 @@ class VacationRequestController {
                 updatedAt = vacationRequest.updatedAt,
             )
         )
+    }
+
+    /**
+     * Lists persisted VacationRequests
+     *
+     * @param personId personId
+     * @param before before date
+     * @param after after date
+     * @return List of VacationRequests
+     */
+    suspend fun listVacationRequests(personId: UUID?, before: LocalDate?, after: LocalDate?): List<VacationRequest> {
+        return vacationsRequestsRepository.listVacationRequest(
+            personId = personId,
+            before = before,
+            after = after
+        )
+    }
+
+    /**
+     * Finds vacation request by id
+     *
+     * @param id id
+     * @return persisted VacationRequest
+     */
+    suspend fun findVacationRequest(id: UUID): VacationRequest? {
+        return vacationsRequestsRepository.findSuspending(id)
     }
 
     /**
@@ -70,16 +80,6 @@ class VacationRequestController {
         existingVacationRequest.updatedAt = vacationRequest.updatedAt
 
         return vacationsRequestsRepository.persistSuspending(existingVacationRequest)
-    }
-
-    /**
-     * Finds vacation request by id
-     *
-     * @param id id
-     * @return persisted VacationRequest
-     */
-    suspend fun findVacationRequest(id: UUID): VacationRequest {
-       return vacationsRequestsRepository.findSuspending(id)
     }
 
     /**

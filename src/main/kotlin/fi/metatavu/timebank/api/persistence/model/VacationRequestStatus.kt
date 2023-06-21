@@ -18,18 +18,21 @@ class VacationRequestStatus(
     @Column
     var vacationRequestId: UUID? = null,
 
-//    @ManyToOne
-//    var vacationRequest: VacationRequest? = null,
-
-    @Column
-    var person: Int? = null,
-
     @Column
     @Enumerated(EnumType.STRING)
     var status: VacationRequestStatuses? = null,
 
     @Column
     var message: String? = null,
+
+    @Column
+    var createdBy: UUID? = null,
+
+    @Column
+    var createdAt: OffsetDateTime? = null,
+
+    @Column
+    var updatedBy: UUID? = null,
 
     @Column
     var updatedAt: OffsetDateTime? = null,

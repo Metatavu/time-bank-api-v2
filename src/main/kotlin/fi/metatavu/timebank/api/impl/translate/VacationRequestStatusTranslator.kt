@@ -13,10 +13,12 @@ class VacationRequestStatusTranslator: AbstractTranslator<VacationRequestStatus,
         return fi.metatavu.timebank.model.VacationRequestStatus(
             id = entity.id,
             vacationRequestId = entity.vacationRequestId!!,
-            person = entity.person!!,
             status = entity.status!!,
             message = entity.message,
-            updatedAt = entity.updatedAt!!
+            createdBy = entity.createdBy,
+            createdAt = entity.createdAt,
+            updatedBy = entity.updatedBy,
+            updatedAt = entity.updatedAt
         )
     }
 

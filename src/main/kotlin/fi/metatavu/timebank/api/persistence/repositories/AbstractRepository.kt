@@ -19,7 +19,7 @@ abstract class AbstractRepository<T, E>: PanacheRepositoryBase<T, E,> {
         return Panache.withTransaction { persist(entity) }.awaitSuspending()
     }
 
-    suspend fun findSuspending(id: E): T {
-        return Panache.withTransaction { findById(id)}.awaitSuspending()
+    suspend fun findSuspending(id: E): T? {
+        return findById(id).awaitSuspending()
     }
 }

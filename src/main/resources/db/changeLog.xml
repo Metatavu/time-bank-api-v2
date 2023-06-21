@@ -110,26 +110,29 @@
         <dropColumn tableName="VacationRequest" columnName="hrManagerStatus"/>
         <dropColumn tableName="VacationRequest" columnName="createdBy"/>
         <dropColumn tableName="VacationRequest" columnName="lastUpdatedBy"/>
+        <modifyDataType columnName="person" newDataType="binary(16)" tableName="VacationRequest"/>
     </changeSet>
 
     <changeSet id="vacationRequestsStatus" author="Veikko Vilpponen">
-        <createTable tableName="vacationrequeststatus">
+        <createTable tableName="VacationRequestStatus">
             <column name="id" type="binary(16)">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="vacationRequestId" type="binary(16)">
                 <constraints foreignKeyName="FK_vacation_request_id" referencedTableName="vacationRequest" referencedColumnNames="id" deleteCascade="true"/>
             </column>
-            <column name="person" type="integer">
-                <constraints nullable="false"/>
-            </column>
             <column name="status" type="varchar(191)">
                 <constraints nullable="false"/>
             </column>
             <column name="message" type="varchar(191)"/>
-            <column name="updatedAt" type="datetime">
+            <column name="createdAt" type="datetime">
                 <constraints nullable="false"/>
             </column>
+            <column name="createdBy" type="binary(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updatedAt" type="datetime"/>
+            <column name="updatedBy" type="binary(16)"/>
         </createTable>
     </changeSet>
 </databaseChangeLog>

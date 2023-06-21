@@ -15,21 +15,15 @@ class VacationsRequestStatusRepository: AbstractRepository<VacationRequestStatus
      * Lists VacationRequestStatuses based on given parameters
      *
      * @param vacationRequestId id of the VacationRequest
-     * @param personId persons id
      * @return List of VacationRequests
      */
-    suspend fun listVacationRequestStatus(vacationRequestId: String? ,personId: Int?): List<VacationRequestStatus> {
+    suspend fun listVacationRequestStatus(vacationRequestId: UUID?): List<VacationRequestStatus> {
         val stringBuilder = StringBuilder()
         val parameters = Parameters()
 
         if (vacationRequestId != null) {
             stringBuilder.append("vacationRequestId = :vacationRequestId")
             parameters.and("vacationRequestId", vacationRequestId)
-        }
-
-        if (personId != null) {
-            stringBuilder.append(if (stringBuilder.isNotEmpty()) " and person = :personId" else "person = :personId")
-            parameters.and("personId", personId)
         }
 
         stringBuilder.append(" order by vacationRequestId DESC")

@@ -3,11 +3,11 @@ package fi.metatavu.timebank.api.impl
 import fi.metatavu.timebank.api.controllers.VacationRequestStatusController
 import fi.metatavu.timebank.api.impl.translate.VacationRequestStatusTranslator
 import fi.metatavu.timebank.model.VacationRequestStatus
+import fi.metatavu.timebank.spec.VacationRequestStatusApi
 import javax.enterprise.context.RequestScoped
 import java.util.*
 import javax.inject.Inject
 import javax.ws.rs.core.Response
-import fi.metatavu.timebank.spec.VacationRequestStatusApi
 
 /**
  * API implementation for VacationRequestStatus API
@@ -21,70 +21,56 @@ class VacationRequestStatusApi: VacationRequestStatusApi, AbstractApi() {
     @Inject
     lateinit var vacationRequestStatusTranslator: VacationRequestStatusTranslator
 
-    override suspend fun listVacationRequestStatuses(vacationRequestId: UUID?, personId: Int?): Response {
+    override suspend fun createVacationRequestStatus(id: UUID, vacationRequestStatus: VacationRequestStatus): Response {
+        val userId = loggedUserId ?: return createUnauthorized("Invalid token!")
+
+        if (!isAdmin()) return createForbidden("Permission missing")
+
+        val newStatus = vacationRequestStatusController.createVacationRequestStatus(vacationRequestStatus, userId)
+
+        return createCreated(entity = vacationRequestStatusTranslator.translate(newStatus))
+    }
+
+    override suspend fun listVacationRequestStatuses(id: UUID): Response {
         loggedUserId ?: return createUnauthorized("Invalid token!")
 
-        val statuses = vacationRequestStatusController.listVacationRequestStatus(vacationRequestId = vacationRequestId, personId = personId)
+        val statuses = vacationRequestStatusController.listVacationRequestStatus(vacationRequestId = id)
 
         return createOk(entity = vacationRequestStatusTranslator.translate(statuses))
     }
 
-    override suspend fun updateVacationRequestStatus(id: UUID, vacationRequestStatus: VacationRequestStatus): Response {
+    override suspend fun findVacationRequestStatus(id: UUID, statusId: UUID): Response {
         loggedUserId ?: return createUnauthorized("Invalid token!")
 
-        val existingStatus = vacationRequestStatusController.findVacationRequestStatus(id)
+        val foundStatus = vacationRequestStatusController.findVacationRequestStatus(statusId) ?: return createNotFound("Vacation request status not found")
 
-        if (vacationRequestStatus.person == existingStatus.person) {
-            val updatedStatus = vacationRequestStatusController.updateVacationRequestStatus(
-                existingStatus = existingStatus,
-                vacationRequestStatus = vacationRequestStatus,
-            )
-
-            return try {
-                return createOk(entity = vacationRequestStatusTranslator.translate(updatedStatus))
-            } catch (e: Error) {
-                createInternalServerError(e.localizedMessage)
-            }
-        }
-        return createUnauthorized("Permission missing")
+        return createOk(vacationRequestStatusTranslator.translate(foundStatus))
     }
 
-    override suspend fun createVacationRequestStatus(vacationRequestStatus: VacationRequestStatus): Response {
-        loggedUserId ?: return createUnauthorized("Invalid token!")
+    override suspend fun updateVacationRequestStatus(id: UUID, statusId: UUID, vacationRequestStatus: VacationRequestStatus): Response {
+        val userId = loggedUserId ?: return createUnauthorized("Invalid token!")
+        val existingStatus = vacationRequestStatusController.findVacationRequestStatus(statusId) ?: return createNotFound("Vacation request status not found")
 
-        if (isAdmin()) {
-            val newStatus = vacationRequestStatusController.createVacationRequestStatus(vacationRequestStatus)
+        if (existingStatus.createdBy != userId) return createForbidden("You can only edit your own statuses")
 
-            return try {
-                createCreated(entity = vacationRequestStatusTranslator.translate(newStatus))
-            } catch (e: Error) {
-                createInternalServerError(e.localizedMessage)
-            }
-        }
-        return createUnauthorized("Permission missing")
+        val updatedStatus = vacationRequestStatusController.updateVacationRequestStatus(
+            existingStatus = existingStatus,
+            vacationRequestStatus = vacationRequestStatus,
+            updaterId = userId
+        )
+
+        return createOk(entity = vacationRequestStatusTranslator.translate(updatedStatus))
+
     }
 
-    override suspend fun deleteVacationRequestStatus(id: UUID, personId: Int): Response {
-        loggedUserId ?: return createUnauthorized("Invalid token!")
+    override suspend fun deleteVacationRequestStatus(id: UUID, statusId: UUID): Response {
+        val userId = loggedUserId ?: return createUnauthorized("Invalid token!")
+        val existingStatus = vacationRequestStatusController.findVacationRequestStatus(statusId) ?: return createNotFound("Vacation request status not found")
 
-        val existingStatus = vacationRequestStatusController.findVacationRequestStatus(id)
+        if (existingStatus.createdBy != userId) return createForbidden("You can only delete your own statuses")
 
-        if (personId == existingStatus.person) {
+        vacationRequestStatusController.deleteVacationRequestStatus(statusId)
 
-            vacationRequestStatusController.deleteVacationRequestStatus(id)
-
-            return createNoContent()
-        }
-        return createUnauthorized("Permission missing")
-    }
-
-    override suspend fun findVacationRequestStatus(id: UUID): Response {
-        loggedUserId ?: return createUnauthorized("Invalid token!")
-
-        return try {
-            return createOk(vacationRequestStatusController.findVacationRequestStatus(id))
-        } catch (e: Error) {
-            createInternalServerError(e.localizedMessage)
-        }
+        return createNoContent()
     }
 }

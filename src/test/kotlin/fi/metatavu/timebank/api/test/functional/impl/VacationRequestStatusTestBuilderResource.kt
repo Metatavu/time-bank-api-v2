@@ -5,7 +5,9 @@ import fi.metatavu.timebank.api.test.functional.TestBuilder
 import fi.metatavu.timebank.api.test.functional.settings.ApiTestSettings
 import fi.metatavu.timebank.test.client.apis.VacationRequestStatusApi
 import fi.metatavu.timebank.test.client.infrastructure.ApiClient
+import fi.metatavu.timebank.test.client.infrastructure.ClientException
 import fi.metatavu.timebank.test.client.models.VacationRequestStatus
+import org.junit.Assert
 import java.util.*
 
 /**
@@ -18,10 +20,10 @@ class VacationRequestStatusTestBuilderResource(
 ): ApiTestBuilderResource<VacationRequestStatus, ApiClient?>(testBuilder, apiClient) {
 
     override fun clean(v: VacationRequestStatus) {
-        api.deleteVacationRequestStatus(v.id!!, v.person)
+        api.deleteVacationRequestStatus(v.vacationRequestId!!, v.id!!)
     }
 
-    override fun getApi(): VacationRequestStatusApi {
+    override fun getApi(): VacationRequestStatusApi{
         ApiClient.accessToken = accessTokenProvider?.accessToken
         return VacationRequestStatusApi(ApiTestSettings.apiBasePath)
     }
@@ -29,43 +31,48 @@ class VacationRequestStatusTestBuilderResource(
     /**
      * Create a new VacationRequestStatus
      *
+     * @param requestId Id of VacationRequest related to the status
      * @param status VacationRequestStatus body
      * @return Created vacationRequest
      */
-    fun createVacationRequestStatus(status: VacationRequestStatus): VacationRequestStatus {
-        return addClosable(api.createVacationRequestStatus(status))
+    fun createVacationRequestStatus(requestId: UUID, status: VacationRequestStatus): VacationRequestStatus {
+        return addClosable(api.createVacationRequestStatus(requestId, status))
     }
 
     /**
      * List all VacationRequestStatuses
      *
-     * @param vacationRequestId optional id of VacationRequest
-     * @param personId optional personId
+     * @param requestId Id of VacationRequest related to the status
      * @return List of VacationRequests
      */
-    fun listVacationRequestStatus(vacationRequestId: UUID? = null, personId: Int? = null): Array<VacationRequestStatus> {
-        return api.listVacationRequestStatuses(vacationRequestId = vacationRequestId, personId = personId)
+    fun listVacationRequestStatus(requestId: UUID): Array<VacationRequestStatus> {
+        return api.listVacationRequestStatuses(requestId)
     }
 
     /**
      * Find a VacationRequestStatus
      *
-     * @param id id of the VacationRequestStatus
+     * @param requestId Id of VacationRequest related to the status
+     * @param statusId id of vacationRequestStatus
      * @return found VacationRequestStatus
      */
-    fun findVacationRequestStatus(id: UUID): VacationRequestStatus {
-        return api.findVacationRequestStatus(id)
+    fun findVacationRequestStatus(requestId: UUID, statusId: UUID): VacationRequestStatus {
+        return api.findVacationRequestStatus(requestId, statusId)
     }
 
     /**
      * Update VacationRequestStatus
      *
-     * @param id id of vacationRequestStatus being updated
+     * @param requestId Id of VacationRequest related to the status
+     * @param statusId id of vacationRequestStatus being updated
      * @param vacationRequestStatus updated vacationRequestStatus
      * @return Updated vacationRequestStatus
      */
-    fun updateVacationRequestStatus(id: UUID, vacationRequestStatus: VacationRequestStatus): VacationRequestStatus {
-        return api.updateVacationRequestStatus(id = id, vacationRequestStatus = vacationRequestStatus)
+    fun updateVacationRequestStatus(requestId: UUID, statusId: UUID, vacationRequestStatus: VacationRequestStatus): VacationRequestStatus {
+        return api.updateVacationRequestStatus(
+            id = requestId,
+            statusId = statusId,
+            vacationRequestStatus = vacationRequestStatus)
     }
 
     /**
@@ -86,13 +93,45 @@ class VacationRequestStatusTestBuilderResource(
     /**
      * Delete persisted VacationRequestStatus
      *
-     * @param id id of the vacationRequestStatus
+     * @param requestId Id of VacationRequest related to the status
+     * @param statusId id of vacationRequestStatus being updated
      */
-    fun deleteVacationRequestStatus(id: UUID, personId: Int) {
-        api.deleteVacationRequestStatus(id = id, personId = personId)
-        remove(id)
+    fun deleteVacationRequestStatus(requestId: UUID, statusId: UUID) {
+        api.deleteVacationRequestStatus(requestId, statusId)
+        remove(statusId)
     }
 
+    /**
+     * Asserts that deleting VacationRequest fails with given status
+     *
+     * @param expectedStatus expected status code
+     * @param requestId Id of VacationRequest related to the status
+     * @param statusId id of vacationRequestStatus being updated
+     */
+    fun assertVacationStatusDeleteFail(expectedStatus: Int, requestId: UUID, statusId: UUID) {
+        try {
+            api.deleteVacationRequestStatus(requestId, statusId)
+            Assert.fail(String.format("Expected fail with status, $expectedStatus"))
+        } catch (ex: ClientException) {
+            assertClientExceptionStatus(expectedStatus, ex)
+        }
+    }
 
+    /**
+     * Asserts that updating VacationRequest fails with given status
+     *
+     * @param expectedStatus expected status code
+     * @param requestId Id of VacationRequest related to the status
+     * @param statusId id of vacationRequestStatus being updated
+     * @param vacationRequestStatus updated vacationRequestStatus
+     */
+    fun assertVacationStatusUpdateFail(expectedStatus: Int, requestId: UUID, statusId: UUID, vacationRequestStatus: VacationRequestStatus) {
+        try {
+            api.updateVacationRequestStatus(requestId, statusId, vacationRequestStatus)
+            Assert.fail(String.format("Expected fail with status, $expectedStatus"))
+        } catch (ex: ClientException) {
+            assertClientExceptionStatus(expectedStatus, ex)
+        }
+    }
 }
 
