@@ -34,7 +34,7 @@ class VacationRequestTestBuilderResource(
      * @param vacationRequest vacationRequest body
      * @return Created vacationRequest
      */
-    fun createVacationRequests(vacationRequest: VacationRequest): VacationRequest {
+    fun createVacationRequest(vacationRequest: VacationRequest): VacationRequest {
         return addClosable(api.createVacationRequest(vacationRequest))
     }
 

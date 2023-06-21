@@ -1,5 +1,6 @@
 package fi.metatavu.timebank.api.impl
 
+import fi.metatavu.timebank.api.controllers.VacationRequestController
 import fi.metatavu.timebank.api.controllers.VacationRequestStatusController
 import fi.metatavu.timebank.api.impl.translate.VacationRequestStatusTranslator
 import fi.metatavu.timebank.model.VacationRequestStatus
@@ -16,6 +17,9 @@ import javax.ws.rs.core.Response
 class VacationRequestStatusApi: VacationRequestStatusApi, AbstractApi() {
 
     @Inject
+    lateinit var vacationRequestController: VacationRequestController
+
+    @Inject
     lateinit var vacationRequestStatusController: VacationRequestStatusController
 
     @Inject
@@ -26,7 +30,8 @@ class VacationRequestStatusApi: VacationRequestStatusApi, AbstractApi() {
 
         if (!isAdmin()) return createForbidden("Permission missing")
 
-        val newStatus = vacationRequestStatusController.createVacationRequestStatus(vacationRequestStatus, userId)
+        val foundVacationRequest = vacationRequestController.findVacationRequest(id) ?: return createNotFound("Vacation request not found")
+        val newStatus = vacationRequestStatusController.createVacationRequestStatus(foundVacationRequest, vacationRequestStatus, userId)
 
         return createCreated(entity = vacationRequestStatusTranslator.translate(newStatus))
     }
@@ -69,7 +74,7 @@ class VacationRequestStatusApi: VacationRequestStatusApi, AbstractApi() {
 
         if (existingStatus.createdBy != userId) return createForbidden("You can only delete your own statuses")
 
-        vacationRequestStatusController.deleteVacationRequestStatus(statusId)
+        vacationRequestStatusController.deleteVacationRequestStatus(existingStatus)
 
         return createNoContent()
     }

@@ -11,8 +11,12 @@ abstract class AbstractRepository<T, E>: PanacheRepositoryBase<T, E,> {
         return find(queryString, parameters).list<T>().awaitSuspending()
     }
 
-    suspend fun deleteSuspending(id: E) {
+    suspend fun deleteByIdSuspending(id: E) {
         Panache.withTransaction { deleteById(id) }.awaitSuspending()
+    }
+
+    suspend fun deleteSuspending(entity: T) {
+        Panache.withTransaction { delete(entity) }.awaitSuspending()
     }
 
     suspend fun persistSuspending(entity: T): T {

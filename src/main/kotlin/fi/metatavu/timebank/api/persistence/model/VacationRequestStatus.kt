@@ -15,8 +15,8 @@ class VacationRequestStatus(
     @Column
     var id: UUID? = null,
 
-    @Column
-    var vacationRequestId: UUID? = null,
+    @ManyToOne
+    var vacationRequest: VacationRequest? = null,
 
     @Column
     @Enumerated(EnumType.STRING)

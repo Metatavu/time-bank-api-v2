@@ -12,7 +12,7 @@ class VacationRequestStatusTranslator: AbstractTranslator<VacationRequestStatus,
     override fun translate(entity: VacationRequestStatus): fi.metatavu.timebank.model.VacationRequestStatus {
         return fi.metatavu.timebank.model.VacationRequestStatus(
             id = entity.id,
-            vacationRequestId = entity.vacationRequestId!!,
+            vacationRequestId = entity.vacationRequest!!.id!!,
             status = entity.status!!,
             message = entity.message,
             createdBy = entity.createdBy,

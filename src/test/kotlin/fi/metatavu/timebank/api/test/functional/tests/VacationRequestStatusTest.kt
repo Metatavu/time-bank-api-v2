@@ -40,7 +40,7 @@ class VacationRequestStatusTest: AbstractTest() {
     }
 
     val testVacationRequest = VacationRequest(
-    person = UUID.randomUUID(),
+    personId = UUID.randomUUID(),
     startDate = LocalDate.now().toString(),
     endDate = LocalDate.now().plusDays(1).toString(),
     days = 2,
@@ -56,7 +56,7 @@ class VacationRequestStatusTest: AbstractTest() {
     @Test
     fun testCreateVacationRequestStatus() {
         createTestBuilder().use { testBuilder ->
-            val request = testBuilder.manager.vacationRequests.createVacationRequests(testVacationRequest)
+            val request = testBuilder.manager.vacationRequests.createVacationRequest(testVacationRequest)
             val status = testBuilder.manager.vacationRequestStatus.createVacationRequestStatus(
                 requestId = request.id!!,
                 VacationRequestStatus(
@@ -81,7 +81,7 @@ class VacationRequestStatusTest: AbstractTest() {
     @Test
     fun testListVacationRequestStatus() {
         createTestBuilder().use { testBuilder ->
-            val request = testBuilder.manager.vacationRequests.createVacationRequests(testVacationRequest)
+            val request = testBuilder.manager.vacationRequests.createVacationRequest(testVacationRequest)
 
             testBuilder.manager.vacationRequestStatus.createVacationRequestStatus(
                 requestId = request.id!!,
@@ -108,7 +108,7 @@ class VacationRequestStatusTest: AbstractTest() {
     @Test
     fun testUpdateVacationRequestStatus() {
         createTestBuilder().use { testBuilder ->
-            val request = testBuilder.manager.vacationRequests.createVacationRequests(testVacationRequest)
+            val request = testBuilder.manager.vacationRequests.createVacationRequest(testVacationRequest)
             val status = testBuilder.manager.vacationRequestStatus.createVacationRequestStatus(
                 requestId = request.id!!,
                 VacationRequestStatus(
@@ -148,7 +148,7 @@ class VacationRequestStatusTest: AbstractTest() {
     @Test
     fun testDeleteVacationRequestStatus() {
         createTestBuilder().use { testBuilder ->
-            val request = testBuilder.manager.vacationRequests.createVacationRequests(testVacationRequest)
+            val request = testBuilder.manager.vacationRequests.createVacationRequest(testVacationRequest)
             val status = testBuilder.manager.vacationRequestStatus.createVacationRequestStatus(
                 requestId = request.id!!,
                 VacationRequestStatus(
@@ -176,7 +176,7 @@ class VacationRequestStatusTest: AbstractTest() {
     @Test
     fun testUpdateVacationRequestStatusFail() {
         createTestBuilder().use { testBuilder ->
-            val request = testBuilder.manager.vacationRequests.createVacationRequests(testVacationRequest)
+            val request = testBuilder.manager.vacationRequests.createVacationRequest(testVacationRequest)
 
             testBuilder.manager.vacationRequests.listVacationRequests()
 
@@ -210,7 +210,7 @@ class VacationRequestStatusTest: AbstractTest() {
     @Test
     fun testDeleteVacationRequestStatusFail() {
         createTestBuilder().use { testBuilder ->
-            val request = testBuilder.manager.vacationRequests.createVacationRequests(testVacationRequest)
+            val request = testBuilder.manager.vacationRequests.createVacationRequest(testVacationRequest)
             val status = testBuilder.manager.vacationRequestStatus.createVacationRequestStatus(
                 requestId = request.id!!,
                 VacationRequestStatus(

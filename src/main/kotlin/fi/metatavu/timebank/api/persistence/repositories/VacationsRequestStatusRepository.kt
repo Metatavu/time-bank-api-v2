@@ -22,11 +22,11 @@ class VacationsRequestStatusRepository: AbstractRepository<VacationRequestStatus
         val parameters = Parameters()
 
         if (vacationRequestId != null) {
-            stringBuilder.append("vacationRequestId = :vacationRequestId")
-            parameters.and("vacationRequestId", vacationRequestId)
+            stringBuilder.append("vacationrequest_id = :vacationrequest_id")
+            parameters.and("vacationrequest_id", vacationRequestId)
         }
 
-        stringBuilder.append(" order by vacationRequestId DESC")
+        stringBuilder.append(" order by vacationrequest_id DESC")
 
         return listWithParameters(stringBuilder.toString(), parameters)
     }

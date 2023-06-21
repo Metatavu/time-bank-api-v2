@@ -47,15 +47,15 @@ class VacationRequestsApi: VacationRequestsApi, AbstractApi() {
 
     override suspend fun findVacationRequest(id: UUID): Response {
         loggedUserId ?: return createUnauthorized("Invalid token!")
-
-        return createOk(vacationRequestController.findVacationRequest(id))
+        val foundVacationRequest = vacationRequestController.findVacationRequest(id) ?: return createNotFound("Vacation Request not found")
+        return createOk(foundVacationRequest)
     }
 
     override suspend fun updateVacationRequest(id: UUID, vacationRequest: VacationRequest): Response {
         val userId = loggedUserId ?: return createUnauthorized("Invalid token!")
         val existingVacationRequest = vacationRequestController.findVacationRequest(id) ?: return createNotFound("Vacation request not found")
 
-        if ( existingVacationRequest.person != userId) return createForbidden("You can only edit your own requests")
+        if (existingVacationRequest.personId != userId) return createForbidden("You can only edit your own requests")
 
         val updatedVacationRequest = vacationRequestController.updateVacationRequest(
             existingVacationRequest = existingVacationRequest,
@@ -69,7 +69,7 @@ class VacationRequestsApi: VacationRequestsApi, AbstractApi() {
         val userId = loggedUserId ?: return createUnauthorized("Invalid token!")
         val existingVacationRequest = vacationRequestController.findVacationRequest(id) ?: return createNotFound("Vacation request not found")
 
-        if ( existingVacationRequest.person != userId) return createForbidden("You can only delete your own requests")
+        if (existingVacationRequest.personId != userId) return createForbidden("You can only delete your own requests")
 
         vacationRequestController.deleteVacationRequest(id)
 

@@ -111,6 +111,12 @@
         <dropColumn tableName="VacationRequest" columnName="createdBy"/>
         <dropColumn tableName="VacationRequest" columnName="lastUpdatedBy"/>
         <modifyDataType columnName="person" newDataType="binary(16)" tableName="VacationRequest"/>
+        <renameColumn
+           columnDataType="binary(16)"
+           newColumnName="personId"
+           oldColumnName="person"
+           tableName="VacationRequest"
+        />
     </changeSet>
 
     <changeSet id="vacationRequestsStatus" author="Veikko Vilpponen">
@@ -118,8 +124,8 @@
             <column name="id" type="binary(16)">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="vacationRequestId" type="binary(16)">
-                <constraints foreignKeyName="FK_vacation_request_id" referencedTableName="vacationRequest" referencedColumnNames="id" deleteCascade="true"/>
+            <column name="vacationrequest_id" type="binary(16)">
+                <constraints foreignKeyName="FK_vacationrequest_id" referencedTableName="vacationRequest" referencedColumnNames="id"/>
             </column>
             <column name="status" type="varchar(191)">
                 <constraints nullable="false"/>

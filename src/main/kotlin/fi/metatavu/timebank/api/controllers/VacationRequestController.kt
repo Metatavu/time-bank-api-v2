@@ -16,6 +16,9 @@ class VacationRequestController {
     @Inject
     lateinit var vacationsRequestsRepository: VacationsRequestsRepository
 
+    @Inject
+    lateinit var vacationRequestStatusController: VacationRequestStatusController
+
     /**
      * Creates and persists new VacationRequest
      *
@@ -26,7 +29,7 @@ class VacationRequestController {
         return vacationsRequestsRepository.persistSuspending(
             VacationRequest(
                 id = UUID.randomUUID(),
-                person = creatorsId,
+                personId = creatorsId,
                 startDate = vacationRequest.startDate,
                 endDate = vacationRequest.endDate,
                 days = vacationRequest.days,
@@ -88,6 +91,9 @@ class VacationRequestController {
      * @param id id
      */
     suspend fun deleteVacationRequest(id: UUID) {
-        vacationsRequestsRepository.deleteSuspending(id)
+        vacationRequestStatusController.listVacationRequestStatus(id).forEach {
+            vacationRequestStatusController.deleteVacationRequestStatus(it)
+        }
+        vacationsRequestsRepository.deleteByIdSuspending(id)
     }
 }

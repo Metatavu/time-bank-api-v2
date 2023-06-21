@@ -17,7 +17,7 @@ class VacationRequest(
     var id: UUID? = null,
 
     @Column
-    var person: UUID? = null,
+    var personId: UUID? = null,
 
     @Column
     var startDate: LocalDate? = null,

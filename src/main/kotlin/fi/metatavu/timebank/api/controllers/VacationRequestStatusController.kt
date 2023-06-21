@@ -1,5 +1,6 @@
 package fi.metatavu.timebank.api.controllers
 
+import fi.metatavu.timebank.api.persistence.model.VacationRequest
 import fi.metatavu.timebank.api.persistence.model.VacationRequestStatus
 import fi.metatavu.timebank.api.persistence.repositories.VacationsRequestStatusRepository
 import java.util.*
@@ -21,10 +22,10 @@ class VacationRequestStatusController {
      * @param vacationRequestStatus VacationRequestStatus
      * @return List of VacationRequestStatuses
      */
-    suspend fun createVacationRequestStatus(vacationRequestStatus: fi.metatavu.timebank.model.VacationRequestStatus, creatorsId: UUID): VacationRequestStatus {
+    suspend fun createVacationRequestStatus(vacationRequest: VacationRequest, vacationRequestStatus: fi.metatavu.timebank.model.VacationRequestStatus, creatorsId: UUID): VacationRequestStatus {
         return vacationsRequestStatusRepository.persistSuspending(VacationRequestStatus(
             id = UUID.randomUUID(),
-            vacationRequestId = vacationRequestStatus.vacationRequestId,
+            vacationRequest = vacationRequest,
             status = vacationRequestStatus.status,
             message = vacationRequestStatus.message,
             createdBy = creatorsId,
@@ -74,9 +75,9 @@ class VacationRequestStatusController {
     /**
      * Deletes given VacationRequestStatus
      *
-     * @param statusId id of vacation request status
+     * @param vacationRequestStatus vacation request status
      */
-    suspend fun deleteVacationRequestStatus(statusId: UUID) {
-        vacationsRequestStatusRepository.deleteSuspending(statusId)
+    suspend fun deleteVacationRequestStatus(vacationRequestStatus: VacationRequestStatus) {
+        vacationsRequestStatusRepository.deleteSuspending(vacationRequestStatus)
     }
 }
