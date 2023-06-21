@@ -16,21 +16,8 @@ class VacationRequestController {
     @Inject
     lateinit var vacationsRequestsRepository: VacationsRequestsRepository
 
-    /**
-     * Gets persisted VacationRequests
-     *
-     * @param personId personId
-     * @param before before
-     * @param after after
-     * @return List of VacationRequests
-     */
-    suspend fun listVacationRequests(personId: Int?, before: LocalDate?, after: LocalDate?): List<VacationRequest> {
-        return vacationsRequestsRepository.listVacationRequest(
-            personId = personId,
-            before = before,
-            after = after
-        )
-    }
+    @Inject
+    lateinit var vacationRequestStatusController: VacationRequestStatusController
 
     /**
      * Creates and persists new VacationRequest
@@ -42,20 +29,42 @@ class VacationRequestController {
         return vacationsRequestsRepository.persistSuspending(
             VacationRequest(
                 id = UUID.randomUUID(),
-                person = vacationRequest.person,
+                personId = creatorsId,
                 startDate = vacationRequest.startDate,
                 endDate = vacationRequest.endDate,
                 days = vacationRequest.days,
                 type = vacationRequest.type,
                 message = vacationRequest.message,
-                projectManagerStatus = vacationRequest.projectManagerStatus,
-                hrManagerStatus = vacationRequest.hrManagerStatus,
                 createdAt = vacationRequest.createdAt,
-                createdBy = creatorsId,
                 updatedAt = vacationRequest.updatedAt,
-                lastUpdatedBy = creatorsId
             )
         )
+    }
+
+    /**
+     * Lists persisted VacationRequests
+     *
+     * @param personId personId
+     * @param before before date
+     * @param after after date
+     * @return List of VacationRequests
+     */
+    suspend fun listVacationRequests(personId: UUID?, before: LocalDate?, after: LocalDate?): List<VacationRequest> {
+        return vacationsRequestsRepository.listVacationRequest(
+            personId = personId,
+            before = before,
+            after = after
+        )
+    }
+
+    /**
+     * Finds vacation request by id
+     *
+     * @param id id
+     * @return persisted VacationRequest
+     */
+    suspend fun findVacationRequest(id: UUID): VacationRequest? {
+        return vacationsRequestsRepository.findSuspending(id)
     }
 
     /**
@@ -65,28 +74,15 @@ class VacationRequestController {
      * @param vacationRequest updated VacationRequest
      * @return persisted VacationRequest
      */
-    suspend fun updateVacationRequest(existingVacationRequest: VacationRequest, vacationRequest: fi.metatavu.timebank.model.VacationRequest, modifiersId: UUID): VacationRequest {
+    suspend fun updateVacationRequest(existingVacationRequest: VacationRequest, vacationRequest: fi.metatavu.timebank.model.VacationRequest): VacationRequest {
         existingVacationRequest.startDate = vacationRequest.startDate
         existingVacationRequest.endDate = vacationRequest.endDate
         existingVacationRequest.days = vacationRequest.days
         existingVacationRequest.type = vacationRequest.type
         existingVacationRequest.message = vacationRequest.message
-        existingVacationRequest.projectManagerStatus = vacationRequest.projectManagerStatus
-        existingVacationRequest.hrManagerStatus = vacationRequest.hrManagerStatus
         existingVacationRequest.updatedAt = vacationRequest.updatedAt
-        existingVacationRequest.lastUpdatedBy = modifiersId
 
         return vacationsRequestsRepository.persistSuspending(existingVacationRequest)
-    }
-
-    /**
-     * Finds vacation request by id
-     *
-     * @param id id
-     * @return persisted VacationRequest
-     */
-    suspend fun findVacationRequest(id: UUID): VacationRequest {
-       return vacationsRequestsRepository.findSuspending(id)
     }
 
     /**
@@ -95,6 +91,9 @@ class VacationRequestController {
      * @param id id
      */
     suspend fun deleteVacationRequest(id: UUID) {
-        vacationsRequestsRepository.deleteSuspending(id)
+        vacationRequestStatusController.listVacationRequestStatus(id).forEach {
+            vacationRequestStatusController.deleteVacationRequestStatus(it)
+        }
+        vacationsRequestsRepository.deleteByIdSuspending(id)
     }
 }

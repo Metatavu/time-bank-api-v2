@@ -5,7 +5,6 @@ import fi.metatavu.timebank.api.test.functional.data.TestDateUtils.Companion.get
 import fi.metatavu.timebank.api.test.functional.resources.LocalTestProfile
 import fi.metatavu.timebank.api.test.functional.resources.TestMySQLResource
 import fi.metatavu.timebank.api.test.functional.resources.TestWiremockResource
-import fi.metatavu.timebank.test.client.models.VacationRequestStatus
 import fi.metatavu.timebank.test.client.models.VacationRequest
 import fi.metatavu.timebank.test.client.models.VacationType
 import io.quarkus.test.common.QuarkusTestResource
@@ -39,14 +38,12 @@ class VacationRequestsTest: AbstractTest() {
     }
 
     val testVacationRequest = VacationRequest(
-    person = 1,
+    personId = UUID.randomUUID(),
     startDate = LocalDate.now().toString(),
     endDate = LocalDate.now().plusDays(1).toString(),
     days = 2,
     type = VacationType.VACATION,
     message = "Lomaa!!!",
-    projectManagerStatus = VacationRequestStatus.PENDING,
-    hrManagerStatus = VacationRequestStatus.PENDING,
     createdAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
     updatedAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
     )
@@ -57,19 +54,15 @@ class VacationRequestsTest: AbstractTest() {
     @Test
     fun testCreateVacationRequests() {
         createTestBuilder().use { testBuilder ->
-            val createdVacation = testBuilder.manager.vacationRequests.createVacationRequests(testVacationRequest)
+            val createdVacation = testBuilder.manager.vacationRequests.createVacationRequest(testVacationRequest)
             val vacations = testBuilder.manager.vacationRequests.findVacationRequests(createdVacation.id!!)
 
-            assertEquals(1, vacations.person)
+            assertEquals(createdVacation.personId, vacations.personId)
             assertEquals(LocalDate.now().toString(), vacations.startDate)
             assertEquals(LocalDate.now().plusDays(1).toString(), vacations.endDate)
             assertEquals(2, vacations.days)
             assertEquals(VacationType.VACATION, vacations.type)
             assertEquals("Lomaa!!!", vacations.message)
-            assertEquals(VacationRequestStatus.PENDING, vacations.projectManagerStatus)
-            assertEquals(VacationRequestStatus.PENDING, vacations.hrManagerStatus)
-            assertEquals(UUID.fromString("50bd84bc-d7f7-445f-b98c-4f6a5d27fb55"), vacations.createdBy)
-            assertEquals(UUID.fromString("50bd84bc-d7f7-445f-b98c-4f6a5d27fb55"), vacations.lastUpdatedBy)
         }
     }
 
@@ -79,44 +72,36 @@ class VacationRequestsTest: AbstractTest() {
     @Test
     fun testListVacationRequests() {
         createTestBuilder().use { testBuilder ->
-            testBuilder.manager.vacationRequests.createVacationRequests(testVacationRequest)
+            val createdVacation = testBuilder.manager.vacationRequests.createVacationRequest(testVacationRequest)
 
-            val vacations = testBuilder.manager.vacationRequests.listVacationRequests(personId = 1)
+            val vacations = testBuilder.manager.vacationRequests.listVacationRequests()
 
-            assertEquals(1, vacations[0].person)
+            assertEquals(createdVacation.personId, vacations[0].personId)
             assertEquals(LocalDate.now().toString(), vacations[0].startDate)
             assertEquals(LocalDate.now().plusDays(1).toString(), vacations[0].endDate)
             assertEquals(2, vacations[0].days)
             assertEquals(VacationType.VACATION, vacations[0].type)
             assertEquals("Lomaa!!!", vacations[0].message)
-            assertEquals(VacationRequestStatus.PENDING, vacations[0].projectManagerStatus)
-            assertEquals(VacationRequestStatus.PENDING, vacations[0].hrManagerStatus)
-            assertEquals(UUID.fromString("50bd84bc-d7f7-445f-b98c-4f6a5d27fb55"), vacations[0].createdBy)
-            assertEquals(UUID.fromString("50bd84bc-d7f7-445f-b98c-4f6a5d27fb55"), vacations[0].lastUpdatedBy)
         }
     }
 
     /**
-     * Tests /v1/vacationRequest -endpoint PUT method
+     * Tests /v1/vacationRequest{id} -endpoint PUT method
      */
     @Test
     fun testUpdateVacationRequests() {
         createTestBuilder().use { testBuilder ->
-            testBuilder.userA.vacationRequests.createVacationRequests(testVacationRequest)
-            val vacations1 = testBuilder.manager.vacationRequests.listVacationRequests(personId = 1)
-
-            assertEquals(VacationRequestStatus.PENDING, vacations1[0].projectManagerStatus)
-            assertEquals(UUID.fromString("7276979e-2f08-4d52-9541-0d10aa3806fe"), vacations1[0].lastUpdatedBy)
+            testBuilder.manager.vacationRequests.createVacationRequest(testVacationRequest)
+            val vacations1 = testBuilder.manager.vacationRequests.listVacationRequests()
 
             testBuilder.manager.vacationRequests.updateVacationRequests(
                 id = vacations1[0].id!!,
-                vacationRequest = testVacationRequest.copy(projectManagerStatus = VacationRequestStatus.APPROVED)
+                vacationRequest = testVacationRequest.copy(message = "Muutoksia lomaan")
             )
 
             val vacations2 = testBuilder.manager.vacationRequests.listVacationRequests()
 
-            assertEquals(VacationRequestStatus.APPROVED, vacations2[0].projectManagerStatus)
-            assertEquals(UUID.fromString("50bd84bc-d7f7-445f-b98c-4f6a5d27fb55"), vacations2[0].lastUpdatedBy)
+            assertEquals("Muutoksia lomaan", vacations2[0].message)
         }
     }
 
@@ -126,15 +111,15 @@ class VacationRequestsTest: AbstractTest() {
     @Test
     fun testDeleteVacationRequests() {
         createTestBuilder().use { testBuilder ->
-            testBuilder.manager.vacationRequests.createVacationRequests(testVacationRequest)
+            testBuilder.manager.vacationRequests.createVacationRequest(testVacationRequest)
 
-            val vacations1 = testBuilder.manager.vacationRequests.listVacationRequests(personId = 1)
+            val vacations1 = testBuilder.manager.vacationRequests.listVacationRequests()
 
             assertEquals(1, vacations1.size)
 
             testBuilder.manager.vacationRequests.deleteVacationRequests(vacations1[0].id!!)
 
-            val vacations2 = testBuilder.manager.vacationRequests.listVacationRequests(personId = 1)
+            val vacations2 = testBuilder.manager.vacationRequests.listVacationRequests()
 
             assertEquals(0, vacations2.size)
         }
@@ -146,10 +131,19 @@ class VacationRequestsTest: AbstractTest() {
     @Test
     fun testUpdateVacationRequestsFail() {
         createTestBuilder().use { testBuilder ->
-            testBuilder.manager.vacationRequests.createVacationRequests(testVacationRequest)
-            val vacations1 = testBuilder.manager.vacationRequests.listVacationRequests(personId = 1)
+            testBuilder.manager.vacationRequests.createVacationRequest(testVacationRequest)
+            val vacations1 = testBuilder.manager.vacationRequests.listVacationRequests()
 
-            testBuilder.userA.vacationRequests.assertUpdateFail(401, vacations1[0].id!!, testVacationRequest )
+            testBuilder.userA.vacationRequests.assertVacationRequestUpdateFail(403, vacations1[0].id!!, VacationRequest(
+                personId = testVacationRequest.personId,
+                startDate = LocalDate.now().toString(),
+                endDate = LocalDate.now().plusDays(1).toString(),
+                days = 2,
+                type = VacationType.VACATION,
+                message = "Lomaa!!!",
+                createdAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
+                updatedAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
+            ) )
         }
     }
 
@@ -159,11 +153,11 @@ class VacationRequestsTest: AbstractTest() {
     @Test
     fun testDeleteVacationRequestsFail() {
         createTestBuilder().use { testBuilder ->
-            testBuilder.manager.vacationRequests.createVacationRequests(testVacationRequest)
+            testBuilder.manager.vacationRequests.createVacationRequest(testVacationRequest)
 
-            val vacations = testBuilder.manager.vacationRequests.listVacationRequests(personId = 1)
+            val vacations = testBuilder.manager.vacationRequests.listVacationRequests()
 
-            testBuilder.userA.vacationRequests.assertDeleteFail(401, vacations[0].id!!)
+            testBuilder.userA.vacationRequests.assertVacationRequestDeleteFail(403, vacations[0].id!!)
         }
     }
 }
