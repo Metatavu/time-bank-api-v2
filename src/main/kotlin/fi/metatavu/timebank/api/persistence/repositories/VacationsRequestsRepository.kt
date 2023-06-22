@@ -25,7 +25,7 @@ class VacationsRequestsRepository: AbstractRepository<VacationRequest, UUID>() {
         val parameters = Parameters()
 
         if (personId != null) {
-            stringBuilder.append("person = :personId")
+            stringBuilder.append("personId = :personId")
             parameters.and("personId", personId)
         }
 
