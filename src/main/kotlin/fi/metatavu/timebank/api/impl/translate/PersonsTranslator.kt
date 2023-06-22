@@ -39,7 +39,7 @@ class PersonsTranslator: AbstractTranslator<ForecastPerson, Person>() {
             unspentVacations = entity.unspentVacations,
             spentVacations = entity.spentVacations,
             minimumBillableRate = minimumBillableRate,
-            keycloakId = if (keycloakUser != null) {UUID.fromString(keycloakUser.id)} else null
+            keycloakId = keycloakUser?.let { UUID.fromString(keycloakUser.id) }
         )
     }
 
