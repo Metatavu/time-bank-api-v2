@@ -22,71 +22,18 @@ class VacationRequestsApi: VacationRequestsApi, AbstractApi() {
     @Inject
     lateinit var vacationRequestTranslator: VacationRequestTranslator
 
-    override suspend fun deleteVacationRequest(id: UUID): Response {
-        loggedUserId ?: return createUnauthorized("Invalid token!")
-
-        val existingVacationRequest = vacationRequestController.findVacationRequest(id)
-
-        if (isAdmin() || loggedUserId == existingVacationRequest.createdBy) {
-
-            vacationRequestController.deleteVacationRequest(id)
-
-            return createNoContent()
-        }
-        return createUnauthorized("Permission missing")
-    }
-
-    override suspend fun findVacationRequest(id: UUID): Response {
-        loggedUserId ?: return createUnauthorized("Invalid token!")
-
-        return try {
-            return createOk(vacationRequestController.findVacationRequest(id))
-        } catch (e: Error) {
-            createInternalServerError(e.localizedMessage)
-        }
-    }
-
-    override suspend fun updateVacationRequest(id: UUID, vacationRequest: VacationRequest): Response {
-        loggedUserId ?: return createUnauthorized("Invalid token!")
-
-        val userId = loggedUserId ?: return createUnauthorized("Invalid token!")
-
-        if (isAdmin() || loggedUserId == vacationRequest.createdBy) {
-            val existingVacationRequest = vacationRequestController.findVacationRequest(id)
-
-            val updatedVacationRequest = vacationRequestController.updateVacationRequest(
-                existingVacationRequest = existingVacationRequest,
-                vacationRequest = vacationRequest,
-                modifiersId = userId
-            )
-
-            return try {
-                return createOk(entity = vacationRequestTranslator.translate(updatedVacationRequest))
-            } catch (e: Error) {
-                createInternalServerError(e.localizedMessage)
-            }
-        }
-        return createUnauthorized("Permission missing")
-    }
-
     override suspend fun createVacationRequest(vacationRequest: VacationRequest): Response {
-        loggedUserId ?: return createUnauthorized("Invalid token!")
-
         val userId = loggedUserId ?: return createUnauthorized("Invalid token!")
+
         val newVacationRequest = vacationRequestController.createVacationRequest(
             vacationRequest = vacationRequest,
             creatorsId = userId
         )
 
-        return try {
-            return createCreated(entity = vacationRequestTranslator.translate(newVacationRequest))
-        } catch (e: Error) {
-            createInternalServerError(e.localizedMessage)
-        }
+        return createCreated(entity = vacationRequestTranslator.translate(newVacationRequest))
     }
 
-
-    override suspend fun listVacationRequests(personId: Int?, before: LocalDate?, after: LocalDate?): Response {
+    override suspend fun listVacationRequests(personId: UUID?, before: LocalDate?, after: LocalDate?): Response {
         loggedUserId ?: return createUnauthorized("Invalid token!")
 
         val vacationRequests = vacationRequestController.listVacationRequests(
@@ -96,5 +43,36 @@ class VacationRequestsApi: VacationRequestsApi, AbstractApi() {
         )
 
         return createOk(entity = vacationRequestTranslator.translate(vacationRequests))
+    }
+
+    override suspend fun findVacationRequest(id: UUID): Response {
+        loggedUserId ?: return createUnauthorized("Invalid token!")
+        val foundVacationRequest = vacationRequestController.findVacationRequest(id) ?: return createNotFound("Vacation Request not found")
+        return createOk(foundVacationRequest)
+    }
+
+    override suspend fun updateVacationRequest(id: UUID, vacationRequest: VacationRequest): Response {
+        val userId = loggedUserId ?: return createUnauthorized("Invalid token!")
+        val existingVacationRequest = vacationRequestController.findVacationRequest(id) ?: return createNotFound("Vacation request not found")
+
+        if (existingVacationRequest.personId != userId) return createForbidden("You can only edit your own requests")
+
+        val updatedVacationRequest = vacationRequestController.updateVacationRequest(
+            existingVacationRequest = existingVacationRequest,
+            vacationRequest = vacationRequest,
+        )
+
+        return createOk(entity = vacationRequestTranslator.translate(updatedVacationRequest))
+    }
+
+    override suspend fun deleteVacationRequest(id: UUID): Response {
+        val userId = loggedUserId ?: return createUnauthorized("Invalid token!")
+        val existingVacationRequest = vacationRequestController.findVacationRequest(id) ?: return createNotFound("Vacation request not found")
+
+        if (existingVacationRequest.personId != userId) return createForbidden("You can only delete your own requests")
+
+        vacationRequestController.deleteVacationRequest(id)
+
+        return createNoContent()
     }
 }

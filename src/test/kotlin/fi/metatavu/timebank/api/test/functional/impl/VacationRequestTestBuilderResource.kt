@@ -25,7 +25,17 @@ class VacationRequestTestBuilderResource(
 
     override fun getApi(): VacationRequestsApi {
         ApiClient.accessToken = accessTokenProvider?.accessToken
-        return VacationRequestsApi (ApiTestSettings.apiBasePath)
+        return VacationRequestsApi(ApiTestSettings.apiBasePath)
+    }
+
+    /**
+     * Create a new VacationRequest
+     *
+     * @param vacationRequest vacationRequest body
+     * @return Created vacationRequest
+     */
+    fun createVacationRequest(vacationRequest: VacationRequest): VacationRequest {
+        return addClosable(api.createVacationRequest(vacationRequest))
     }
 
     /**
@@ -36,10 +46,10 @@ class VacationRequestTestBuilderResource(
      * @param after optional after date
      * @return List of VacationRequests
      */
-    fun listVacationRequests(personId: Int? = null, before: String? = null, after: String? = null): Array<VacationRequest> {
+    fun listVacationRequests(personId: UUID? = null, before: String? = null, after: String? = null): Array<VacationRequest> {
         return api.listVacationRequests(
             personId = personId,
-            before =  before,
+            before = before,
             after = after
         )
     }
@@ -55,16 +65,6 @@ class VacationRequestTestBuilderResource(
     }
 
     /**
-     * Create a new VacationRequest
-     *
-     * @param vacationRequest vacationRequest body
-     * @return Created vacationRequest
-     */
-    fun createVacationRequests(vacationRequest: VacationRequest): VacationRequest {
-        return addClosable(api.createVacationRequest(vacationRequest))
-    }
-
-    /**
      * Update VacationRequest
      *
      * @param id id of vacationRequest being updated
@@ -76,16 +76,6 @@ class VacationRequestTestBuilderResource(
             id = id,
             vacationRequest = vacationRequest
         )
-    }
-
-    /**
-     * Delete persisted VacationRequest
-     *
-     * @param id id of the vacationRequest
-     */
-    fun deleteVacationRequests(id: UUID) {
-        api.deleteVacationRequest(id)
-        remove(id)
     }
 
     /**
@@ -104,12 +94,22 @@ class VacationRequestTestBuilderResource(
     }
 
     /**
+     * Delete persisted VacationRequest
+     *
+     * @param id id of the vacationRequest
+     */
+    fun deleteVacationRequests(id: UUID) {
+        api.deleteVacationRequest(id = id)
+        remove(id)
+    }
+
+    /**
      * Asserts that deleting VacationRequest fails with given status
      *
      * @param expectedStatus expected status code
      * @param id entryId
      */
-    fun assertDeleteFail(expectedStatus: Int, id: UUID) {
+    fun assertVacationRequestDeleteFail(expectedStatus: Int, id: UUID) {
         try {
             api.deleteVacationRequest(id = id)
             Assert.fail(String.format("Expected fail with status, $expectedStatus"))
@@ -125,7 +125,7 @@ class VacationRequestTestBuilderResource(
      * @param id requestId
      * @param id Updated VacationRequest
      */
-    fun assertUpdateFail(expectedStatus: Int, id: UUID, vacationRequest: VacationRequest) {
+    fun assertVacationRequestUpdateFail(expectedStatus: Int, id: UUID, vacationRequest: VacationRequest) {
         try {
             api.updateVacationRequest(id, vacationRequest)
             Assert.fail(String.format("Expected fail with status, $expectedStatus"))

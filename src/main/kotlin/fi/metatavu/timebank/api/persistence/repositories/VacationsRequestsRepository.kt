@@ -20,7 +20,7 @@ class VacationsRequestsRepository: AbstractRepository<VacationRequest, UUID>() {
      * @param after LocalDate to retrieve requests after given date
      * @return List of VacationRequests
      */
-    suspend fun listVacationRequest(personId: Int?, before: LocalDate?, after: LocalDate?): List<VacationRequest> {
+    suspend fun listVacationRequest(personId: UUID?, before: LocalDate?, after: LocalDate?): List<VacationRequest> {
         val stringBuilder = StringBuilder()
         val parameters = Parameters()
 
