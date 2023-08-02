@@ -61,4 +61,84 @@
         <dropForeignKeyConstraint baseTableName="TimeEntry" constraintName="FK_TIME_ENTRY_WORKTIME_CALENDAR" />
         <dropColumn tableName="TimeEntry" columnName="worktimeCalendar_id" />
     </changeSet>
+    <changeSet id="vacationRequests" author="Veikko Vilpponen">
+        <createTable tableName="VacationRequest">
+            <column name="id" type="binary(16)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="person" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="startDate" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="endDate" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="days" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="varchar(191)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="message" type="varchar(191)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="projectManagerStatus" type="varchar(191)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hrManagerStatus" type="varchar(191)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="createdAt" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="createdBy" type="binary(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updatedAt" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lastUpdatedBy" type="binary(16)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Veikko Vilpponen" id="remove_status_columns">
+        <dropColumn tableName="VacationRequest" columnName="projectManagerStatus"/>
+        <dropColumn tableName="VacationRequest" columnName="hrManagerStatus"/>
+        <dropColumn tableName="VacationRequest" columnName="createdBy"/>
+        <dropColumn tableName="VacationRequest" columnName="lastUpdatedBy"/>
+        <modifyDataType columnName="person" newDataType="binary(16)" tableName="VacationRequest"/>
+        <renameColumn
+           columnDataType="binary(16)"
+           newColumnName="personId"
+           oldColumnName="person"
+           tableName="VacationRequest"
+        />
+    </changeSet>
+
+    <changeSet id="vacationRequestsStatus" author="Veikko Vilpponen">
+        <createTable tableName="VacationRequestStatus">
+            <column name="id" type="binary(16)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="vacationrequest_id" type="binary(16)">
+                <constraints foreignKeyName="FK_vacationrequest_id" referencedTableName="vacationRequest" referencedColumnNames="id"/>
+            </column>
+            <column name="status" type="varchar(191)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="message" type="varchar(191)"/>
+            <column name="createdAt" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="createdBy" type="binary(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updatedAt" type="datetime"/>
+            <column name="updatedBy" type="binary(16)"/>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>
