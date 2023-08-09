@@ -28,8 +28,11 @@ class ScheduledSynchronization {
         runBlocking {
             val afterDate = LocalDate.now().minusDays(1)
             logger.info("[${LocalDate.now()}] Scheduled synchronization starting with...")
-            val synchronizedEntries = synchronizeController.synchronize(afterDate)
-            logger.info("Synchronized $synchronizedEntries entries from Forecast!")
+
+            synchronizeController.synchronize(
+                after = afterDate,
+                syncDeletedEntries = true
+            )
         }
     }
 }

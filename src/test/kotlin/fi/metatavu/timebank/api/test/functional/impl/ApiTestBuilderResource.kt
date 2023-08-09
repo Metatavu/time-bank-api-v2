@@ -25,10 +25,10 @@ abstract class ApiTestBuilderResource<T, A>(
      */
     override fun getApiClient(): ApiClient {
         ApiClient.builder
-            .connectTimeout(Integer.MAX_VALUE.toLong(), TimeUnit.SECONDS)
-            .writeTimeout(Integer.MAX_VALUE.toLong(), TimeUnit.SECONDS)
-            .readTimeout(Integer.MAX_VALUE.toLong(), TimeUnit.SECONDS)
-            .callTimeout(Integer.MAX_VALUE.toLong(), TimeUnit.SECONDS)
+            .connectTimeout(600, TimeUnit.SECONDS)
+            .writeTimeout(600, TimeUnit.SECONDS)
+            .readTimeout(600, TimeUnit.SECONDS)
+            .callTimeout(600, TimeUnit.SECONDS)
             .build()
         return apiClient
     }

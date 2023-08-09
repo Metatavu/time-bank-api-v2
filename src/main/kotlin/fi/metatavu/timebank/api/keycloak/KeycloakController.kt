@@ -68,6 +68,23 @@ class KeycloakController {
     }
 
     /**
+     * Finds person by their email
+     *
+     * @param email String
+     * @return UserRepresentation
+     */
+    fun findUserByEmail(email: String): UserRepresentation? {
+        return getKeycloakClient().realm(realm).users().search(
+            null,
+            null,
+            null,
+            email,
+            null,
+            null
+        ).firstOrNull()
+    }
+
+    /**
      * Gets Keycloak UsersResource
      * e.g. list of Keycloak Users
      *

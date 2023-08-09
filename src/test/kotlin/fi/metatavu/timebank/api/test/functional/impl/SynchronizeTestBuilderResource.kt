@@ -21,6 +21,7 @@ class SynchronizeTestBuilderResource(
     }
 
     override fun getApi(): SynchronizeApi {
+        super.getApiClient()
         ApiClient.accessToken = accessTokenProvider?.accessToken
         return SynchronizeApi(ApiTestSettings.apiBasePath)
     }
@@ -31,10 +32,11 @@ class SynchronizeTestBuilderResource(
      * @param before before date
      * @param after after date
      */
-    fun synchronizeEntries(before: String? = null, after: String? = null) {
+    fun synchronizeEntries(before: String? = null, after: String? = null, syncDeleted: Boolean = false) {
         api.synchronizeTimeEntries(
             before = before,
-            after = after
+            after = after,
+            syncDeleted = syncDeleted
         )
     }
 }

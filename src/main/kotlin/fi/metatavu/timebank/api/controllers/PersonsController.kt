@@ -69,7 +69,8 @@ class PersonsController {
             spentVacations = person.spentVacations,
             minimumBillableRate = keycloakController.getUsersMinimumBillableRate(keycloakUser),
             language = person.language,
-            startDate = person.startDate
+            startDate = person.startDate,
+            keycloakId = person.keycloakId
         )
     }
 
@@ -123,15 +124,11 @@ class PersonsController {
      */
     suspend fun listPersons(active: Boolean? = true): List<ForecastPerson>? {
         val persons = getPersonsFromForecast()
-        val keycloakUsers = keycloakController.getUsersResource()?.list() ?: return null
 
         persons.forEach { forecastPerson ->
-            val keycloakUser = keycloakUsers.find { it.email == forecastPerson.email.lowercase() }
-            val minimumBillableRate = if (keycloakUser == null) 75 else keycloakController.getUsersMinimumBillableRate(keycloakUser)
             val vacationAmounts = vacationUtils.getPersonsVacations(forecastPerson)
             forecastPerson.unspentVacations = vacationAmounts.first
             forecastPerson.spentVacations = vacationAmounts.second
-            forecastPerson.minimumBillableRate = minimumBillableRate
         }
 
         return if (active == false) {
