@@ -23,4 +23,4 @@
 3. Ask for environment variables from someone who has worked with the project
 4. Run `quarkus dev`
 5. Look up [Quarkus guides](https://quarkus.io/guides/)
-6. **Enjoy!**
+6. **Enjoy!** 
