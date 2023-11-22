@@ -56,7 +56,7 @@ class VacationRequestStatusApi: VacationRequestStatusApi, AbstractApi() {
         val userId = loggedUserId ?: return createUnauthorized("Invalid token!")
         val existingStatus = vacationRequestStatusController.findVacationRequestStatus(statusId) ?: return createNotFound("Vacation request status not found")
 
-        if (existingStatus.createdBy != userId || !isAdmin()) return createForbidden("You can only edit your own statuses")
+        if (existingStatus.createdBy != userId && !isAdmin()) return createForbidden("You can only edit your own statuses")
 
         val updatedStatus = vacationRequestStatusController.updateVacationRequestStatus(
             existingStatus = existingStatus,
