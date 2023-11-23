@@ -45,7 +45,7 @@ class VacationRequestStatusTest: AbstractTest() {
     endDate = LocalDate.now().plusDays(1).toString(),
     days = 2,
     type = VacationType.VACATION,
-    message = "Lomaa!!!",
+    message = "Vacation!!!",
     createdAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
     updatedAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
     )
@@ -62,7 +62,7 @@ class VacationRequestStatusTest: AbstractTest() {
                 VacationRequestStatus(
                     vacationRequestId = request.id,
                     status = VacationRequestStatuses.APPROVED,
-                    message = "Hyväksytty",
+                    message = "Approved",
                     createdAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay())
                 )
             )
@@ -71,7 +71,7 @@ class VacationRequestStatusTest: AbstractTest() {
 
             assertEquals(request.id, foundStatus.vacationRequestId)
             assertEquals(VacationRequestStatuses.APPROVED, foundStatus.status)
-            assertEquals("Hyväksytty", foundStatus.message)
+            assertEquals("Approved", foundStatus.message)
         }
     }
 
@@ -88,7 +88,7 @@ class VacationRequestStatusTest: AbstractTest() {
                 VacationRequestStatus(
                     vacationRequestId = request.id,
                     status = VacationRequestStatuses.APPROVED,
-                    message = "Hyväksytty",
+                    message = "Approved",
                     createdAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay())
                 )
             )
@@ -98,7 +98,7 @@ class VacationRequestStatusTest: AbstractTest() {
             assertEquals(1, vacationStatuses.size)
             assertEquals(request.id, vacationStatuses[0].vacationRequestId)
             assertEquals(VacationRequestStatuses.APPROVED, vacationStatuses[0].status)
-            assertEquals("Hyväksytty", vacationStatuses[0].message)
+            assertEquals("Approved", vacationStatuses[0].message)
         }
     }
 
@@ -114,7 +114,7 @@ class VacationRequestStatusTest: AbstractTest() {
                 VacationRequestStatus(
                     vacationRequestId = request.id,
                     status = VacationRequestStatuses.APPROVED,
-                    message = "Hyväksytty",
+                    message = "Approved",
                     createdAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay())
                 )
             )
@@ -122,7 +122,7 @@ class VacationRequestStatusTest: AbstractTest() {
             val vacationStatuses1 = testBuilder.manager.vacationRequestStatus.listVacationRequestStatus(request.id)
 
             assertEquals(status.id, vacationStatuses1[0].id)
-            assertEquals("Hyväksytty", vacationStatuses1[0].message)
+            assertEquals("Approved", vacationStatuses1[0].message)
 
             testBuilder.manager.vacationRequestStatus.updateVacationRequestStatus(
                 requestId = request.id,
@@ -130,7 +130,7 @@ class VacationRequestStatusTest: AbstractTest() {
                 vacationRequestStatus = VacationRequestStatus(
                     vacationRequestId = request.id,
                     status = VacationRequestStatuses.APPROVED,
-                    message = "Mene lomalle",
+                    message = "Go on vacation",
                     createdAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
                 )
             )
@@ -138,7 +138,47 @@ class VacationRequestStatusTest: AbstractTest() {
             val vacationStatuses2 = testBuilder.manager.vacationRequestStatus.listVacationRequestStatus(request.id)
 
             assertEquals(status.id, vacationStatuses2[0].id)
-            assertEquals("Mene lomalle", vacationStatuses2[0].message)
+            assertEquals("Go on vacation", vacationStatuses2[0].message)
+        }
+    }
+
+    /**
+     * Tests /v1/vacationRequestStatus{id} -endpoint PUT method permissions
+     */
+    @Test
+    fun testUpdateVacationRequestStatusPermissions() {
+        createTestBuilder().use { testBuilder ->
+            val request = testBuilder.manager.vacationRequests.createVacationRequest(testVacationRequest)
+            val status = testBuilder.manager.vacationRequestStatus.createVacationRequestStatus(
+                requestId = request.id!!,
+                VacationRequestStatus(
+                    vacationRequestId = request.id,
+                    status = VacationRequestStatuses.PENDING,
+                    message = "I am manager and I created a status",
+                    createdAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay())
+                )
+            )
+
+            val vacationStatuses1 = testBuilder.manager.vacationRequestStatus.listVacationRequestStatus(request.id)
+
+            assertEquals(status.id, vacationStatuses1[0].id)
+            assertEquals("I am manager and I created a status", vacationStatuses1[0].message)
+
+            testBuilder.admin.vacationRequestStatus.updateVacationRequestStatus(
+                requestId = request.id,
+                statusId = status.id!!,
+                vacationRequestStatus = VacationRequestStatus(
+                    vacationRequestId = request.id,
+                    status = VacationRequestStatuses.APPROVED,
+                    message = "I am admin and I updated manager's status",
+                    createdAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
+                )
+            )
+
+            val vacationStatuses2 = testBuilder.admin.vacationRequestStatus.listVacationRequestStatus(request.id)
+
+            assertEquals(status.id, vacationStatuses2[0].id)
+            assertEquals("I am admin and I updated manager's status", vacationStatuses2[0].message)
         }
     }
 
@@ -154,7 +194,7 @@ class VacationRequestStatusTest: AbstractTest() {
                 VacationRequestStatus(
                     vacationRequestId = request.id,
                     status = VacationRequestStatuses.APPROVED,
-                    message = "Hyväksytty",
+                    message = "Approved",
                     createdAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay())
                 )
             )
@@ -185,7 +225,7 @@ class VacationRequestStatusTest: AbstractTest() {
                 VacationRequestStatus(
                     vacationRequestId = request.id,
                     status = VacationRequestStatuses.APPROVED,
-                    message = "Hyväksytty",
+                    message = "Approved",
                     createdAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay())
                 )
             )
@@ -197,7 +237,7 @@ class VacationRequestStatusTest: AbstractTest() {
                 vacationRequestStatus = VacationRequestStatus(
                     vacationRequestId = request.id,
                     status = VacationRequestStatuses.APPROVED,
-                    message = "Mene lomalle",
+                    message = "Go on vacation",
                     createdAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
                 )
             )
@@ -216,7 +256,7 @@ class VacationRequestStatusTest: AbstractTest() {
                 VacationRequestStatus(
                     vacationRequestId = request.id,
                     status = VacationRequestStatuses.APPROVED,
-                    message = "Hyväksytty",
+                    message = "Approved",
                     createdAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay())
                 )
             )
