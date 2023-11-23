@@ -143,6 +143,46 @@ class VacationRequestStatusTest: AbstractTest() {
     }
 
     /**
+     * Tests /v1/vacationRequestStatus{id} -endpoint PUT method permissions
+     */
+    @Test
+    fun testUpdateVacationRequestStatusPermissions() {
+        createTestBuilder().use { testBuilder ->
+            val request = testBuilder.manager.vacationRequests.createVacationRequest(testVacationRequest)
+            val status = testBuilder.manager.vacationRequestStatus.createVacationRequestStatus(
+                requestId = request.id!!,
+                VacationRequestStatus(
+                    vacationRequestId = request.id,
+                    status = VacationRequestStatuses.PENDING,
+                    message = "Olen manager ja loin statuksen",
+                    createdAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay())
+                )
+            )
+
+            val vacationStatuses1 = testBuilder.manager.vacationRequestStatus.listVacationRequestStatus(request.id)
+
+            assertEquals(status.id, vacationStatuses1[0].id)
+            assertEquals("Olen manager ja loin statuksen", vacationStatuses1[0].message)
+
+            testBuilder.admin.vacationRequestStatus.updateVacationRequestStatus(
+                requestId = request.id,
+                statusId = status.id!!,
+                vacationRequestStatus = VacationRequestStatus(
+                    vacationRequestId = request.id,
+                    status = VacationRequestStatuses.APPROVED,
+                    message = "Olen admin ja muokkasin managerin statusta",
+                    createdAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
+                )
+            )
+
+            val vacationStatuses2 = testBuilder.admin.vacationRequestStatus.listVacationRequestStatus(request.id)
+
+            assertEquals(status.id, vacationStatuses2[0].id)
+            assertEquals("Olen admin ja muokkasin managerin statusta", vacationStatuses2[0].message)
+        }
+    }
+
+    /**
      * Tests /v1/vacationRequestStatus{id} -endpoint DELETE method
      */
     @Test
