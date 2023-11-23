@@ -125,7 +125,7 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="vacationrequest_id" type="binary(16)">
-                <constraints foreignKeyName="FK_vacationrequest_id" referencedTableName="VacationRequest" referencedColumnNames="id"/>
+                <constraints foreignKeyName="FK_vacationrequest_id" referencedTableName="vacationRequest" referencedColumnNames="id"/>
             </column>
             <column name="status" type="varchar(191)">
                 <constraints nullable="false"/>
