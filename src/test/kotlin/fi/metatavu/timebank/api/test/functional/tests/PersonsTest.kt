@@ -239,20 +239,21 @@ class PersonsTest: AbstractTest() {
     /**
      * Tests listing total time entries for a non-existing person
      */
+    // TODO: listNonExistingPersonTimeEntries This doesnt work or make sense
     @Test
     fun listNonExistingPersonTimeEntries() {
         createTestBuilder().use { testBuilder ->
-            testBuilder.manager.persons.assertTotalsFail(
-                expectedStatus = 404,
+            val persontotals = testBuilder.manager.persons.getPersonTotal(
                 personId = 123
             )
+            assertEquals(0 , persontotals.size)
         }
     }
 
     /**
      * Test /v1/persons?active=false without access token
      */
-     @Test
+    @Test
     fun listPersonsWithNullToken() {
         createTestBuilder().use { testBuilder ->
             testBuilder.userWithNullToken.persons.assertListFailWithNullToken(expectedStatus = 401)
@@ -262,7 +263,7 @@ class PersonsTest: AbstractTest() {
     /**
      * Tests /v1/persons -endpoint when Forecast API persons -endpoint responses with an error
      */
-     @Test
+    @Test
     fun testPersonsWithForecastError() {
         setScenario(
             scenario = PERSONS_SCENARIO,
@@ -270,6 +271,17 @@ class PersonsTest: AbstractTest() {
         )
         createTestBuilder().use { testBuilder ->
             testBuilder.manager.persons.assertListFail(expectedStatus = 400)
+        }
+    }
+
+    /**
+     *  Tests if a valid or invalid user (Currently invalid userid) requests vacation time entries returns emptylist
+     */
+    @Test
+    fun testVacationErrorReturnsEmptyListOnNoEntriesFound() {
+        createTestBuilder().use { testBuilder ->
+            val vacationEntry = testBuilder.manager.timeEntries.getTimeEntries(214152663,null,null,true)
+            assertEquals(0, vacationEntry.size)
         }
     }
 }

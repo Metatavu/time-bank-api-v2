@@ -54,7 +54,7 @@ class DailyEntryController {
      * @param vacation filter vacation days
      * @return List of DailyEntries
      */
-    suspend fun makeDailyEntries(personId: Int?, before: LocalDate?, after: LocalDate?, vacation: Boolean?): List<DailyEntry>? {
+    suspend fun makeDailyEntries(personId: Int?, before: LocalDate?, after: LocalDate?, vacation: Boolean?): List<DailyEntry> {
         return try {
             val persons = personsController.getPersonsFromForecast()
             val holidays = personsController.getHolidaysFromForecast()
@@ -66,7 +66,7 @@ class DailyEntryController {
                 vacation = vacation
             )
 
-            if (entries.isEmpty()) return null
+            if (entries.isEmpty()) return emptyList()
 
             val dailyEntries = mutableListOf<DailyEntry>()
 
