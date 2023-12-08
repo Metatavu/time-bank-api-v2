@@ -1,27 +1,60 @@
-# Timebank API
+# time-bank-api-v2
 
-#### API project for [Timebank](https://github.com/metatavu/time-bank-ui)
+This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
-### Running the application locally
+If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
 
-1. Clone the repository with `git clone --recurse-submodules git@github.com:Metatavu/time-bank-api-v2.git`
-2. Ensure that tests are passing in JVM mode with `quarkus dev` in case of wrong submodule branch/HEAD
-3. Build the application with `./gradlew build -Dquarkus.package.type=native -Dquarkus.native.native-image-xmx=12G`
-   - If you don't have GraalVM and Native-Image installed Quarkus will automatically run build in Docker container
-4. Run `docker build -f src/main/docker/Dockerfile.native -t metatavu/time-bank-api .`
-5. Go to [https://github.com/Metatavu/dockerfile-keycloak](https://github.com/Metatavu/dockerfile-keycloak)
-    and proceed as instructed.
-6. Ask for Docker Compose file from someone who has worked with the project
-   - *Contains environment variables and therefore will not be shared here*
-7. Run `docker compose up`
-8. **Enjoy!**
+## Running the application in dev mode
 
-### Developing the application
+You can run your application in dev mode that enables live coding using:
+```shell script
+./gradlew quarkusDev
+```
 
-1. Clone the repository with `git clone --recurse-submodules git@github.com:Metatavu/time-bank-api-v2.git`
-2. If you are using Linux, check Linux post-install guide for Docker
-3. Gradle JVM should be at least SKD/JDK 11
-4. Ask for environment variables from someone who has worked with the project
-5. Run `quarkus dev`
-6. Look up [Quarkus guides](https://quarkus.io/guides/)
-7. **Enjoy!**
+> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
+
+## Packaging and running the application
+
+The application can be packaged using:
+```shell script
+./gradlew build
+```
+It produces the `quarkus-run.jar` file in the `build/quarkus-app/` directory.
+Be aware that it’s not an _über-jar_ as the dependencies are copied into the `build/quarkus-app/lib/` directory.
+
+The application is now runnable using `java -jar build/quarkus-app/quarkus-run.jar`.
+
+If you want to build an _über-jar_, execute the following command:
+```shell script
+./gradlew build -Dquarkus.package.type=uber-jar
+```
+
+The application, packaged as an _über-jar_, is now runnable using `java -jar build/*-runner.jar`.
+
+## Creating a native executable
+
+You can create a native executable using: 
+```shell script
+./gradlew build -Dquarkus.package.type=native
+```
+
+Or, if you don't have GraalVM installed, you can run the native executable build in a container using: 
+```shell script
+./gradlew build -Dquarkus.package.type=native -Dquarkus.native.container-build=true
+```
+
+You can then execute your native executable with: `./build/time-bank-api-v2-1.0.0-SNAPSHOT-runner`
+
+If you want to learn more about building native executables, please consult https://quarkus.io/guides/gradle-tooling.
+
+## Related Guides
+
+- Kotlin ([guide](https://quarkus.io/guides/kotlin)): Write your services in Kotlin
+
+## Provided Code
+
+### RESTEasy Reactive
+
+Easily start your Reactive RESTful Web Services
+
+[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)

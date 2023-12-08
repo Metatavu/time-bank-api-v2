@@ -5,8 +5,8 @@ import io.quarkus.scheduler.Scheduled
 import kotlinx.coroutines.runBlocking
 import org.slf4j.Logger
 import java.time.LocalDate
-import javax.enterprise.context.ApplicationScoped
-import javax.inject.Inject
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.inject.Inject
 
 /**
  * Class for scheduled synchronization

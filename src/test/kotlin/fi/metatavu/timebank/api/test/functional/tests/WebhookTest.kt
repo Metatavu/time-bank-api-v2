@@ -10,8 +10,9 @@ import fi.metatavu.timebank.test.client.models.ForecastWebhookPerson
 import io.quarkus.test.common.QuarkusTestResource
 import io.quarkus.test.junit.QuarkusTest
 import io.quarkus.test.junit.TestProfile
-import org.junit.jupiter.api.Assertions.assertTrue
+import io.quarkus.test.vertx.RunOnVertxContext
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -40,6 +41,7 @@ class WebhookTest: AbstractTest() {
      * Tests /v1/ForecastWebhook -endpoint time_registration_deleted -event
      */
     @Test
+    @RunOnVertxContext
     fun testForecastTimeEntriesDeleteWebhook() {
         createTestBuilder().use { testBuilder ->
             testBuilder.manager.synchronization.synchronizeEntries(

@@ -3,7 +3,7 @@ package fi.metatavu.timebank.api.persistence.repositories
 import fi.metatavu.timebank.api.persistence.model.VacationRequestStatus
 import io.quarkus.panache.common.Parameters
 import java.util.UUID
-import javax.enterprise.context.ApplicationScoped
+import jakarta.enterprise.context.ApplicationScoped
 
 /**
  * Manages VacationRequestStatus JPA entity

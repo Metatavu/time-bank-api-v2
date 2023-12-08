@@ -4,7 +4,7 @@ import fi.metatavu.timebank.model.VacationType
 import java.time.LocalDate
 import java.time.OffsetDateTime
 import java.util.*
-import javax.persistence.*
+import jakarta.persistence.*
 
 /**
  * VacationRequest JPA entity

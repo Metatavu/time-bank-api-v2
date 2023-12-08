@@ -8,8 +8,8 @@ import fi.metatavu.timebank.api.utils.VacationUtils
 import java.time.LocalDate
 import java.time.OffsetDateTime
 import java.util.*
-import javax.enterprise.context.ApplicationScoped
-import javax.inject.Inject
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.inject.Inject
 
 /**
  * Controller for timeEntry objects

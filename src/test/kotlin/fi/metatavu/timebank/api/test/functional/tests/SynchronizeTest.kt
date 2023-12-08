@@ -1,20 +1,19 @@
 package fi.metatavu.timebank.api.test.functional.tests
 
+import fi.metatavu.timebank.api.test.functional.data.TestDateUtils.Companion.getSixtyDaysAgo
+import fi.metatavu.timebank.api.test.functional.data.TestDateUtils.Companion.getThirtyDaysAgo
 import fi.metatavu.timebank.api.test.functional.resources.LocalTestProfile
 import fi.metatavu.timebank.api.test.functional.resources.TestMySQLResource
 import fi.metatavu.timebank.api.test.functional.resources.TestWiremockResource
 import io.quarkus.test.common.QuarkusTestResource
 import io.quarkus.test.junit.QuarkusTest
 import io.quarkus.test.junit.TestProfile
+import io.quarkus.test.vertx.RunOnVertxContext
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import fi.metatavu.timebank.api.test.functional.data.TestDateUtils.Companion.getSixtyDaysAgo
-import fi.metatavu.timebank.api.test.functional.data.TestDateUtils.Companion.getThirtyDaysAgo
 import java.time.LocalDate
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
 
 /**
  * Tests for Synchronization API
@@ -26,6 +25,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 )
 @TestProfile(LocalTestProfile::class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@RunOnVertxContext
 class SynchronizeTest: AbstractTest() {
 
     /**
@@ -41,6 +41,7 @@ class SynchronizeTest: AbstractTest() {
      * with mock Forecast data from past 30 and 60 days.
      */
     @Test
+    @RunOnVertxContext
     fun testSynchronization() {
         createTestBuilder().use { testBuilder ->
             val amountOfPersons = testBuilder.manager.persons.getPersons().size
@@ -71,6 +72,7 @@ class SynchronizeTest: AbstractTest() {
      * when Forecast API response contains updated entry
      */
     @Test
+    @RunOnVertxContext
     fun testSynchronizationUpdate() {
         createTestBuilder().use { testBuilder ->
             testBuilder.manager.synchronization.synchronizeEntries(
@@ -101,6 +103,7 @@ class SynchronizeTest: AbstractTest() {
      * Tests /v1/synchronizeDeletions -endpoint
      */
     @Test
+    @RunOnVertxContext
     fun testDeletedSynchronization() {
         createTestBuilder().use { testBuilder ->
             testBuilder.manager.synchronization.synchronizeEntries()

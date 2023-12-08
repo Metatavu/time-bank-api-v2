@@ -3,12 +3,12 @@ package fi.metatavu.timebank.api.impl
 import fi.metatavu.timebank.api.controllers.VacationRequestController
 import fi.metatavu.timebank.api.impl.translate.VacationRequestTranslator
 import fi.metatavu.timebank.model.VacationRequest
-import javax.enterprise.context.RequestScoped
+import jakarta.enterprise.context.RequestScoped
 import fi.metatavu.timebank.spec.VacationRequestsApi
 import java.time.LocalDate
 import java.util.*
-import javax.inject.Inject
-import javax.ws.rs.core.Response
+import jakarta.inject.Inject
+import jakarta.ws.rs.core.Response
 
 /**
  * API implementation for VacationRequests API

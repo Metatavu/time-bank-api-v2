@@ -7,8 +7,8 @@ import fi.metatavu.timebank.api.forecast.models.ForecastTimeEntry
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
-import javax.enterprise.context.ApplicationScoped
-import javax.inject.Inject
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.inject.Inject
 import org.slf4j.Logger
 
 /**
@@ -78,7 +78,7 @@ class SynchronizeController {
                 var deletedEntries = 0
                 var synchronizedEntries = 0
 
-                timeBankTimeEntries.forEachIndexed { idx, timeEntry ->
+                timeBankTimeEntries.forEachIndexed { _, timeEntry ->
                     if (timeEntry.forecastId != null) {
                         if (forecastTimeEntries.none { it.id == timeEntry.forecastId }) {
                             timeEntryController.deleteEntry(timeEntry.id)

@@ -4,8 +4,8 @@ import fi.metatavu.timebank.api.persistence.model.VacationRequest
 import fi.metatavu.timebank.api.persistence.repositories.VacationsRequestsRepository
 import java.time.LocalDate
 import java.util.*
-import javax.enterprise.context.ApplicationScoped
-import javax.inject.Inject
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.inject.Inject
 
 /**
  * Controller for vacationRequest objects

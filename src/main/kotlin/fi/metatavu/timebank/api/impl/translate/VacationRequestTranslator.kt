@@ -1,7 +1,7 @@
 package fi.metatavu.timebank.api.impl.translate
 
 import fi.metatavu.timebank.api.persistence.model.VacationRequest
-import javax.enterprise.context.ApplicationScoped
+import jakarta.enterprise.context.ApplicationScoped
 
 /**
  * Translates VacationRequest objects

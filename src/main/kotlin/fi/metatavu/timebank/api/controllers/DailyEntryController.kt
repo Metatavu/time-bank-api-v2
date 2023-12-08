@@ -6,8 +6,8 @@ import java.time.LocalDate
 import fi.metatavu.timebank.model.DailyEntry
 import org.slf4j.Logger
 import java.time.DayOfWeek
-import javax.enterprise.context.ApplicationScoped
-import javax.inject.Inject
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.inject.Inject
 
 /**
  * Controller for DailyEntry objects

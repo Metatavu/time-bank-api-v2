@@ -2,12 +2,12 @@ package fi.metatavu.timebank.api.impl
 
 import fi.metatavu.timebank.api.controllers.TimeEntryController
 import fi.metatavu.timebank.api.impl.translate.TimeEntryTranslator
-import javax.enterprise.context.RequestScoped
+import jakarta.enterprise.context.RequestScoped
 import fi.metatavu.timebank.spec.TimeEntriesApi
 import java.time.LocalDate
 import java.util.*
-import javax.inject.Inject
-import javax.ws.rs.core.Response
+import jakarta.inject.Inject
+import jakarta.ws.rs.core.Response
 
 /**
  * API implementation for TimeEntries API

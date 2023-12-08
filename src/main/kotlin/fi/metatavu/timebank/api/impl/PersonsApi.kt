@@ -6,9 +6,9 @@ import fi.metatavu.timebank.model.Person
 import fi.metatavu.timebank.model.Timespan
 import fi.metatavu.timebank.spec.PersonsApi
 import java.time.LocalDate
-import javax.enterprise.context.RequestScoped
-import javax.inject.Inject
-import javax.ws.rs.core.Response
+import jakarta.enterprise.context.RequestScoped
+import jakarta.inject.Inject
+import jakarta.ws.rs.core.Response
 
 /**
  * API implementation for Persons API

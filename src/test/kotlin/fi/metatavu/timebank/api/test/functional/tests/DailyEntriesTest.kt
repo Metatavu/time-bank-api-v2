@@ -1,20 +1,17 @@
 package fi.metatavu.timebank.api.test.functional.tests
 
+import fi.metatavu.timebank.api.test.functional.data.TestDateUtils.Companion.getThirtyDaysAgo
 import fi.metatavu.timebank.api.test.functional.resources.LocalTestProfile
 import fi.metatavu.timebank.api.test.functional.resources.TestMySQLResource
 import fi.metatavu.timebank.api.test.functional.resources.TestWiremockResource
 import io.quarkus.test.common.QuarkusTestResource
 import io.quarkus.test.junit.QuarkusTest
 import io.quarkus.test.junit.TestProfile
-import org.junit.jupiter.api.AfterAll
+import io.quarkus.test.vertx.RunOnVertxContext
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
-import fi.metatavu.timebank.api.test.functional.data.TestDateUtils.Companion.getThirtyDaysAgo
-import java.time.LocalDate
 import org.junit.jupiter.api.Assertions.assertTrue
+import java.time.LocalDate
 
 /**
  * Tests for DailyEntries API
@@ -66,6 +63,7 @@ class DailyEntriesTest: AbstractTest() {
      * Tests /v1/dailyEntries -endpoint
      */
     @Test
+    @RunOnVertxContext
     fun listDailyEntries() {
         createTestBuilder().use { testBuilder ->
             val personA = testBuilder.manager.dailyEntries.getDailyEntries(
@@ -107,6 +105,7 @@ class DailyEntriesTest: AbstractTest() {
      * Forecast API cannot be reached via different requests
      */
     @Test
+    @RunOnVertxContext
     fun dailyEntriesErrorTest() {
         createTestBuilder().use { testBuilder ->
 
@@ -132,6 +131,7 @@ class DailyEntriesTest: AbstractTest() {
      * when persons expected worktime has changed.
      */
     @Test
+    @RunOnVertxContext
     fun testWorktimeCalendars() {
         createTestBuilder().use { testBuilder ->
             val firstEntries = testBuilder.manager.dailyEntries.getDailyEntries(

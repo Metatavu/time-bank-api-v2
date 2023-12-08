@@ -5,10 +5,10 @@ import fi.metatavu.timebank.api.controllers.VacationRequestStatusController
 import fi.metatavu.timebank.api.impl.translate.VacationRequestStatusTranslator
 import fi.metatavu.timebank.model.VacationRequestStatus
 import fi.metatavu.timebank.spec.VacationRequestStatusApi
-import javax.enterprise.context.RequestScoped
+import jakarta.enterprise.context.RequestScoped
 import java.util.*
-import javax.inject.Inject
-import javax.ws.rs.core.Response
+import jakarta.inject.Inject
+import jakarta.ws.rs.core.Response
 
 /**
  * API implementation for VacationRequestStatus API

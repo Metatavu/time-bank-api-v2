@@ -10,8 +10,8 @@ import okhttp3.Request
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.slf4j.Logger
 import java.time.LocalDate
-import javax.enterprise.context.RequestScoped
-import javax.inject.Inject
+import jakarta.enterprise.context.RequestScoped
+import jakarta.inject.Inject
 
 /**
  * Service for accessing Forecast API

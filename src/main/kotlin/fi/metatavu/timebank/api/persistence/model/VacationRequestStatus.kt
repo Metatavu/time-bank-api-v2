@@ -3,7 +3,7 @@ package fi.metatavu.timebank.api.persistence.model
 import fi.metatavu.timebank.model.VacationRequestStatuses
 import java.time.OffsetDateTime
 import java.util.*
-import javax.persistence.*
+import jakarta.persistence.*
 
 /**
  * VacationRequestStatus JPA entity

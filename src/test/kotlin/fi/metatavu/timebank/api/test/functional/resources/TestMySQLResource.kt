@@ -3,7 +3,7 @@ package fi.metatavu.timebank.api.test.functional.resources
 import io.quarkus.test.common.DevServicesContext
 import io.quarkus.test.common.QuarkusTestResourceLifecycleManager
 import org.testcontainers.containers.MySQLContainer
-import javax.enterprise.context.ApplicationScoped
+import jakarta.enterprise.context.ApplicationScoped
 
 internal class SpecifiedMySQLContainer(image: String): MySQLContainer<SpecifiedMySQLContainer>(image)
 

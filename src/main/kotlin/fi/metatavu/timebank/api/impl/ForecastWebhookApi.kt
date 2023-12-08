@@ -2,11 +2,11 @@ package fi.metatavu.timebank.api.impl
 
 import fi.metatavu.timebank.api.controllers.TimeEntryController
 import fi.metatavu.timebank.model.ForecastWebhookEvent
-import javax.enterprise.context.RequestScoped
+import jakarta.enterprise.context.RequestScoped
 import fi.metatavu.timebank.spec.ForecastWebhookApi
 import org.slf4j.Logger
-import javax.inject.Inject
-import javax.ws.rs.core.Response
+import jakarta.inject.Inject
+import jakarta.ws.rs.core.Response
 
 /**
  * API implementation for ForecastWebhook API

@@ -2,6 +2,7 @@ package fi.metatavu.timebank.api.persistence.repositories
 
 import io.quarkus.hibernate.reactive.panache.Panache
 import io.quarkus.hibernate.reactive.panache.PanacheRepositoryBase
+import io.quarkus.hibernate.reactive.panache.common.WithTransaction
 import io.quarkus.panache.common.Parameters
 import io.smallrye.mutiny.coroutines.awaitSuspending
 

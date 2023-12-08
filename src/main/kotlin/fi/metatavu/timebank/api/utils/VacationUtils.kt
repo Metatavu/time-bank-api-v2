@@ -5,8 +5,8 @@ import fi.metatavu.timebank.api.forecast.models.ForecastPerson
 import java.time.LocalDate
 import java.time.Period
 import java.time.Year
-import javax.enterprise.context.ApplicationScoped
-import javax.inject.Inject
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.inject.Inject
 import kotlin.math.roundToInt
 import org.eclipse.microprofile.config.ConfigProvider
 

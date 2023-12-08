@@ -1,7 +1,7 @@
 package fi.metatavu.timebank.api.impl.translate
 
 import fi.metatavu.timebank.api.persistence.model.TimeEntry
-import javax.enterprise.context.ApplicationScoped
+import jakarta.enterprise.context.ApplicationScoped
 
 /**
  * Translates TimeEntry objects

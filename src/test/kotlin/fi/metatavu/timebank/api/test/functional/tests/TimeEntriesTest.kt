@@ -7,6 +7,7 @@ import fi.metatavu.timebank.api.test.functional.resources.TestWiremockResource
 import io.quarkus.test.common.QuarkusTestResource
 import io.quarkus.test.junit.QuarkusTest
 import io.quarkus.test.junit.TestProfile
+import io.quarkus.test.vertx.RunOnVertxContext
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -36,6 +37,7 @@ class TimeEntriesTest: AbstractTest() {
      * Tests /v1/timeEntries -endpoint
      */
     @Test
+    @RunOnVertxContext
     fun testTimeEntries() {
         createTestBuilder().use { testBuilder ->
             val amountOfPersons = testBuilder.manager.persons.getPersons().size

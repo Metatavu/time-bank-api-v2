@@ -4,8 +4,8 @@ import fi.metatavu.timebank.api.forecast.models.ForecastPerson
 import fi.metatavu.timebank.api.keycloak.KeycloakController
 import fi.metatavu.timebank.model.Person
 import java.util.*
-import javax.enterprise.context.ApplicationScoped
-import javax.inject.Inject
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.inject.Inject
 
 /**
  * Translates ForecastPerson object to Person object

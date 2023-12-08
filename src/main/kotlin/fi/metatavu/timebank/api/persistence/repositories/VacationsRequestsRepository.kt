@@ -4,7 +4,7 @@ import fi.metatavu.timebank.api.persistence.model.VacationRequest
 import io.quarkus.panache.common.Parameters
 import java.time.LocalDate
 import java.util.UUID
-import javax.enterprise.context.ApplicationScoped
+import jakarta.enterprise.context.ApplicationScoped
 
 /**
  * Manages VacationRequest JPA entity

@@ -4,7 +4,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.keycloak.admin.client.Keycloak
 import org.keycloak.admin.client.KeycloakBuilder
 import org.keycloak.admin.client.resource.UsersResource
-import javax.enterprise.context.ApplicationScoped
+import jakarta.enterprise.context.ApplicationScoped
 import org.keycloak.representations.idm.UserRepresentation
 
 /**

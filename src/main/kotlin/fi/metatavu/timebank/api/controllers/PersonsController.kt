@@ -12,8 +12,8 @@ import fi.metatavu.timebank.model.Timespan
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.temporal.WeekFields
-import javax.enterprise.context.ApplicationScoped
-import javax.inject.Inject
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.inject.Inject
 
 /**
  * Controller for Person objects

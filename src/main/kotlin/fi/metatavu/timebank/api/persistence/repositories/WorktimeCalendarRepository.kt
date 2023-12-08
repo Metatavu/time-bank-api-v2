@@ -6,7 +6,7 @@ import io.quarkus.hibernate.reactive.panache.PanacheRepositoryBase
 import io.smallrye.mutiny.coroutines.awaitSuspending
 import java.time.LocalDate
 import java.util.*
-import javax.enterprise.context.ApplicationScoped
+import jakarta.enterprise.context.ApplicationScoped
 
 /**
  * Manages WorktimeCalendar JPA entity

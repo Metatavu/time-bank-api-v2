@@ -10,12 +10,13 @@ import fi.metatavu.timebank.test.client.models.VacationType
 import io.quarkus.test.common.QuarkusTestResource
 import io.quarkus.test.junit.QuarkusTest
 import io.quarkus.test.junit.TestProfile
+import io.quarkus.test.vertx.RunOnVertxContext
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import java.util.*
-import org.junit.jupiter.api.Assertions.*
 import java.time.LocalDate
+import java.util.*
 
 /**
  * Tests for Vacations API
@@ -52,6 +53,7 @@ class VacationRequestsTest: AbstractTest() {
      * Tests /v1/vacationRequest -endpoint POST method
      */
     @Test
+    @RunOnVertxContext
     fun testCreateVacationRequests() {
         createTestBuilder().use { testBuilder ->
             val createdVacation = testBuilder.manager.vacationRequests.createVacationRequest(testVacationRequest)
@@ -70,6 +72,7 @@ class VacationRequestsTest: AbstractTest() {
      * Tests /v1/vacationRequest -endpoint GET method
      */
     @Test
+    @RunOnVertxContext
     fun testListVacationRequests() {
         createTestBuilder().use { testBuilder ->
             val createdVacation = testBuilder.manager.vacationRequests.createVacationRequest(testVacationRequest)
@@ -89,6 +92,7 @@ class VacationRequestsTest: AbstractTest() {
      * Tests /v1/vacationRequest{id} -endpoint PUT method
      */
     @Test
+    @RunOnVertxContext
     fun testUpdateVacationRequests() {
         createTestBuilder().use { testBuilder ->
             testBuilder.manager.vacationRequests.createVacationRequest(testVacationRequest)
@@ -109,6 +113,7 @@ class VacationRequestsTest: AbstractTest() {
      * Tests /v1/vacationRequest{id} -endpoint DELETE method
      */
     @Test
+    @RunOnVertxContext
     fun testDeleteVacationRequests() {
         createTestBuilder().use { testBuilder ->
             testBuilder.manager.vacationRequests.createVacationRequest(testVacationRequest)
@@ -129,6 +134,7 @@ class VacationRequestsTest: AbstractTest() {
      * Tests Tests /v1/vacationRequest -endpoint PUT method fail
      */
     @Test
+    @RunOnVertxContext
     fun testUpdateVacationRequestsFail() {
         createTestBuilder().use { testBuilder ->
             testBuilder.manager.vacationRequests.createVacationRequest(testVacationRequest)
@@ -151,6 +157,7 @@ class VacationRequestsTest: AbstractTest() {
      * Tests /v1/vacationRequest{id} -endpoint DELETE method fail
      */
     @Test
+    @RunOnVertxContext
     fun testDeleteVacationRequestsFail() {
         createTestBuilder().use { testBuilder ->
             testBuilder.manager.vacationRequests.createVacationRequest(testVacationRequest)

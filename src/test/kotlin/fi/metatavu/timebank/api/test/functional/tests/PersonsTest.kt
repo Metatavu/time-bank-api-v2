@@ -1,19 +1,20 @@
 package fi.metatavu.timebank.api.test.functional.tests
 
+import fi.metatavu.timebank.api.test.functional.data.TestDateUtils.Companion.getThirtyDaysAgo
 import fi.metatavu.timebank.api.test.functional.resources.LocalTestProfile
-import fi.metatavu.timebank.api.test.functional.resources.TestWiremockResource
 import fi.metatavu.timebank.api.test.functional.resources.TestMySQLResource
+import fi.metatavu.timebank.api.test.functional.resources.TestWiremockResource
 import fi.metatavu.timebank.test.client.models.Person
 import fi.metatavu.timebank.test.client.models.Timespan
 import io.quarkus.test.common.QuarkusTestResource
 import io.quarkus.test.junit.QuarkusTest
 import io.quarkus.test.junit.TestProfile
+import io.quarkus.test.vertx.RunOnVertxContext
 import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.*
-import fi.metatavu.timebank.api.test.functional.data.TestDateUtils.Companion.getThirtyDaysAgo
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
-import java.util.*
 import kotlin.math.ceil
 
 /**
@@ -26,6 +27,7 @@ import kotlin.math.ceil
 )
 @TestProfile(LocalTestProfile::class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@RunOnVertxContext
 class PersonsTest: AbstractTest() {
 
     /**
@@ -66,6 +68,7 @@ class PersonsTest: AbstractTest() {
      * Tests /v1/persons?active=false -endpoint
      */
     @Test
+    @RunOnVertxContext
     fun listActivePersons() {
         createTestBuilder().use { testBuilder ->
             val persons = testBuilder.manager.persons.getPersons(active = false)
@@ -79,6 +82,7 @@ class PersonsTest: AbstractTest() {
      * Tests /v1/persons -endpoint
      */
      @Test
+     @RunOnVertxContext
     fun listAllPersons() {
         createTestBuilder().use { testBuilder ->
             val persons = testBuilder.manager.persons.getPersons()
@@ -97,6 +101,8 @@ class PersonsTest: AbstractTest() {
      * Tests handling Keycloak user attributes via v/1/persons/{personId} -endpoint PUT method
      */
     @Test
+    @RunOnVertxContext
+
     fun updatePersons() {
         createTestBuilder().use { testBuilder ->
             val person = testBuilder.manager.persons.getPersons(active = false).find { it.id == 2 }!!
@@ -150,6 +156,7 @@ class PersonsTest: AbstractTest() {
      * timespan defaults to ALL_TIME
      */
     @Test
+    @RunOnVertxContext
     fun listPersonTotalTimeForTesterBAllTime() {
         createTestBuilder().use { testBuilder ->
             val personTotalTimes = testBuilder.manager.persons.getPersonTotal(
@@ -168,6 +175,7 @@ class PersonsTest: AbstractTest() {
      * Tests /v1/persons/2/total?timespan=ALL_TIME&before=yyyy-mm-dd
      */
     @Test
+    @RunOnVertxContext
     fun listPersonTotalTimeForTesterBAllTimeWithoutToday() {
         createTestBuilder().use { testBuilder ->
             val personTotalTimes = testBuilder.manager.persons.getPersonTotal(
@@ -187,6 +195,7 @@ class PersonsTest: AbstractTest() {
      * Tests /v1/persons/3/total?timespan=MONTH
      */
     @Test
+    @RunOnVertxContext
     fun listPersonTotalTimeForTesterCMonth() {
         createTestBuilder().use { testBuilder ->
             val amountOfMonths = ChronoUnit.MONTHS.between(
@@ -214,6 +223,7 @@ class PersonsTest: AbstractTest() {
      * Tests /v1/persons/3/total?timespan=WEEK
      */
     @Test
+    @RunOnVertxContext
     fun listPersonTotalTimeForTesterCWeek() {
         createTestBuilder().use { testBuilder ->
             val personTotalTimes = testBuilder.manager.persons.getPersonTotal(
@@ -240,6 +250,7 @@ class PersonsTest: AbstractTest() {
      * Tests listing total time entries for a non-existing person
      */
     @Test
+    @RunOnVertxContext
     fun listNonExistingPersonTimeEntries() {
         createTestBuilder().use { testBuilder ->
             testBuilder.manager.persons.assertTotalsFail(
@@ -253,6 +264,7 @@ class PersonsTest: AbstractTest() {
      * Test /v1/persons?active=false without access token
      */
      @Test
+     @RunOnVertxContext
     fun listPersonsWithNullToken() {
         createTestBuilder().use { testBuilder ->
             testBuilder.userWithNullToken.persons.assertListFailWithNullToken(expectedStatus = 401)
@@ -263,6 +275,7 @@ class PersonsTest: AbstractTest() {
      * Tests /v1/persons -endpoint when Forecast API persons -endpoint responses with an error
      */
      @Test
+     @RunOnVertxContext
     fun testPersonsWithForecastError() {
         setScenario(
             scenario = PERSONS_SCENARIO,

@@ -6,7 +6,7 @@ import io.quarkus.panache.common.Parameters
 import io.smallrye.mutiny.coroutines.awaitSuspending
 import java.time.LocalDate
 import java.util.UUID
-import javax.enterprise.context.ApplicationScoped
+import jakarta.enterprise.context.ApplicationScoped
 
 /**
  * Manages TimeEntry JPA entity
