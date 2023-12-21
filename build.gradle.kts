@@ -52,6 +52,9 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("io.vertx:vertx-core")
+    implementation("io.vertx:vertx-lang-kotlin")
+    implementation("io.vertx:vertx-lang-kotlin-coroutines")
 
     testImplementation("io.quarkus:quarkus-test-hibernate-reactive-panache")
     testImplementation("io.quarkus:quarkus-junit5")
@@ -62,11 +65,7 @@ dependencies {
     testImplementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     testImplementation("org.testcontainers:testcontainers")
     testImplementation("org.testcontainers:mysql")
-    testImplementation("fi.metatavu.jaxrs.testbuilder:jaxrs-functional-test-builder:$jaxrsFunctionalTestBuilderVersion") {
-        exclude(group="com.fasterxml.jackson.core", module="jackson-core")
-        exclude(group="com.fasterxml.jackson.core", module="jackson-databind")
-        exclude(group="com.fasterxml.jackson.datatype", module="jackson-datatype-jsr310")
-    }
+    testImplementation("fi.metatavu.jaxrs.testbuilder:jaxrs-functional-test-builder:$jaxrsFunctionalTestBuilderVersion")
 
     kapt("org.hibernate:hibernate-jpamodelgen:6.2.13.Final")
 }
@@ -111,7 +110,7 @@ val generateApiSpec = tasks.register("generateApiSpec",GenerateTask::class){
     this.configOptions.put("library", "jaxrs-spec")
     this.configOptions.put("dateLibrary", "java8")
     this.configOptions.put("interfaceOnly", "true")
-    this.configOptions.put("useCoroutines", "true")
+    this.configOptions.put("useMutiny", "true")
     this.configOptions.put("enumPropertyNaming", "UPPERCASE")
     this.configOptions.put("returnResponse", "true")
     this.configOptions.put("useSwaggerAnnotations", "false")

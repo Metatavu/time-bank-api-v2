@@ -1,19 +1,19 @@
 package fi.metatavu.timebank.api.controllers
 
-import fi.metatavu.timebank.model.PersonTotalTime
 import fi.metatavu.timebank.api.forecast.ForecastService
 import fi.metatavu.timebank.api.forecast.models.ForecastPerson
 import fi.metatavu.timebank.api.keycloak.KeycloakController
 import fi.metatavu.timebank.api.utils.VacationUtils
-import org.slf4j.Logger
 import fi.metatavu.timebank.model.DailyEntry
 import fi.metatavu.timebank.model.Person
+import fi.metatavu.timebank.model.PersonTotalTime
 import fi.metatavu.timebank.model.Timespan
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.inject.Inject
+import org.slf4j.Logger
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.temporal.WeekFields
-import jakarta.enterprise.context.ApplicationScoped
-import jakarta.inject.Inject
 
 /**
  * Controller for Person objects
@@ -80,7 +80,7 @@ class PersonsController {
      *
      * @return List of ForecastPersons
      */
-    suspend fun getPersonsFromForecast(): List<ForecastPerson> {
+    fun getPersonsFromForecast(): List<ForecastPerson> {
         return try {
             forecastService.getPersons().filter { !it.isSystemUser }
         } catch (e: Error) {
@@ -94,7 +94,7 @@ class PersonsController {
      *
      * @return List of LocalDate
      */
-    suspend fun getHolidaysFromForecast(): List<LocalDate> {
+    fun getHolidaysFromForecast(): List<LocalDate> {
         return try {
             val forecastHolidays = forecastService.getHolidays()
             forecastHolidays.map{ holiday ->

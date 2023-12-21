@@ -2,29 +2,27 @@ package fi.metatavu.timebank.api.persistence.repositories
 
 import io.quarkus.hibernate.reactive.panache.Panache
 import io.quarkus.hibernate.reactive.panache.PanacheRepositoryBase
-import io.quarkus.hibernate.reactive.panache.common.WithTransaction
 import io.quarkus.panache.common.Parameters
-import io.smallrye.mutiny.coroutines.awaitSuspending
 
 abstract class AbstractRepository<T, E>: PanacheRepositoryBase<T, E,> {
 
-    suspend fun listWithParameters(queryString: String, parameters: Parameters): List<T>{
-        return find(queryString, parameters).list<T>().awaitSuspending()
+    fun listWithParameters(queryString: String, parameters: Parameters): List<T>{
+        return find(queryString, parameters).list<T>().await().indefinitely()
     }
 
-    suspend fun deleteByIdSuspending(id: E) {
-        Panache.withTransaction { deleteById(id) }.awaitSuspending()
+    fun deleteByIdSuspending(id: E) {
+        Panache.withTransaction { deleteById(id) }.await().indefinitely()
     }
 
-    suspend fun deleteSuspending(entity: T) {
-        Panache.withTransaction { delete(entity) }.awaitSuspending()
+    fun deleteSuspending(entity: T) {
+        Panache.withTransaction { delete(entity) }.await().indefinitely()
     }
 
-    suspend fun persistSuspending(entity: T): T {
-        return Panache.withTransaction { persist(entity) }.awaitSuspending()
+    fun persistSuspending(entity: T): T {
+        return Panache.withTransaction { persist(entity) }.await().indefinitely()
     }
 
-    suspend fun findSuspending(id: E): T? {
-        return findById(id).awaitSuspending()
+    fun findSuspending(id: E): T? {
+        return findById(id).await().indefinitely()
     }
 }

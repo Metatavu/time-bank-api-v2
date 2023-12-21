@@ -2,10 +2,10 @@ package fi.metatavu.timebank.api.controllers
 
 import fi.metatavu.timebank.api.persistence.model.VacationRequest
 import fi.metatavu.timebank.api.persistence.repositories.VacationsRequestsRepository
-import java.time.LocalDate
-import java.util.*
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
+import java.time.LocalDate
+import java.util.*
 
 /**
  * Controller for vacationRequest objects
@@ -25,7 +25,7 @@ class VacationRequestController {
      * @param vacationRequest VacationRequest
      * @return persisted VacationRequest
      */
-    suspend fun createVacationRequest(vacationRequest: fi.metatavu.timebank.model.VacationRequest, creatorsId: UUID): VacationRequest {
+    fun createVacationRequest(vacationRequest: fi.metatavu.timebank.model.VacationRequest, creatorsId: UUID): VacationRequest {
         return vacationsRequestsRepository.persistSuspending(
             VacationRequest(
                 id = UUID.randomUUID(),
@@ -49,7 +49,7 @@ class VacationRequestController {
      * @param after after date
      * @return List of VacationRequests
      */
-    suspend fun listVacationRequests(personId: UUID?, before: LocalDate?, after: LocalDate?): List<VacationRequest> {
+    fun listVacationRequests(personId: UUID?, before: LocalDate?, after: LocalDate?): List<VacationRequest> {
         return vacationsRequestsRepository.listVacationRequest(
             personId = personId,
             before = before,
@@ -63,7 +63,7 @@ class VacationRequestController {
      * @param id id
      * @return persisted VacationRequest
      */
-    suspend fun findVacationRequest(id: UUID): VacationRequest? {
+    fun findVacationRequest(id: UUID): VacationRequest? {
         return vacationsRequestsRepository.findSuspending(id)
     }
 

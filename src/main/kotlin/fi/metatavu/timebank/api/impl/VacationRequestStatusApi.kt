@@ -5,15 +5,23 @@ import fi.metatavu.timebank.api.controllers.VacationRequestStatusController
 import fi.metatavu.timebank.api.impl.translate.VacationRequestStatusTranslator
 import fi.metatavu.timebank.model.VacationRequestStatus
 import fi.metatavu.timebank.spec.VacationRequestStatusApi
+import io.smallrye.mutiny.Uni
+import io.smallrye.mutiny.coroutines.asUni
+import io.vertx.core.Vertx
+import io.vertx.kotlin.coroutines.dispatcher
 import jakarta.enterprise.context.RequestScoped
-import java.util.*
 import jakarta.inject.Inject
 import jakarta.ws.rs.core.Response
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
+import java.util.*
 
 /**
  * API implementation for VacationRequestStatus API
  */
 @RequestScoped
+@OptIn(ExperimentalCoroutinesApi::class)
 class VacationRequestStatusApi: VacationRequestStatusApi, AbstractApi() {
 
     @Inject
@@ -25,38 +33,45 @@ class VacationRequestStatusApi: VacationRequestStatusApi, AbstractApi() {
     @Inject
     lateinit var vacationRequestStatusTranslator: VacationRequestStatusTranslator
 
-    override suspend fun createVacationRequestStatus(id: UUID, vacationRequestStatus: VacationRequestStatus): Response {
-        val userId = loggedUserId ?: return createUnauthorized("Invalid token!")
+    @Inject
+    lateinit var vertx: Vertx
 
-        if (!isAdmin()) return createForbidden("Permission missing")
+    override fun createVacationRequestStatus(id: UUID, vacationRequestStatus: VacationRequestStatus): Uni<Response> =
+        CoroutineScope(vertx.dispatcher()).async {
+        val userId = loggedUserId ?: return@async createUnauthorized("Invalid token!")
 
-        val foundVacationRequest = vacationRequestController.findVacationRequest(id) ?: return createNotFound("Vacation request not found")
+        if (!isAdmin()) return@async createForbidden("Permission missing")
+
+        val foundVacationRequest = vacationRequestController.findVacationRequest(id) ?: return@async createNotFound("Vacation request not found")
         val newStatus = vacationRequestStatusController.createVacationRequestStatus(foundVacationRequest, vacationRequestStatus, userId)
 
-        return createCreated(entity = vacationRequestStatusTranslator.translate(newStatus))
-    }
+        return@async createCreated(entity = vacationRequestStatusTranslator.translate(newStatus))
+    }.asUni()
 
-    override suspend fun listVacationRequestStatuses(id: UUID): Response {
-        loggedUserId ?: return createUnauthorized("Invalid token!")
+    override fun listVacationRequestStatuses(id: UUID): Uni<Response> =
+        CoroutineScope(vertx.dispatcher()).async {
+        loggedUserId ?: return@async createUnauthorized("Invalid token!")
 
         val statuses = vacationRequestStatusController.listVacationRequestStatus(vacationRequestId = id)
 
-        return createOk(entity = vacationRequestStatusTranslator.translate(statuses))
-    }
+        return@async createOk(entity = vacationRequestStatusTranslator.translate(statuses))
+    }.asUni()
 
-    override suspend fun findVacationRequestStatus(id: UUID, statusId: UUID): Response {
-        loggedUserId ?: return createUnauthorized("Invalid token!")
+    override fun findVacationRequestStatus(id: UUID, statusId: UUID): Uni<Response> =
+        CoroutineScope(vertx.dispatcher()).async {
+        loggedUserId ?: return@async createUnauthorized("Invalid token!")
 
-        val foundStatus = vacationRequestStatusController.findVacationRequestStatus(statusId) ?: return createNotFound("Vacation request status not found")
+        val foundStatus = vacationRequestStatusController.findVacationRequestStatus(statusId) ?: return@async createNotFound("Vacation request status not found")
 
-        return createOk(vacationRequestStatusTranslator.translate(foundStatus))
-    }
+        return@async createOk(vacationRequestStatusTranslator.translate(foundStatus))
+    }.asUni()
 
-    override suspend fun updateVacationRequestStatus(id: UUID, statusId: UUID, vacationRequestStatus: VacationRequestStatus): Response {
-        val userId = loggedUserId ?: return createUnauthorized("Invalid token!")
-        val existingStatus = vacationRequestStatusController.findVacationRequestStatus(statusId) ?: return createNotFound("Vacation request status not found")
+    override fun updateVacationRequestStatus(id: UUID, statusId: UUID, vacationRequestStatus: VacationRequestStatus): Uni<Response> =
+        CoroutineScope(vertx.dispatcher()).async {
+        val userId = loggedUserId ?: return@async createUnauthorized("Invalid token!")
+        val existingStatus = vacationRequestStatusController.findVacationRequestStatus(statusId) ?: return@async createNotFound("Vacation request status not found")
 
-        if (existingStatus.createdBy != userId && !isAdmin()) return createForbidden("Permission missing")
+        if (existingStatus.createdBy != userId && !isAdmin()) return@async createForbidden("Permission missing")
 
         val updatedStatus = vacationRequestStatusController.updateVacationRequestStatus(
             existingStatus = existingStatus,
@@ -64,18 +79,19 @@ class VacationRequestStatusApi: VacationRequestStatusApi, AbstractApi() {
             updaterId = userId
         )
 
-        return createOk(entity = vacationRequestStatusTranslator.translate(updatedStatus))
+        return@async createOk(entity = vacationRequestStatusTranslator.translate(updatedStatus))
 
-    }
+    }.asUni()
 
-    override suspend fun deleteVacationRequestStatus(id: UUID, statusId: UUID): Response {
-        val userId = loggedUserId ?: return createUnauthorized("Invalid token!")
-        val existingStatus = vacationRequestStatusController.findVacationRequestStatus(statusId) ?: return createNotFound("Vacation request status not found")
+    override fun deleteVacationRequestStatus(id: UUID, statusId: UUID): Uni<Response> =
+        CoroutineScope(vertx.dispatcher()).async {
+        val userId = loggedUserId ?: return@async createUnauthorized("Invalid token!")
+        val existingStatus = vacationRequestStatusController.findVacationRequestStatus(statusId) ?: return@async createNotFound("Vacation request status not found")
 
-        if (existingStatus.createdBy != userId) return createForbidden("You can only delete your own statuses")
+        if (existingStatus.createdBy != userId) return@async createForbidden("You can only delete your own statuses")
 
         vacationRequestStatusController.deleteVacationRequestStatus(existingStatus)
 
-        return createNoContent()
-    }
+        return@async createNoContent()
+    }.asUni()
 }

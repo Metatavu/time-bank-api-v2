@@ -4,12 +4,12 @@ import fi.metatavu.timebank.api.forecast.ForecastService
 import fi.metatavu.timebank.api.forecast.models.ForecastPerson
 import fi.metatavu.timebank.api.forecast.models.ForecastTask
 import fi.metatavu.timebank.api.forecast.models.ForecastTimeEntry
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.temporal.ChronoUnit
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
 import org.slf4j.Logger
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 
 /**
  * Controller for synchronization Forecast time registrations with Time-bank
@@ -40,7 +40,7 @@ class SynchronizeController {
      * @param after YYYY-MM-DD LocalDate
      * @param syncDeletedEntries boolean if true synchronize deleted time entries between forecast and time bank
      */
-    suspend fun synchronize(after: LocalDate? = oldestSyncDate, syncDeletedEntries: Boolean = false) {
+     fun synchronize(after: LocalDate? = oldestSyncDate, syncDeletedEntries: Boolean = false) {
         var forecastPersons = personsController.getPersonsFromForecast()
 
         forecastPersons.forEach { worktimeCalendarController.checkWorktimeCalendar(it) }
@@ -104,7 +104,7 @@ class SynchronizeController {
      * @param forecastPersons List of ForecastPersons
      * @return List of TimeEntries
      */
-    private suspend fun retrieveAllEntries(after: LocalDate?, forecastPersons: List<ForecastPerson>): List<ForecastTimeEntry> {
+    private fun retrieveAllEntries(after: LocalDate?, forecastPersons: List<ForecastPerson>): List<ForecastTimeEntry> {
         var retrievedAllEntries = false
         val forecastTimeEntries = mutableListOf<ForecastTimeEntry>()
         var pageNumber = 1
@@ -137,7 +137,7 @@ class SynchronizeController {
      *
      * @return List of ForecastTasks
      */
-    private suspend fun retrieveAllTasks(): List<ForecastTask> {
+    private fun retrieveAllTasks(): List<ForecastTask> {
         var retrievedAllTasks = false
         val forecastTasks = mutableListOf<ForecastTask>()
         var pageNumber = 1
@@ -170,7 +170,7 @@ class SynchronizeController {
      * @param persons persons
      * @return List of ForecastTimeEntries
      */
-    private suspend fun synchronizationDayValidator(timeEntries: List<ForecastTimeEntry>, persons: List<ForecastPerson>): List<ForecastTimeEntry> {
+    private fun synchronizationDayValidator(timeEntries: List<ForecastTimeEntry>, persons: List<ForecastPerson>): List<ForecastTimeEntry> {
         val sortedEntries = timeEntries.sortedBy { it.date }.filter { LocalDate.parse(it.date) > oldestSyncDate }.toMutableList()
         var firstEntryDate = LocalDate.parse(sortedEntries.first().date)
         if (firstEntryDate < oldestSyncDate) firstEntryDate = oldestSyncDate

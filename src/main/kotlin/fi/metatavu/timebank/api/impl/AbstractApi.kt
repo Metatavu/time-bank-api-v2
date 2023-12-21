@@ -1,12 +1,12 @@
 package fi.metatavu.timebank.api.impl
 
 import io.quarkus.security.identity.SecurityIdentity
-import org.eclipse.microprofile.config.inject.ConfigProperty
-import org.eclipse.microprofile.jwt.JsonWebToken
-import java.util.*
 import jakarta.enterprise.context.RequestScoped
 import jakarta.inject.Inject
 import jakarta.ws.rs.core.Response
+import org.eclipse.microprofile.config.inject.ConfigProperty
+import org.eclipse.microprofile.jwt.JsonWebToken
+import java.util.*
 
 /**
  * Abstract base class for all API services

@@ -23,7 +23,7 @@ class TimeEntryRepository: AbstractRepository<TimeEntry, UUID>() {
      * @param vacation filter vacation days
      * @return List of TimeEntries
      */
-    suspend fun getEntries(personId: Int?, before: LocalDate?, after: LocalDate?, vacation: Boolean?): List<TimeEntry> {
+    fun getEntries(personId: Int?, before: LocalDate?, after: LocalDate?, vacation: Boolean?): List<TimeEntry> {
         val stringBuilder = StringBuilder()
         val parameters = Parameters()
 
@@ -59,10 +59,10 @@ class TimeEntryRepository: AbstractRepository<TimeEntry, UUID>() {
      * @param entry TimeEntry
      * @return true for persisted false for not persisted
      */
-    suspend fun persistEntry(entry: TimeEntry): Boolean {
-        val existingEntry = find("forecastId", entry.forecastId).list<TimeEntry>().awaitSuspending()
+    fun persistEntry(entry: TimeEntry): Boolean {
+        val existingEntry = find("forecastId", entry.forecastId).list<TimeEntry>().await().indefinitely()
         if (existingEntry.isEmpty()) {
-            Panache.withTransaction { persist(entry) }.awaitSuspending()
+            Panache.withTransaction { persist(entry) }.await().indefinitely()
             return true
         }
 
@@ -71,7 +71,7 @@ class TimeEntryRepository: AbstractRepository<TimeEntry, UUID>() {
                 false
             } else {
                 deleteEntry(entry.forecastId!!)
-                Panache.withTransaction { persist(entry) }.awaitSuspending()
+                Panache.withTransaction { persist(entry) }.await().indefinitely()
                 true
             }
         }
@@ -84,8 +84,8 @@ class TimeEntryRepository: AbstractRepository<TimeEntry, UUID>() {
      *
      * @param forecastId id of time registration in Forecast
      */
-    suspend fun deleteEntry(forecastId: Int) {
-        Panache.withTransaction { delete("forecastId", forecastId) }.awaitSuspending()
+    fun deleteEntry(forecastId: Int) {
+        Panache.withTransaction { delete("forecastId", forecastId) }.await().indefinitely()
     }
 
     /**
@@ -93,7 +93,7 @@ class TimeEntryRepository: AbstractRepository<TimeEntry, UUID>() {
      *
      * @param id id of time registration
      */
-    suspend fun deleteEntry(id: UUID) {
-        Panache.withTransaction { deleteById(id) }.awaitSuspending()
+    fun deleteEntry(id: UUID) {
+        Panache.withTransaction { deleteById(id) }.await().indefinitely()
     }
 }

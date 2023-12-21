@@ -5,11 +5,11 @@ import fi.metatavu.timebank.api.forecast.models.ForecastTimeEntry
 import fi.metatavu.timebank.api.persistence.model.TimeEntry
 import fi.metatavu.timebank.api.persistence.repositories.TimeEntryRepository
 import fi.metatavu.timebank.api.utils.VacationUtils
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.inject.Inject
 import java.time.LocalDate
 import java.time.OffsetDateTime
 import java.util.*
-import jakarta.enterprise.context.ApplicationScoped
-import jakarta.inject.Inject
 
 /**
  * Controller for timeEntry objects
@@ -29,7 +29,7 @@ class TimeEntryController {
      * @param vacation vacation
      * @return List of TimeEntries
      */
-    suspend fun getEntries(personId: Int?, before: LocalDate?, after: LocalDate?, vacation: Boolean?): List<TimeEntry> {
+    fun getEntries(personId: Int?, before: LocalDate?, after: LocalDate?, vacation: Boolean?): List<TimeEntry> {
         return timeEntryRepository.getEntries(
             personId = personId,
             before = before,
@@ -45,7 +45,7 @@ class TimeEntryController {
      * @param forecastTasks List of ForecastTasks
      * @return boolean whether operation was successful
      */
-    suspend fun createEntry(
+    fun createEntry(
         forecastTimeEntry: ForecastTimeEntry, forecastTasks: List<ForecastTask>): Boolean {
         val nonBillableTask = forecastTasks.find { it.id == forecastTimeEntry.task }?.unBillable ?: true
         val internalTime = forecastTimeEntry.nonProjectTime != null
@@ -76,7 +76,7 @@ class TimeEntryController {
      *
      * @param id id
      */
-    suspend fun deleteEntry(id: UUID) {
+    fun deleteEntry(id: UUID) {
         timeEntryRepository.deleteEntry(id = id)
     }
 
@@ -85,7 +85,7 @@ class TimeEntryController {
      *
      * @param forecastId forecastId
      */
-    suspend fun deleteEntry(forecastId: Int) {
+    fun deleteEntry(forecastId: Int) {
         timeEntryRepository.deleteEntry(forecastId = forecastId)
     }
 }

@@ -3,10 +3,11 @@ package fi.metatavu.timebank.api.controllers
 import fi.metatavu.timebank.api.forecast.models.ForecastPerson
 import fi.metatavu.timebank.api.persistence.model.WorktimeCalendar
 import fi.metatavu.timebank.api.persistence.repositories.WorktimeCalendarRepository
-import java.time.LocalDate
-import java.util.*
+import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
+import java.time.LocalDate
+import java.util.*
 
 /**
  * Controller for WorktimeCalendars
@@ -23,7 +24,7 @@ class WorktimeCalendarController {
      * @param personId personId
      * @return List of WorktimeCalendars
      */
-    suspend fun getAllWorktimeCalendarsByPerson(personId: Int): List<WorktimeCalendar> {
+    fun getAllWorktimeCalendarsByPerson(personId: Int): Uni<MutableList<WorktimeCalendar>> {
         return worktimeCalendarRepository.getAllWorkTimeCalendarsByPerson(
             personId = personId
         )!!
@@ -35,9 +36,10 @@ class WorktimeCalendarController {
      *
      * @param person ForecastPerson
      */
-    suspend fun checkWorktimeCalendar(person: ForecastPerson) {
+    fun checkWorktimeCalendar(person: ForecastPerson) {
         val allWorktimeCalendars = worktimeCalendarRepository.getAllWorkTimeCalendarsByPerson(person.id)
-        if (allWorktimeCalendars.isNullOrEmpty()) {
+
+        if (allWorktimeCalendars?.await()?.indefinitely().isNullOrEmpty()) {
             createWorktimeCalendar(
                 person = person,
                 first = true
@@ -46,7 +48,7 @@ class WorktimeCalendarController {
             return
         }
 
-        val upToDateWorktimeCalendar = allWorktimeCalendars.find { it.calendarEnd == null }!!
+        val upToDateWorktimeCalendar = allWorktimeCalendars?.await()?.indefinitely()?.find { it.calendarEnd == null }!!
 
         if (!compareExpected(person, upToDateWorktimeCalendar)) {
             updateWorktimeCalendar(
@@ -65,7 +67,7 @@ class WorktimeCalendarController {
      * @param worktimeCalendar WorktimeCalendar
      * @return Boolean whether WorktimeCalendar was up-to-date
      */
-    suspend fun compareExpected(person: ForecastPerson, worktimeCalendar: WorktimeCalendar): Boolean {
+    fun compareExpected(person: ForecastPerson, worktimeCalendar: WorktimeCalendar): Boolean {
         val isCalendarUpToDate =
             person.monday == worktimeCalendar.monday &&
             person.tuesday == worktimeCalendar.tuesday &&
@@ -95,7 +97,7 @@ class WorktimeCalendarController {
      * @param first whether this is the first WorktimeCalendar for given Person
      * @return WorktimeCalendar
      */
-    suspend fun createWorktimeCalendar(person: ForecastPerson, first: Boolean): WorktimeCalendar {
+    fun createWorktimeCalendar(person: ForecastPerson, first: Boolean): WorktimeCalendar {
         val newWorktimeCalendar = WorktimeCalendar(
             id = UUID.randomUUID(),
             personId = person.id,
@@ -119,7 +121,7 @@ class WorktimeCalendarController {
      * @param id id
      * @param calendarEnd calendarEnd
      */
-    suspend fun updateWorktimeCalendar(id: UUID, calendarEnd: LocalDate) {
+    fun updateWorktimeCalendar(id: UUID, calendarEnd: LocalDate) {
         worktimeCalendarRepository.updateWorktimeCalendar(
             id = id,
             calendarEnd = calendarEnd

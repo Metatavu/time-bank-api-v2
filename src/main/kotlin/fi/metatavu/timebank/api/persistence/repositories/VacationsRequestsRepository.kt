@@ -2,9 +2,9 @@ package fi.metatavu.timebank.api.persistence.repositories
 
 import fi.metatavu.timebank.api.persistence.model.VacationRequest
 import io.quarkus.panache.common.Parameters
-import java.time.LocalDate
-import java.util.UUID
 import jakarta.enterprise.context.ApplicationScoped
+import java.time.LocalDate
+import java.util.*
 
 /**
  * Manages VacationRequest JPA entity
@@ -20,7 +20,7 @@ class VacationsRequestsRepository: AbstractRepository<VacationRequest, UUID>() {
      * @param after LocalDate to retrieve requests after given date
      * @return List of VacationRequests
      */
-    suspend fun listVacationRequest(personId: UUID?, before: LocalDate?, after: LocalDate?): List<VacationRequest> {
+    fun listVacationRequest(personId: UUID?, before: LocalDate?, after: LocalDate?): List<VacationRequest> {
         val stringBuilder = StringBuilder()
         val parameters = Parameters()
 

@@ -2,12 +2,13 @@ package fi.metatavu.timebank.api.controllers
 
 import fi.metatavu.timebank.api.persistence.model.TimeEntry
 import fi.metatavu.timebank.api.persistence.model.WorktimeCalendar
-import java.time.LocalDate
 import fi.metatavu.timebank.model.DailyEntry
-import org.slf4j.Logger
-import java.time.DayOfWeek
+import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
+import org.slf4j.Logger
+import java.time.DayOfWeek
+import java.time.LocalDate
 
 /**
  * Controller for DailyEntry objects
@@ -36,7 +37,7 @@ class DailyEntryController {
      * @param vacation filter vacation days
      * @return List of DailyEntries
      */
-    suspend fun list(personId: Int?, before: LocalDate?, after: LocalDate?, vacation: Boolean?): List<DailyEntry>? {
+    fun list(personId: Int?, before: LocalDate?, after: LocalDate?, vacation: Boolean?): List<DailyEntry>? {
         return makeDailyEntries(
             personId = personId,
             before = before,
@@ -54,7 +55,7 @@ class DailyEntryController {
      * @param vacation filter vacation days
      * @return List of DailyEntries
      */
-    suspend fun makeDailyEntries(personId: Int?, before: LocalDate?, after: LocalDate?, vacation: Boolean?): List<DailyEntry>? {
+    fun makeDailyEntries(personId: Int?, before: LocalDate?, after: LocalDate?, vacation: Boolean?): List<DailyEntry>? {
         return try {
             val persons = personsController.getPersonsFromForecast()
             val holidays = personsController.getHolidaysFromForecast()
@@ -102,14 +103,14 @@ class DailyEntryController {
      * @param personsWorktimeCalendars List of WorktimeCalendars
      * @return DailyEntry
      */
-    suspend fun calculateDailyEntries(entriesOfDay: List<TimeEntry>, personId: Int, holidays: List<LocalDate>, personsWorktimeCalendars: List<WorktimeCalendar>): DailyEntry {
+    fun calculateDailyEntries(entriesOfDay: List<TimeEntry>, personId: Int, holidays: List<LocalDate>, personsWorktimeCalendars: Uni<MutableList<WorktimeCalendar>>): DailyEntry {
         var internalTime = 0
         var billableProjectTime = 0
         var nonBillableProjectTime = 0
         val date = entriesOfDay.first().date!!
         val isVacation = entriesOfDay.any { it.isVacation!! }
 
-        val worktimeCalendar = personsWorktimeCalendars.find {
+        val worktimeCalendar = personsWorktimeCalendars.await().indefinitely().find {
             it.calendarStart!! <= date && it.calendarEnd == null ||
             it.calendarStart!! <= date && it.calendarEnd!! >= date
         } ?: if (date < LocalDate.parse("2021-07-31")) {
@@ -154,7 +155,7 @@ class DailyEntryController {
      * @param day LocalDate
      * @return Int minutes of expected work
      */
-    private suspend fun getDailyExpected(worktimeCalendar: WorktimeCalendar, holidays: List<LocalDate>, day: LocalDate): Int {
+    private fun getDailyExpected(worktimeCalendar: WorktimeCalendar, holidays: List<LocalDate>, day: LocalDate): Int {
         if (holidays.contains(day)) return 0
 
         return when (day.dayOfWeek) {
