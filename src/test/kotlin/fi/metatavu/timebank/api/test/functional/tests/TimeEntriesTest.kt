@@ -2,7 +2,6 @@ package fi.metatavu.timebank.api.test.functional.tests
 
 import fi.metatavu.timebank.api.test.functional.data.TestDateUtils.Companion.getThirtyDaysAgo
 import fi.metatavu.timebank.api.test.functional.resources.LocalTestProfile
-import fi.metatavu.timebank.api.test.functional.resources.TestMySQLResource
 import fi.metatavu.timebank.api.test.functional.resources.TestWiremockResource
 import io.quarkus.test.common.QuarkusTestResource
 import io.quarkus.test.junit.QuarkusTest
@@ -17,7 +16,6 @@ import org.junit.jupiter.api.TestInstance
  */
 @QuarkusTest
 @QuarkusTestResource.List(
-    QuarkusTestResource(TestMySQLResource::class),
     QuarkusTestResource(TestWiremockResource::class)
 )
 @TestProfile(LocalTestProfile::class)

@@ -3,7 +3,6 @@ package fi.metatavu.timebank.api.test.functional.tests
 import fi.metatavu.timebank.api.test.functional.data.TestDateUtils.Companion.getODT
 import fi.metatavu.timebank.api.test.functional.data.TestDateUtils.Companion.getThirtyDaysAgoThirdWeek
 import fi.metatavu.timebank.api.test.functional.resources.LocalTestProfile
-import fi.metatavu.timebank.api.test.functional.resources.TestMySQLResource
 import fi.metatavu.timebank.api.test.functional.resources.TestWiremockResource
 import fi.metatavu.timebank.test.client.models.VacationRequest
 import fi.metatavu.timebank.test.client.models.VacationRequestStatus
@@ -24,7 +23,6 @@ import java.time.LocalDate
  */
 @QuarkusTest
 @QuarkusTestResource.List(
-    QuarkusTestResource(TestMySQLResource::class),
     QuarkusTestResource(TestWiremockResource::class)
 )
 @TestProfile(LocalTestProfile::class)
