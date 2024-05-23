@@ -17,6 +17,7 @@ class TestBuilder(private val config: Map<String, String>): AbstractAccessTokenT
 
     val manager = createTestBuilderAuthentication("manager", "test")
     val userA = createTestBuilderAuthentication("test", "password")
+    val admin = createTestBuilderAuthentication("admin", "admin")
     val notValid: TestBuilderAuthentication = TestBuilderAuthentication(this, InvalidAccessTokenProvider())
     val userWithNullToken: TestBuilderAuthentication = TestBuilderAuthentication(this, NullAccessTokenProvider())
 

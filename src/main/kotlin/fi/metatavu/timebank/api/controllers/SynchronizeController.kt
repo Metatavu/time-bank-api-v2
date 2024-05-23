@@ -73,7 +73,7 @@ class SynchronizeController {
             logger.info("Finished synchronization with: $synchronized entries synchronized... $duplicates entries NOT synchronized...")
 
             if (syncDeletedEntries) {
-                val timeBankTimeEntries = timeEntryController.getEntries(personId = null, before = null, after = after, vacation = false)
+                val timeBankTimeEntries = timeEntryController.getEntries(personId = null, before = null, after = after, vacation = null)
 
                 var deletedEntries = 0
                 var synchronizedEntries = 0

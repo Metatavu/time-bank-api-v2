@@ -22,7 +22,8 @@
         </createTable>
     </changeSet>
     <changeSet id="worktimeCalendars" author="Ville Juutila">
-        <createTable tableName="worktimeCalendar">
+        <validCheckSum>8:8ee8cf461c1ecfd4a9bcb4a924181992</validCheckSum>
+        <createTable tableName="WorktimeCalendar">
             <column name="id" type="binary(16)">
                 <constraints primaryKey="true" />
             </column>
@@ -39,7 +40,7 @@
         </createTable>
         <addColumn tableName="TimeEntry">
             <column name="worktimeCalendar_id" type="binary(16)">
-                <constraints foreignKeyName="FK_TIME_ENTRY_WORKTIME_CALENDAR" referencedTableName="worktimeCalendar" referencedColumnNames="id" />
+                <constraints foreignKeyName="FK_TIME_ENTRY_WORKTIME_CALENDAR" referencedTableName="WorktimeCalendar" referencedColumnNames="id" />
             </column>
         </addColumn>
     </changeSet>
@@ -120,12 +121,13 @@
     </changeSet>
 
     <changeSet id="vacationRequestsStatus" author="Veikko Vilpponen">
+        <validCheckSum>8:329a80def221ecdb8cae4fe4cf397a92</validCheckSum>
         <createTable tableName="VacationRequestStatus">
             <column name="id" type="binary(16)">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="vacationrequest_id" type="binary(16)">
-                <constraints foreignKeyName="FK_vacationrequest_id" referencedTableName="vacationRequest" referencedColumnNames="id"/>
+                <constraints foreignKeyName="FK_vacationrequest_id" referencedTableName="VacationRequest" referencedColumnNames="id"/>
             </column>
             <column name="status" type="varchar(191)">
                 <constraints nullable="false"/>

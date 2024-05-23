@@ -47,10 +47,8 @@ dependencies {
     testImplementation("io.quarkus:quarkus-junit5-mockito")
     testImplementation("io.rest-assured:rest-assured")
     testImplementation("com.github.tomakehurst:wiremock-jre8:$wiremockVersion")
-    testImplementation("io.quarkus:quarkus-test-keycloak-server")
     testImplementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     testImplementation("org.testcontainers:testcontainers")
-    testImplementation("org.testcontainers:mysql")
     testImplementation("fi.metatavu.jaxrs.testbuilder:jaxrs-functional-test-builder:$jaxrsFunctionalTestBuilderVersion")
 }
 
