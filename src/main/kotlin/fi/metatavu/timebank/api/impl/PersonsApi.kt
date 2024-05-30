@@ -50,15 +50,11 @@ class PersonsApi: PersonsApi, AbstractApi() {
         }
     }
 
-    override suspend fun findPerson(personId: Long): Response {
+    override suspend fun findPerson(personId: Int): Response {
         loggedUserId ?: return createUnauthorized("Invalid token!")
-        val person = personsController.findPerson(personId)
+        val person = personsController.findPerson(personId) ?: return createNotFound("Person not found!")
 
-        return if (person != null) {
-            createOk(entity = person)
-        } else {
-            createNotFound("Person not found!")
-        }
+        return createOk(personsTranslator.translate(person))
     }
 
     override suspend fun updatePerson(personId: Int, person: Person): Response {
