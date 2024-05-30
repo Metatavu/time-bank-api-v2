@@ -47,10 +47,14 @@ class PersonsController {
             throw Error("Invalid minimumBillableRate!")
         }
 
+        if (person.unspentVacations < 0 || person.spentVacations < 0){
+            throw Error("Invalid vacation days!")
+        }
+
         val keycloakUser = keycloakController.getUsersResource()?.list()?.find { it.email == person.email.lowercase() }
             ?: throw Error("Invalid e-mail!")
 
-        keycloakController.updateUsersMinimumBillableRate(keycloakUser, person.minimumBillableRate)
+        keycloakController.updateAll(keycloakUser, person.minimumBillableRate, person.unspentVacations, person.spentVacations)
 
         return Person(
             id = person.id,
@@ -65,8 +69,8 @@ class PersonsController {
             saturday = person.saturday,
             sunday = person.sunday,
             active = person.active,
-            unspentVacations = person.unspentVacations,
-            spentVacations = person.spentVacations,
+            unspentVacations = keycloakController.getUsersUnspentVacationDays(keycloakUser),
+            spentVacations = keycloakController.getUsersSpentVacationDays(keycloakUser),
             minimumBillableRate = keycloakController.getUsersMinimumBillableRate(keycloakUser),
             language = person.language,
             startDate = person.startDate,
