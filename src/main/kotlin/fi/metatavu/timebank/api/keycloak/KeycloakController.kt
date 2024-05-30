@@ -62,7 +62,6 @@ class KeycloakController {
         } catch (e: Exception){
             updateUsersUnspentVacationDays(user, -1)
             -1
-            //TODO: Appropriate error handling
         }
     }
 
@@ -79,7 +78,6 @@ class KeycloakController {
         } catch (e: Exception){
             updateUsersSpentVacationDays(user, -1)
             -1
-            //TODO: Appropriate error handling
         }
     }
 
