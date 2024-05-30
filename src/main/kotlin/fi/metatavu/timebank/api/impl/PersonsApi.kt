@@ -30,8 +30,8 @@ class PersonsApi: PersonsApi, AbstractApi() {
             timespan = timespan ?: Timespan.ALL_TIME,
             before = before,
             after = after
-        ) ?: return createNotFound("Cannot calculate totals for given person")
-
+        )
+        
         return createOk(entity = entries)
     }
 

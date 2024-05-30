@@ -24,7 +24,7 @@ class DailyEntriesApi: DailyEntriesApi, AbstractApi() {
                 before = before,
                 after = after,
                 vacation = vacation
-            ) ?: return createNotFound("No daily entries found!")
+            )
 
             createOk(entity = entries)
         } catch (e: Error) {

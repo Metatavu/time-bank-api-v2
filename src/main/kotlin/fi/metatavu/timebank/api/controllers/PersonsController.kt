@@ -145,13 +145,13 @@ class PersonsController {
      * @param timespan Timespan
      * @return List of PersonTotalTimes
      */
-    suspend fun makePersonTotal(personId: Int, timespan: Timespan, before: LocalDate?, after: LocalDate?): List<PersonTotalTime>? {
+    suspend fun makePersonTotal(personId: Int, timespan: Timespan, before: LocalDate?, after: LocalDate?): List<PersonTotalTime> {
         val dailyEntries = dailyEntryController.makeDailyEntries(
             personId = personId,
             before = before,
             after = after,
             vacation = null
-        ) ?: return null
+        )
 
         return when (timespan) {
             Timespan.ALL_TIME -> {
