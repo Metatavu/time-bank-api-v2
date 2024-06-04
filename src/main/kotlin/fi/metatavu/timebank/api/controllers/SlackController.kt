@@ -4,6 +4,7 @@ import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
 import javax.enterprise.context.ApplicationScoped
+import javax.ws.rs.BadRequestException
 
 @ApplicationScoped
 class SlackController {
@@ -14,8 +15,9 @@ class SlackController {
      * @param message String
      * @return String
      */
-    fun messageManagers(message: String): String{
-        val webhookUrl = ""
+    suspend fun messageManagers(message: String): String{
+        /*  THIS IS A DUMMY LINK */
+        val webhookUrl = "https://hooks.slack.com/services/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"
         val payload = """{"text": "$message"}"""
 
         val url = URL(webhookUrl)
@@ -44,7 +46,7 @@ class SlackController {
         return if (responseCode == HttpURLConnection.HTTP_OK) {
             payload
         } else {
-            "Failed to send message: $responseMessage"
+            throw BadRequestException("Error occurred")
         }
     }
 }
