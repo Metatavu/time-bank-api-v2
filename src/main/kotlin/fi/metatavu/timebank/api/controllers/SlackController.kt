@@ -16,8 +16,7 @@ class SlackController {
      * @return String
      */
     suspend fun messageManagers(message: String): String{
-        /*  THIS IS A DUMMY LINK */
-        val webhookUrl = "https://hooks.slack.com/services/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"
+        val webhookUrl = ""
         val payload = """{"text": "$message"}"""
 
         val url = URL(webhookUrl)
