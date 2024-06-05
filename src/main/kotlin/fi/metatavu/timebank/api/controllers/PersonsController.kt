@@ -79,18 +79,6 @@ class PersonsController {
     }
 
     /**
-     * Finds person by id from Forecast
-     *
-     * @param personId persons Forecast id
-     * @return ForecastPerson
-     */
-    suspend fun findPerson(personId: Int): ForecastPerson? {
-        val person = listPersons()?.find { it.id == personId }
-
-        return person
-    }
-
-    /**
      * List persons data from Forecast API
      * Filters out system users since they should not be needed in this application
      *
@@ -282,9 +270,5 @@ class PersonsController {
             Timespan.MONTH -> "$year,$month"
             Timespan.WEEK -> "$year,$month,$week"
         }
-    }
-
-    companion object {
-        const val DEFAULT_MINIMUM_BILLABLE_RATE = 75
     }
 }

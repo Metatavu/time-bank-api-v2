@@ -9,7 +9,7 @@ import javax.enterprise.context.ApplicationScoped
 @ApplicationScoped
 class VacationRequestStatusTranslator: AbstractTranslator<VacationRequestStatus, fi.metatavu.timebank.model.VacationRequestStatus>() {
 
-    override suspend fun translate(entity: VacationRequestStatus): fi.metatavu.timebank.model.VacationRequestStatus {
+    override fun translate(entity: VacationRequestStatus): fi.metatavu.timebank.model.VacationRequestStatus {
         return fi.metatavu.timebank.model.VacationRequestStatus(
             id = entity.id,
             vacationRequestId = entity.vacationRequest!!.id!!,
@@ -20,5 +20,9 @@ class VacationRequestStatusTranslator: AbstractTranslator<VacationRequestStatus,
             updatedBy = entity.updatedBy,
             updatedAt = entity.updatedAt
         )
+    }
+
+    override fun translate(entities: List<VacationRequestStatus>): List<fi.metatavu.timebank.model.VacationRequestStatus> {
+        return entities.map(this::translate)
     }
 }
