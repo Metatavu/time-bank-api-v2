@@ -138,6 +138,12 @@ class PersonsController {
         }
     }
 
+    suspend fun findPerson(personId: Int): ForecastPerson? {
+        val person = listPersons()?.find { it.id == personId }
+
+        return person
+    }
+
     /**
      * Makes List of PersonTotalTimes
      *
