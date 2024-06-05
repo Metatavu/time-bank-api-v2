@@ -52,7 +52,26 @@ class PersonsController {
 
         keycloakController.updateUsersMinimumBillableRate(keycloakUser, person.minimumBillableRate)
 
-        return person.copy(minimumBillableRate = keycloakController.getUsersMinimumBillableRate(keycloakUser))
+        return Person(
+            id = person.id,
+            firstName = person.firstName,
+            lastName = person.firstName,
+            email = person.email,
+            monday = person.monday,
+            tuesday = person.tuesday,
+            wednesday = person.wednesday,
+            thursday = person.thursday,
+            friday = person.friday,
+            saturday = person.saturday,
+            sunday = person.sunday,
+            active = person.active,
+            unspentVacations = person.unspentVacations,
+            spentVacations = person.spentVacations,
+            minimumBillableRate = keycloakController.getUsersMinimumBillableRate(keycloakUser),
+            language = person.language,
+            startDate = person.startDate,
+            keycloakId = person.keycloakId
+        )
     }
 
     /**
@@ -106,6 +125,12 @@ class PersonsController {
     suspend fun listPersons(active: Boolean? = true): List<ForecastPerson>? {
         val persons = getPersonsFromForecast()
 
+        persons.forEach { forecastPerson ->
+            val vacationAmounts = vacationUtils.getPersonsVacations(forecastPerson)
+            forecastPerson.unspentVacations = vacationAmounts.first
+            forecastPerson.spentVacations = vacationAmounts.second
+        }
+
         return if (active == false) {
             persons
         } else {
@@ -113,8 +138,8 @@ class PersonsController {
         }
     }
 
-    suspend fun findPerson(personId: Int): ForecastPerson? {
-        val person = forecastService.findPerson(personId)
+    suspend fun findPerson(personId: Long): ForecastPerson? {
+        val person = listPersons()?.find { it.id.toLong() == personId }
 
         return person
     }
