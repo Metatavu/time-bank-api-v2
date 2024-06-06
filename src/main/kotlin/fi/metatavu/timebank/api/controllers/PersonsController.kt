@@ -3,6 +3,7 @@ package fi.metatavu.timebank.api.controllers
 import fi.metatavu.timebank.model.PersonTotalTime
 import fi.metatavu.timebank.api.forecast.ForecastService
 import fi.metatavu.timebank.api.forecast.models.ForecastPerson
+import fi.metatavu.timebank.api.impl.translate.PersonsTranslator
 import fi.metatavu.timebank.api.keycloak.KeycloakController
 import fi.metatavu.timebank.api.utils.VacationUtils
 import org.slf4j.Logger
@@ -36,6 +37,9 @@ class PersonsController {
     @Inject
     lateinit var keycloakController: KeycloakController
 
+    @Inject
+    lateinit var personsTranslator: PersonsTranslator
+
     /**
      * Updates Person minimumBillableRate in Keycloak
      *
@@ -52,26 +56,8 @@ class PersonsController {
 
         keycloakController.updateUsersMinimumBillableRate(keycloakUser, person.minimumBillableRate)
 
-        return Person(
-            id = person.id,
-            firstName = person.firstName,
-            lastName = person.firstName,
-            email = person.email,
-            monday = person.monday,
-            tuesday = person.tuesday,
-            wednesday = person.wednesday,
-            thursday = person.thursday,
-            friday = person.friday,
-            saturday = person.saturday,
-            sunday = person.sunday,
-            active = person.active,
-            unspentVacations = person.unspentVacations,
-            spentVacations = person.spentVacations,
-            minimumBillableRate = keycloakController.getUsersMinimumBillableRate(keycloakUser),
-            language = person.language,
-            startDate = person.startDate,
-            keycloakId = person.keycloakId
-        )
+
+        return personsTranslator.translate(findPerson(person.id))
     }
 
     /**
@@ -138,11 +124,7 @@ class PersonsController {
         }
     }
 
-    suspend fun findPerson(personId: Int): ForecastPerson? {
-        val person = listPersons()?.find { it.id == personId }
-
-        return person
-    }
+    suspend fun findPerson(personId: Int): ForecastPerson = forecastService.findPerson(personId)
 
     /**
      * Makes List of PersonTotalTimes
