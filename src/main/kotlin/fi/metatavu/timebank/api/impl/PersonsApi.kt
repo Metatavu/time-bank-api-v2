@@ -23,8 +23,8 @@ class PersonsApi: PersonsApi, AbstractApi() {
     lateinit var personsTranslator: PersonsTranslator
 
     override suspend fun findPerson(personId: Int): Response {
-        //loggedUserId ?: return createUnauthorized("Invalid token!")
-        val person = personsController.findPerson(personId) ?: return createNotFound("Person with id $personId not found!")
+        loggedUserId ?: return createUnauthorized("Invalid token!")
+        val person = personsController.findPerson(personId) ?: return createUnauthorized("Person with id $personId not found!")
 
         return createOk(personsTranslator.translate(person))
     }
@@ -57,8 +57,8 @@ class PersonsApi: PersonsApi, AbstractApi() {
     }
 
     override suspend fun updatePerson(personId: Int, person: Person): Response {
-        //loggedUserId ?: return createUnauthorized("Invalid token!")
-        //if (!isAdmin()) return createUnauthorized("Only admin is allowed to perform this action!")
+        loggedUserId ?: return createUnauthorized("Invalid token!")
+        if (!isAdmin()) return createUnauthorized("Only admin is allowed to perform this action!")
 
         return try {
             createOk(entity = personsController.updatePerson(person))

@@ -3,7 +3,6 @@ package fi.metatavu.timebank.api.controllers
 import fi.metatavu.timebank.model.PersonTotalTime
 import fi.metatavu.timebank.api.forecast.ForecastService
 import fi.metatavu.timebank.api.forecast.models.ForecastPerson
-import fi.metatavu.timebank.api.impl.translate.PersonsTranslator
 import fi.metatavu.timebank.api.keycloak.KeycloakController
 import fi.metatavu.timebank.api.utils.VacationUtils
 import org.slf4j.Logger
@@ -37,9 +36,6 @@ class PersonsController {
     @Inject
     lateinit var keycloakController: KeycloakController
 
-    @Inject
-    lateinit var personsTranslator: PersonsTranslator
-
     /**
      * Updates Person minimumBillableRate in Keycloak
      *
@@ -56,7 +52,26 @@ class PersonsController {
 
         keycloakController.updateUsersMinimumBillableRate(keycloakUser, person.minimumBillableRate)
 
-        return personsTranslator.translate(findPerson(person.id))
+        return Person(
+            id = person.id,
+            firstName = person.firstName,
+            lastName = person.firstName,
+            email = person.email,
+            monday = person.monday,
+            tuesday = person.tuesday,
+            wednesday = person.wednesday,
+            thursday = person.thursday,
+            friday = person.friday,
+            saturday = person.saturday,
+            sunday = person.sunday,
+            active = person.active,
+            unspentVacations = person.unspentVacations,
+            spentVacations = person.spentVacations,
+            minimumBillableRate = keycloakController.getUsersMinimumBillableRate(keycloakUser),
+            language = person.language,
+            startDate = person.startDate,
+            keycloakId = person.keycloakId
+        )
     }
 
     /**
@@ -70,7 +85,7 @@ class PersonsController {
             forecastService.getPersons().filter { !it.isSystemUser }
         } catch (e: Error) {
             logger.error("Error when requesting persons from Forecast API: ${e.localizedMessage}")
-            throw Error(e.cause)
+            throw Error(e.localizedMessage)
         }
     }
 
@@ -110,6 +125,12 @@ class PersonsController {
     suspend fun listPersons(active: Boolean? = true): List<ForecastPerson>? {
         val persons = getPersonsFromForecast()
 
+        persons.forEach { forecastPerson ->
+            val vacationAmounts = vacationUtils.getPersonsVacations(forecastPerson)
+            forecastPerson.unspentVacations = vacationAmounts.first
+            forecastPerson.spentVacations = vacationAmounts.second
+        }
+
         return if (active == false) {
             persons
         } else {
@@ -117,14 +138,11 @@ class PersonsController {
         }
     }
 
-    /**
-     * Finds a Forecast person with id
-     *
-     * @param personId Int
-     * @return ForecastPerson
-     */
-    suspend fun findPerson(personId: Int): ForecastPerson = forecastService.findPerson(personId)
+    suspend fun findPerson(personId: Int): ForecastPerson? {
+        val person = listPersons()?.find { it.id == personId }
 
+        return person
+    }
 
     /**
      * Makes List of PersonTotalTimes
