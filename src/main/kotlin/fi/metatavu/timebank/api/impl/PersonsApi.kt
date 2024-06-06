@@ -1,7 +1,6 @@
 package fi.metatavu.timebank.api.impl
 
 import fi.metatavu.timebank.api.controllers.PersonsController
-import fi.metatavu.timebank.api.forecast.models.ForecastPerson
 import fi.metatavu.timebank.api.impl.translate.PersonsTranslator
 import fi.metatavu.timebank.model.Person
 import fi.metatavu.timebank.model.Timespan
@@ -47,17 +46,6 @@ class PersonsApi: PersonsApi, AbstractApi() {
             createOk(entity = translatedPersons)
         } catch (e: Error) {
             createBadRequest(e.localizedMessage)
-        }
-    }
-
-    override suspend fun findPerson(personId: Long): Response {
-        loggedUserId ?: return createUnauthorized("Invalid token!")
-        val person = personsController.findPerson(personId)
-
-        return if (person != null) {
-            createOk(entity = person)
-        } else {
-            createNotFound("Person not found!")
         }
     }
 

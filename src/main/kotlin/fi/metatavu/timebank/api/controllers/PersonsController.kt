@@ -138,12 +138,6 @@ class PersonsController {
         }
     }
 
-    suspend fun findPerson(personId: Long): ForecastPerson? {
-        val person = listPersons()?.find { it.id.toLong() == personId }
-
-        return person
-    }
-
     /**
      * Makes List of PersonTotalTimes
      *
