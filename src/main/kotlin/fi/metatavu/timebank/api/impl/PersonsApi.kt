@@ -22,6 +22,16 @@ class PersonsApi: PersonsApi, AbstractApi() {
 
     @Inject
     lateinit var personsTranslator: PersonsTranslator
+    override suspend fun findPerson(personId: Int): Response {
+        loggedUserId ?: return createUnauthorized("Invalid token!")
+        val person = personsController.findPerson(personId)
+
+        return if (person != null) {
+            createOk(entity = person)
+        } else {
+            createNotFound("Person not found!")
+        }
+    }
 
     override suspend fun listPersonTotalTime(personId: Int, timespan: Timespan?, before: LocalDate?, after: LocalDate?): Response {
         loggedUserId ?: return createUnauthorized("Invalid token!")
@@ -47,17 +57,6 @@ class PersonsApi: PersonsApi, AbstractApi() {
             createOk(entity = translatedPersons)
         } catch (e: Error) {
             createBadRequest(e.localizedMessage)
-        }
-    }
-
-    override suspend fun findPerson(personId: Long): Response {
-        loggedUserId ?: return createUnauthorized("Invalid token!")
-        val person = personsController.findPerson(personId)
-
-        return if (person != null) {
-            createOk(entity = person)
-        } else {
-            createNotFound("Person not found!")
         }
     }
 

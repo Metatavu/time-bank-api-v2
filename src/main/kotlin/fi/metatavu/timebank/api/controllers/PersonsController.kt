@@ -138,8 +138,8 @@ class PersonsController {
         }
     }
 
-    suspend fun findPerson(personId: Long): ForecastPerson? {
-        val person = listPersons()?.find { it.id.toLong() == personId }
+    suspend fun findPerson(personId: Int): ForecastPerson? {
+        val person = listPersons()?.find { it.id == personId }
 
         return person
     }
