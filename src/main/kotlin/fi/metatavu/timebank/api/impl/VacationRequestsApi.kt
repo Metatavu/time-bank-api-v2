@@ -33,8 +33,12 @@ class VacationRequestsApi: VacationRequestsApi, AbstractApi() {
             vacationRequest = vacationRequest,
             creatorsId = userId
         )
-        slackController.messageManagers("Person with id ${vacationRequest.personId} just submitted a vacation request.")
-
+        try {
+            slackController.messageManagers("Person with id ${vacationRequest.personId} just submitted a vacation request.")
+        } catch (e: Exception) {
+            //Error handling
+            return createCreated(entity = vacationRequestTranslator.translate(newVacationRequest))
+        }
         return createCreated(entity = vacationRequestTranslator.translate(newVacationRequest))
     }
 

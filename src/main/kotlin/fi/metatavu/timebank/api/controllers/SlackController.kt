@@ -15,7 +15,7 @@ class SlackController {
      * @param message String
      * @return String
      */
-    suspend fun messageManagers(message: String): String{
+    suspend fun messageManagers(message: String): String {
         val webhookUrl = ""
         val payload = """{"text": "$message"}"""
 
@@ -37,9 +37,7 @@ class SlackController {
                 }
             }
         }
-
         val responseCode = httpConn.responseCode
-        val responseMessage = httpConn.responseMessage
 
         return if (responseCode == HttpURLConnection.HTTP_OK) {
             payload
