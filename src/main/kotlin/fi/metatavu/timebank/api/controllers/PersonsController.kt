@@ -15,6 +15,7 @@ import java.time.LocalDate
 import java.time.temporal.WeekFields
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
+import javax.ws.rs.NotFoundException
 
 /**
  * Controller for Person objects
@@ -56,9 +57,7 @@ class PersonsController {
 
         keycloakController.updateUsersMinimumBillableRate(keycloakUser, person.minimumBillableRate)
 
-        return personsTranslator.translate(forecastService.findPerson(personId = person.id))
-
-        /*return Person(
+        return Person(
             id = person.id,
             firstName = person.firstName,
             lastName = person.firstName,
@@ -77,7 +76,7 @@ class PersonsController {
             language = person.language,
             startDate = person.startDate,
             keycloakId = person.keycloakId
-        )*/
+        )
     }
 
     /**
