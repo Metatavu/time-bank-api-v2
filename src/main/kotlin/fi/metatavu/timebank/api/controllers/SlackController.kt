@@ -38,14 +38,13 @@ class SlackController {
             }
         }
 
-
         val responseCode = httpConn.responseCode
         val responseMessage = httpConn.responseMessage
 
         return if (responseCode == HttpURLConnection.HTTP_OK) {
             payload
         } else {
-            throw BadRequestException("Error occurred")
+            throw BadRequestException("Error occurred when sending message on Slack")
         }
     }
 }

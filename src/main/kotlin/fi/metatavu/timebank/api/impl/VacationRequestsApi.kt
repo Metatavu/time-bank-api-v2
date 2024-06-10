@@ -1,5 +1,6 @@
 package fi.metatavu.timebank.api.impl
 
+import fi.metatavu.timebank.api.controllers.SlackController
 import fi.metatavu.timebank.api.controllers.VacationRequestController
 import fi.metatavu.timebank.api.impl.translate.VacationRequestTranslator
 import fi.metatavu.timebank.model.VacationRequest
@@ -22,6 +23,9 @@ class VacationRequestsApi: VacationRequestsApi, AbstractApi() {
     @Inject
     lateinit var vacationRequestTranslator: VacationRequestTranslator
 
+    @Inject
+    lateinit var slackController: SlackController
+
     override suspend fun createVacationRequest(vacationRequest: VacationRequest): Response {
         val userId = loggedUserId ?: return createUnauthorized("Invalid token!")
 
@@ -29,6 +33,7 @@ class VacationRequestsApi: VacationRequestsApi, AbstractApi() {
             vacationRequest = vacationRequest,
             creatorsId = userId
         )
+        slackController.messageManagers("Person with id ${vacationRequest.personId} just submitted a vacation request.")
 
         return createCreated(entity = vacationRequestTranslator.translate(newVacationRequest))
     }
