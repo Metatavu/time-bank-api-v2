@@ -3,6 +3,7 @@ package fi.metatavu.timebank.api.controllers
 import fi.metatavu.timebank.model.PersonTotalTime
 import fi.metatavu.timebank.api.forecast.ForecastService
 import fi.metatavu.timebank.api.forecast.models.ForecastPerson
+import fi.metatavu.timebank.api.impl.translate.PersonsTranslator
 import fi.metatavu.timebank.api.keycloak.KeycloakController
 import fi.metatavu.timebank.api.utils.VacationUtils
 import org.slf4j.Logger
@@ -36,6 +37,9 @@ class PersonsController {
     @Inject
     lateinit var keycloakController: KeycloakController
 
+    @Inject
+    lateinit var personsTranslator: PersonsTranslator
+
     /**
      * Updates Person minimumBillableRate in Keycloak
      *
@@ -52,7 +56,9 @@ class PersonsController {
 
         keycloakController.updateUsersMinimumBillableRate(keycloakUser, person.minimumBillableRate)
 
-        return Person(
+        return personsTranslator.translate(forecastService.findPerson(personId = person.id))
+
+        /*return Person(
             id = person.id,
             firstName = person.firstName,
             lastName = person.firstName,
@@ -71,7 +77,7 @@ class PersonsController {
             language = person.language,
             startDate = person.startDate,
             keycloakId = person.keycloakId
-        )
+        )*/
     }
 
     /**
@@ -139,9 +145,7 @@ class PersonsController {
     }
 
     suspend fun findPerson(personId: Int): ForecastPerson? {
-        val person = listPersons()?.find { it.id == personId }
-
-        return person
+        return forecastService.findPerson(personId)
     }
 
     /**
@@ -272,5 +276,9 @@ class PersonsController {
             Timespan.MONTH -> "$year,$month"
             Timespan.WEEK -> "$year,$month,$week"
         }
+    }
+
+    companion object {
+        const val DEFAULT_MINIMUM_BILLABLE_VALUE = 75
     }
 }

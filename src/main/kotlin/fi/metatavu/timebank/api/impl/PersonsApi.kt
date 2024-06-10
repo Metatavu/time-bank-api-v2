@@ -29,7 +29,7 @@ class PersonsApi: PersonsApi, AbstractApi() {
         return if (person != null) {
             createOk(entity = person)
         } else {
-            createNotFound("Person not found!")
+            createNotFound("Person with id $personId not found!")
         }
     }
 
