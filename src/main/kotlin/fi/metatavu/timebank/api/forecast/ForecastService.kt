@@ -58,7 +58,7 @@ class ForecastService {
      * @param personId Int
      * @return ForecastPerson?
      */
-    fun findPerson(personId: Int): ForecastPerson? {
+    fun findPerson(personId: Int): ForecastPerson {
         return jacksonObjectMapper().readValue(
             doRequest("/v2/persons/$personId"),
             ForecastPerson::class.java

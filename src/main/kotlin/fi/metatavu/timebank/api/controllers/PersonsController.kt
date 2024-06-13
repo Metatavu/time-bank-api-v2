@@ -57,26 +57,7 @@ class PersonsController {
 
         keycloakController.updateUsersMinimumBillableRate(keycloakUser, person.minimumBillableRate)
 
-        return Person(
-            id = person.id,
-            firstName = person.firstName,
-            lastName = person.firstName,
-            email = person.email,
-            monday = person.monday,
-            tuesday = person.tuesday,
-            wednesday = person.wednesday,
-            thursday = person.thursday,
-            friday = person.friday,
-            saturday = person.saturday,
-            sunday = person.sunday,
-            active = person.active,
-            unspentVacations = person.unspentVacations,
-            spentVacations = person.spentVacations,
-            minimumBillableRate = keycloakController.getUsersMinimumBillableRate(keycloakUser),
-            language = person.language,
-            startDate = person.startDate,
-            keycloakId = person.keycloakId
-        )
+        return personsTranslator.translate(findPerson(person.id))
     }
 
     /**
@@ -143,7 +124,13 @@ class PersonsController {
         }
     }
 
-    suspend fun findPerson(personId: Int): ForecastPerson? {
+    /**
+     * Fetches Person from Forecast
+     *
+     * @param personId Int
+     * @return ForecastPerson
+     */
+    suspend fun findPerson(personId: Int): ForecastPerson {
         return forecastService.findPerson(personId)
     }
 
