@@ -35,7 +35,7 @@ class ForecastService {
      * @param path path for the request
      * @return Response from the request
      */
-    private inline fun <reified T>doRequest(path: String): T {
+    private fun doRequest(path: String): String? {
         return try {
             val client = OkHttpClient()
             val request = Request.Builder().url("${forecastBaseUrl}${path}")
@@ -43,7 +43,7 @@ class ForecastService {
                 .build()
             val response = client.newCall(request).execute()
             when (response.code()) {
-                200 -> jacksonObjectMapper().readValue(response.body()?.string(), T::class.java)
+                200 -> response.body()?.string()
                 else -> throw Error("Couldn't reach Forecast API.")
             }
         } catch (e: Error) {
@@ -53,22 +53,28 @@ class ForecastService {
     }
 
     /**
+     * Finds ForecastPerson from Forecast by id
+     *
+     * @param personId Int
+     * @return ForecastPerson?
+     */
+    fun findPerson(personId: Int): ForecastPerson? {
+        return jacksonObjectMapper().readValue(
+            doRequest("/v2/persons/$personId"),
+            ForecastPerson::class.java
+        )
+    }
+
+    /**
      * Gets persons from Forecast
      *
      * @return List of ForecastPersons
      */
     fun getPersons(): List<ForecastPerson> {
-        return doRequest("/v2/persons") ?: emptyList()
-    }
-
-    /**
-     * Finds person by id from Forecast
-     *
-     * @param personId persons Forecast id
-     * @return ForecastPerson
-     */
-    fun findPerson(personId: Int): ForecastPerson? {
-        return doRequest("/v2/persons/$personId")
+        return jacksonObjectMapper().readValue(
+            doRequest("/v2/persons"),
+            Array<ForecastPerson>::class.java
+        ).toList()
     }
 
     /**
@@ -85,8 +91,10 @@ class ForecastService {
             pathSections.add("/updated_after/${after.toString().replace("-", "")}T000000")
         }
         pathSections.add("?pageSize=1000&pageNumber=$pageNumber")
-
-        return doRequest(pathSections.joinToString(""))
+        return jacksonObjectMapper().readValue(
+            doRequest(pathSections.joinToString("")),
+            ForecastTimeEntryResponse::class.java
+        )
     }
 
     /**
@@ -95,7 +103,10 @@ class ForecastService {
      * @return List of ForecastHolidays
      */
     fun getHolidays(): List<ForecastHoliday> {
-        return doRequest("/v1/holiday_calendar_entries")
+        return jacksonObjectMapper().readValue(
+            doRequest("/v1/holiday_calendar_entries"),
+            Array<ForecastHoliday>::class.java
+        ).toList()
     }
 
     /**
@@ -105,6 +116,9 @@ class ForecastService {
      * @return ForecastTaskResponse
      */
     fun getTasks(pageNumber: Int): ForecastTaskResponse {
-        return doRequest("/v4/tasks?pageSize=1000&pageNumber=$pageNumber")
+        return jacksonObjectMapper().readValue(
+            doRequest("/v4/tasks?pageSize=1000&pageNumber=$pageNumber"),
+            ForecastTaskResponse::class.java
+        )
     }
 }
