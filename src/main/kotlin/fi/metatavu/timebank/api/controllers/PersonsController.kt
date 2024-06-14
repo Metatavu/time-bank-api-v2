@@ -57,7 +57,7 @@ class PersonsController {
 
         keycloakController.updateUsersMinimumBillableRate(keycloakUser, person.minimumBillableRate)
 
-        return personsTranslator.translate(findPerson(person.id))
+        return person.copy(minimumBillableRate = person.minimumBillableRate)
     }
 
     /**
