@@ -17,7 +17,7 @@ class SlackController {
      * @return Boolean
      */
     suspend fun messageManagers(message: String): Boolean {
-        val webhook = System.getenv("SLACK_WEBHOOK_URL") ?: return false
+        val webhook = System.getenv("SLACK_WEBHOOK_URL_MANAGERS") ?: return false
         val payload = """{"text": "$message"}"""
 
         val url = URL(webhook)
