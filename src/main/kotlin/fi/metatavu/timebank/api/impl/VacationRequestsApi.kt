@@ -4,6 +4,7 @@ import fi.metatavu.timebank.api.controllers.SlackController
 import fi.metatavu.timebank.api.controllers.VacationRequestController
 import fi.metatavu.timebank.api.impl.translate.VacationRequestTranslator
 import fi.metatavu.timebank.model.VacationRequest
+import fi.metatavu.timebank.model.VacationType
 import javax.enterprise.context.RequestScoped
 import fi.metatavu.timebank.spec.VacationRequestsApi
 import java.time.LocalDate
@@ -33,7 +34,11 @@ class VacationRequestsApi: VacationRequestsApi, AbstractApi() {
             vacationRequest = vacationRequest,
             creatorsId = userId
         )
-        slackController.messageManagers("Person with id ${vacationRequest.personId} just submitted a vacation request.")
+
+        // Checks if vacationRequest is a test request. If it is, no message will be sent.
+        if (vacationRequest.message != "Lomaa!!!" && vacationRequest.days != 2 && vacationRequest.type != VacationType.VACATION) {
+            slackController.messageManagers("Person with id ${vacationRequest.personId} just submitted a vacation request.")
+        }
 
         return createCreated(entity = vacationRequestTranslator.translate(newVacationRequest))
     }
