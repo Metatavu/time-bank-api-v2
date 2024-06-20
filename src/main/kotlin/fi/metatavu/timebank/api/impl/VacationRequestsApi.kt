@@ -36,7 +36,7 @@ class VacationRequestsApi: VacationRequestsApi, AbstractApi() {
         )
 
         // Checks if vacationRequest is a test request. If it is, no message will be sent.
-        if (vacationRequest.message != "Lomaa!!!" && vacationRequest.days != 2 && vacationRequest.type != VacationType.VACATION) {
+        if (vacationRequest.message != "Lomaa!!!12321szH?" && vacationRequest.message != "Vacation!!!12321szH?") {
             slackController.messageManagers("Person with id ${vacationRequest.personId} just submitted a vacation request.")
         }
 

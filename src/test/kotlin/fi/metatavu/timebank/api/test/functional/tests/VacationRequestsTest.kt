@@ -41,7 +41,7 @@ class VacationRequestsTest: AbstractTest() {
     endDate = LocalDate.now().plusDays(1).toString(),
     days = 2,
     type = VacationType.VACATION,
-    message = "Lomaa!!!",
+    message = "Lomaa!!!12321szH?",
     createdAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
     updatedAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
     )
@@ -60,7 +60,7 @@ class VacationRequestsTest: AbstractTest() {
             assertEquals(LocalDate.now().plusDays(1).toString(), vacations.endDate)
             assertEquals(2, vacations.days)
             assertEquals(VacationType.VACATION, vacations.type)
-            assertEquals("Lomaa!!!", vacations.message)
+            assertEquals("Lomaa!!!12321szH?", vacations.message)
         }
     }
 
@@ -79,7 +79,7 @@ class VacationRequestsTest: AbstractTest() {
             assertEquals(LocalDate.now().plusDays(1).toString(), vacations[0].endDate)
             assertEquals(2, vacations[0].days)
             assertEquals(VacationType.VACATION, vacations[0].type)
-            assertEquals("Lomaa!!!", vacations[0].message)
+            assertEquals("Lomaa!!!12321szH?", vacations[0].message)
         }
     }
 
