@@ -35,7 +35,6 @@ class VacationRequestController {
                 days = vacationRequest.days,
                 type = vacationRequest.type,
                 message = vacationRequest.message,
-                draft = vacationRequest.draft,
                 createdAt = vacationRequest.createdAt,
                 updatedAt = vacationRequest.updatedAt,
             )
@@ -50,12 +49,11 @@ class VacationRequestController {
      * @param after after date
      * @return List of VacationRequests
      */
-    suspend fun listVacationRequests(personId: UUID?, before: LocalDate?, after: LocalDate?, draft: Boolean?): List<VacationRequest> {
+    suspend fun listVacationRequests(personId: UUID?, before: LocalDate?, after: LocalDate?): List<VacationRequest> {
         return vacationsRequestsRepository.listVacationRequest(
             personId = personId,
             before = before,
-            after = after,
-            draft = draft
+            after = after
         )
     }
 

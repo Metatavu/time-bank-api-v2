@@ -33,14 +33,13 @@ class VacationRequestsApi: VacationRequestsApi, AbstractApi() {
         return createCreated(entity = vacationRequestTranslator.translate(newVacationRequest))
     }
 
-    override suspend fun listVacationRequests(personId: UUID?, before: LocalDate?, after: LocalDate?, draft: Boolean?): Response {
+    override suspend fun listVacationRequests(personId: UUID?, before: LocalDate?, after: LocalDate?): Response {
         loggedUserId ?: return createUnauthorized("Invalid token!")
 
         val vacationRequests = vacationRequestController.listVacationRequests(
             personId = personId,
             before = before,
-            after = after,
-            draft = draft
+            after = after
         )
 
         return createOk(entity = vacationRequestTranslator.translate(vacationRequests))

@@ -46,12 +46,11 @@ class VacationRequestTestBuilderResource(
      * @param after optional after date
      * @return List of VacationRequests
      */
-    fun listVacationRequests(personId: UUID? = null, before: String? = null, after: String? = null, draft: Boolean? = null): Array<VacationRequest> {
+    fun listVacationRequests(personId: UUID? = null, before: String? = null, after: String? = null): Array<VacationRequest> {
         return api.listVacationRequests(
             personId = personId,
             before = before,
-            after = after,
-            draft = draft
+            after = after
         )
     }
 

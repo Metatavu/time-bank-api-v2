@@ -143,12 +143,4 @@
             <column name="updatedBy" type="binary(16)"/>
         </createTable>
     </changeSet>
-
-    <changeSet id="add_draft_field_to_vacation_request" author="Iiro Anttila">
-        <addColumn tableName="VacationRequest">
-            <column name="draft" type="boolean">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
 </databaseChangeLog>
