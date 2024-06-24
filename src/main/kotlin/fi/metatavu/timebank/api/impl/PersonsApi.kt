@@ -21,9 +21,6 @@ class PersonsApi: PersonsApi, AbstractApi() {
 
     @Inject
     lateinit var personsTranslator: PersonsTranslator
-    override suspend fun findPerson(personId: Int): Response {
-        TODO("Not yet implemented")
-    }
 
     override suspend fun listPersonTotalTime(personId: Int, timespan: Timespan?, before: LocalDate?, after: LocalDate?): Response {
         loggedUserId ?: return createUnauthorized("Invalid token!")
