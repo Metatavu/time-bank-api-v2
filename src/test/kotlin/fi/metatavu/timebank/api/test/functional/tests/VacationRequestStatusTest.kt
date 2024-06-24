@@ -43,7 +43,8 @@ class VacationRequestStatusTest: AbstractTest() {
     endDate = LocalDate.now().plusDays(1).toString(),
     days = 2,
     type = VacationType.VACATION,
-    message = "Vacation!!!12321szH?",
+    message = "Vacation!!!",
+    draft = false,
     createdAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
     updatedAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
     )
