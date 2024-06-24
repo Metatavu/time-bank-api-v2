@@ -42,6 +42,7 @@ class VacationRequestsTest: AbstractTest() {
     days = 2,
     type = VacationType.VACATION,
     message = "Lomaa!!!",
+    draft = false,
     createdAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
     updatedAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
     )
@@ -139,6 +140,7 @@ class VacationRequestsTest: AbstractTest() {
                 days = 2,
                 type = VacationType.VACATION,
                 message = "Lomaa!!!",
+                draft = false,
                 createdAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
                 updatedAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
             ) )
