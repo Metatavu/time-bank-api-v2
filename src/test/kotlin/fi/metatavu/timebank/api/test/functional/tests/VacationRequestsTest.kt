@@ -41,6 +41,7 @@ class VacationRequestsTest: AbstractTest() {
     endDate = LocalDate.now().plusDays(1).toString(),
     days = 2,
     type = VacationType.VACATION,
+    draft = false,
     message = "Lomaa!!!",
     createdAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
     updatedAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
@@ -139,6 +140,7 @@ class VacationRequestsTest: AbstractTest() {
                 days = 2,
                 type = VacationType.VACATION,
                 message = "Lomaa!!!",
+                draft = false,
                 createdAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
                 updatedAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
             ) )
