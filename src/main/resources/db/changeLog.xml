@@ -150,5 +150,6 @@
                 <constraints nullable="false" />
             </column>
         </addColumn>
+        <sql>UPDATE VacationRequest SET draft = false</sql>
     </changeSet>
 </databaseChangeLog>

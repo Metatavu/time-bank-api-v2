@@ -39,6 +39,11 @@ class VacationsRequestsRepository: AbstractRepository<VacationRequest, UUID>() {
             parameters.and("after", after)
         }
 
+        if (draft != null) {
+            stringBuilder.append(if (stringBuilder.isNotEmpty()) " and draft = :draft" else "draft = :draft")
+            parameters.and("draft", draft)
+        }
+
         stringBuilder.append(" order by startDate DESC")
 
         return listWithParameters(stringBuilder.toString(), parameters)
