@@ -20,12 +20,11 @@ class SlackController {
     lateinit var slackVacationRequestsMessageEndpoint: String
 
     /**
-     * Sends a Slack message to managers. Return true/false depending on success
+     * Sends a Slack message to vacation_requests channel.
      *
      * @param message String
-     * @return Boolean
      */
-    suspend fun messageManagers(message: String) {
+    suspend fun messageVacationRequestsChannel(message: String) {
         try {
             OkHttpClient()
                 .newCall(

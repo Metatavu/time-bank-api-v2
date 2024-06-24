@@ -44,7 +44,8 @@ class TestWiremockResource: QuarkusTestResourceLifecycleManager {
 
         return mapOf(
             "forecast.base.url" to  wireMockServer.baseUrl(),
-            "forecast.api.key" to "noapikey"
+            "forecast.api.key" to "noapikey",
+            "slack.vacation.requests.message.endpoint" to "${wireMockServer.baseUrl()}/test-slack-endpoint"
         )
     }
 
