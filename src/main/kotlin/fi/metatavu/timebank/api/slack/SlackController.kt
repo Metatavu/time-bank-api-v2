@@ -30,7 +30,7 @@ class SlackController {
                 .newCall(
                     Request.Builder()
                         .url(slackVacationRequestsMessageEndpoint)
-                        .put(
+                        .post(
                             RequestBody.create(
                             MediaType.parse("application/json"),
                             jacksonObjectMapper().writeValueAsString(MessagePayload(text = message)
