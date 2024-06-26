@@ -34,7 +34,7 @@ class VacationRequestsApi: VacationRequestsApi, AbstractApi() {
             creatorsId = userId
         )
 
-        if (newVacationRequest.draft == true){
+        if (newVacationRequest.draft == false){
             slackController.messageVacationRequestsChannel("Person with id ${vacationRequest.personId} just submitted a vacation request.")
         }
 
