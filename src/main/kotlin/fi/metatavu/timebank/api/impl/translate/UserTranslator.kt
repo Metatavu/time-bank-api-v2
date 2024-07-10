@@ -7,8 +7,10 @@ import fi.metatavu.timebank.model.User
 import org.keycloak.admin.client.resource.UsersResource
 import org.keycloak.representations.idm.UserRepresentation
 import java.util.*
+import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 
+@ApplicationScoped
 class UserTranslator: AbstractTranslator<UserRepresentation, User>() {
     @Inject
     lateinit var keycloakController: KeycloakController

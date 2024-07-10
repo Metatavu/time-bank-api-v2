@@ -4,8 +4,10 @@ import fi.metatavu.timebank.api.impl.translate.UserTranslator
 import fi.metatavu.timebank.api.keycloak.KeycloakController
 import fi.metatavu.timebank.model.User
 import java.util.UUID
+import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 
+@ApplicationScoped
 class UsersController {
 
     @Inject
