@@ -17,6 +17,7 @@ val quarkusPlatformArtifactId: String by project
 val quarkusPlatformVersion: String by project
 val jaxrsFunctionalTestBuilderVersion: String by project
 val wiremockVersion: String by project
+val keycloakVersion: String by project
 
 dependencies {
     implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
@@ -41,7 +42,7 @@ dependencies {
     implementation("io.quarkus:quarkus-oidc")
     implementation("io.quarkus:quarkus-jdbc-mysql")
     implementation("io.quarkus:quarkus-rest-client")
-    implementation("io.quarkus:quarkus-keycloak-admin-client")
+    implementation("io.quarkus:quarkus-keycloak-admin-client:$keycloakVersion")
 
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("io.quarkus:quarkus-junit5-mockito")

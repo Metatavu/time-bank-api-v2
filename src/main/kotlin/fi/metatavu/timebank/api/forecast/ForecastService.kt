@@ -44,7 +44,7 @@ class ForecastService {
             val response = client.newCall(request).execute()
             when (response.code()) {
                 200 -> response.body()?.string()
-                else -> throw Error("Couldn't reach Forecast API.")
+                else -> throw Error("Couldn't reach Severa API.")
             }
         } catch (e: Error) {
             logger.error("Error when executing get request: ${e.localizedMessage}")

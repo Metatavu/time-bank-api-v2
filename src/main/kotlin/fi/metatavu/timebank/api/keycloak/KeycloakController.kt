@@ -6,6 +6,7 @@ import org.keycloak.admin.client.KeycloakBuilder
 import org.keycloak.admin.client.resource.UsersResource
 import javax.enterprise.context.ApplicationScoped
 import org.keycloak.representations.idm.UserRepresentation
+import java.util.UUID
 
 /**
  * Class for Keycloak controller
@@ -82,6 +83,16 @@ class KeycloakController {
             null,
             null
         ).firstOrNull()
+    }
+
+    /**
+     * Finds person by their keycloak id
+     *
+     * @param userId UUID
+     * @return UserRepresentation
+     */
+    fun findUserById(userId: UUID): UserRepresentation? {
+        return getKeycloakClient().realm(realm).users().get(userId.toString()).toRepresentation()
     }
 
     /**
