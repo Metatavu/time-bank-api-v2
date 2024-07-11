@@ -37,6 +37,7 @@ class VacationRequestController {
                 message = vacationRequest.message,
                 createdAt = vacationRequest.createdAt,
                 updatedAt = vacationRequest.updatedAt,
+                draft = vacationRequest.draft
             )
         )
     }
@@ -49,11 +50,12 @@ class VacationRequestController {
      * @param after after date
      * @return List of VacationRequests
      */
-    suspend fun listVacationRequests(personId: UUID?, before: LocalDate?, after: LocalDate?): List<VacationRequest> {
+    suspend fun listVacationRequests(personId: UUID?, before: LocalDate?, after: LocalDate?, draft: Boolean?): List<VacationRequest> {
         return vacationsRequestsRepository.listVacationRequest(
             personId = personId,
             before = before,
-            after = after
+            after = after,
+            draft = draft
         )
     }
 
@@ -81,6 +83,7 @@ class VacationRequestController {
         existingVacationRequest.type = vacationRequest.type
         existingVacationRequest.message = vacationRequest.message
         existingVacationRequest.updatedAt = vacationRequest.updatedAt
+        existingVacationRequest.draft = vacationRequest.draft
 
         return vacationsRequestsRepository.persistSuspending(existingVacationRequest)
     }

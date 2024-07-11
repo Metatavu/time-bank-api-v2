@@ -40,4 +40,7 @@ class VacationRequest(
 
     @Column
     var updatedAt: OffsetDateTime? = null,
+
+    @Column
+    var draft: Boolean? = null
 )

@@ -143,4 +143,12 @@
             <column name="updatedBy" type="binary(16)"/>
         </createTable>
     </changeSet>
+
+    <changeSet id="addDraftColumnToVacationRequest" author="Veikko Vilpponen">
+        <addColumn tableName="VacationRequest">
+            <column name="draft" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
