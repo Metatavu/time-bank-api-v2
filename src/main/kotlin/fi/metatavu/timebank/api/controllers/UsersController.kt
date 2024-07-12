@@ -3,6 +3,7 @@ package fi.metatavu.timebank.api.controllers
 import fi.metatavu.timebank.api.impl.translate.UserTranslator
 import fi.metatavu.timebank.api.keycloak.KeycloakController
 import fi.metatavu.timebank.model.User
+import org.keycloak.admin.client.resource.UsersResource
 import org.keycloak.representations.idm.UserRepresentation
 import java.util.UUID
 import javax.enterprise.context.ApplicationScoped
@@ -35,12 +36,7 @@ class UsersController {
      *
      * @return List<User>
      */
-    fun listUsers(): List<User>? {
-        val users = keycloakController.getUsersResource()
-        if (users != null) {
-            return userTranslator.translate(keycloakController.getUsersResource()!!)
-        }
-
-        return null
+    fun listUsers(): UsersResource? {
+        return keycloakController.getUsersResource()!!
     }
 }
