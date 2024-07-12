@@ -38,8 +38,4 @@ class UsersApi: UsersApi, AbstractApi() {
             createBadRequest(e.localizedMessage)
         }
     }
-
-    override suspend fun updateUser(userId: UUID, user: User): Response {
-        TODO("Not yet implemented")
-    }
 }
