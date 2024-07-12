@@ -16,10 +16,8 @@ class UserTranslator: AbstractTranslator<UserRepresentation, User>() {
     lateinit var keycloakController: KeycloakController
 
     override fun translate(entity: UserRepresentation): User {
-        val keycloakUser = keycloakController.findUserByEmail(entity.email)
-
         return User(
-            id = keycloakUser?.let { UUID.fromString(keycloakUser.id) }!!,
+            id = UUID.fromString(entity.id),
             email = entity.email,
             firstName = entity.firstName,
             lastName = entity.lastName,

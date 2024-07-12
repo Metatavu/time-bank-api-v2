@@ -144,7 +144,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="addDraftColumnToVacationRequest" author="Veikko Vilpponen">
+    <changeSet id="addDraftColumnToVacationRequest" author="Iiro Anttila">
         <addColumn tableName="VacationRequest">
             <column name="draft" type="boolean" defaultValueBoolean="false">
                 <constraints nullable="false"/>
