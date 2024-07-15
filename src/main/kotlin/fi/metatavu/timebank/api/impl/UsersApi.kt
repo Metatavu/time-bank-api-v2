@@ -32,7 +32,7 @@ class UsersApi: UsersApi, AbstractApi() {
         loggedUserId ?: return createUnauthorized("Invalid token!")
 
         return try {
-            val persons = usersController.listUsers() ?: return createNotFound("No persons found!")
+            val persons = usersController.listUsers()
             createOk(entity = userTranslator.translate(persons))
         } catch (e: Exception){
             createBadRequest(e.localizedMessage)

@@ -176,6 +176,25 @@ class KeycloakController {
     }
 
     /**
+     * Searches Keycloak users
+     *
+     * @return List<UserRepresentation>
+     */
+    fun searchUsers(): List<UserRepresentation> {
+        val keycloakClient = getKeycloakClient()
+        val foundRealm = keycloakClient.realm(realm)
+            ?: throw IllegalArgumentException("Realm $realm not found!")
+
+        return foundRealm.users().search(
+            null,
+            null,
+            null,
+            null,
+            false
+        )
+    }
+
+    /**
      * Builds a Keycloak Admin Client
      *
      * @return Keycloak client

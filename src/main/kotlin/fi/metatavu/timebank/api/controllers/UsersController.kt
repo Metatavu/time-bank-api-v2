@@ -36,7 +36,7 @@ class UsersController {
      *
      * @return List<User>
      */
-    fun listUsers(): UsersResource? {
-        return keycloakController.getUsersResource()!!
+    fun listUsers(): List<UserRepresentation> {
+        return keycloakController.searchUsers()
     }
 }
