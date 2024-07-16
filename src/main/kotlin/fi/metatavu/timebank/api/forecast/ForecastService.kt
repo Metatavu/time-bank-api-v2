@@ -53,19 +53,6 @@ class ForecastService {
     }
 
     /**
-     * Finds ForecastPerson from Forecast by id
-     *
-     * @param personId Int
-     * @return ForecastPerson?
-     */
-    fun findPerson(personId: Int): ForecastPerson {
-        return jacksonObjectMapper().readValue(
-            doRequest("/v2/persons/$personId"),
-            ForecastPerson::class.java
-        )
-    }
-
-    /**
      * Gets persons from Forecast
      *
      * @return List of ForecastPersons

@@ -22,16 +22,6 @@ class PersonsApi: PersonsApi, AbstractApi() {
 
     @Inject
     lateinit var personsTranslator: PersonsTranslator
-    override suspend fun findPerson(personId: Int): Response {
-        loggedUserId ?: return createUnauthorized("Invalid token!")
-        val person = personsController.findPerson(personId)
-
-        return if (person != null) {
-            createOk(entity = person)
-        } else {
-            createNotFound("Person with id $personId not found!")
-        }
-    }
 
     override suspend fun listPersonTotalTime(personId: Int, timespan: Timespan?, before: LocalDate?, after: LocalDate?): Response {
         loggedUserId ?: return createUnauthorized("Invalid token!")

@@ -125,16 +125,6 @@ class PersonsController {
     }
 
     /**
-     * Fetches Person from Forecast
-     *
-     * @param personId Int
-     * @return ForecastPerson
-     */
-    suspend fun findPerson(personId: Int): ForecastPerson {
-        return forecastService.findPerson(personId)
-    }
-
-    /**
      * Makes List of PersonTotalTimes
      *
      * @param personId personId
