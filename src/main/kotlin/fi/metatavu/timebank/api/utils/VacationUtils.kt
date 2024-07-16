@@ -22,7 +22,7 @@ class VacationUtils {
     /**
      * Gets amount of unspent and spent vacations for person
      *
-     * @param personId personId
+     * @param person person
      * @return Pair<Int, Int> (unspent, spent)
      */
     suspend fun getPersonsVacations(person: ForecastPerson): Pair<Int, Int> {

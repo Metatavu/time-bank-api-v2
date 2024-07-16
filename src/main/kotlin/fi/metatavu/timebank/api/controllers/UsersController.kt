@@ -1,11 +1,8 @@
 package fi.metatavu.timebank.api.controllers
 
-import fi.metatavu.timebank.api.impl.translate.UserTranslator
 import fi.metatavu.timebank.api.keycloak.KeycloakController
-import fi.metatavu.timebank.model.User
-import org.keycloak.admin.client.resource.UsersResource
 import org.keycloak.representations.idm.UserRepresentation
-import java.util.UUID
+import java.util.*
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 
@@ -17,9 +14,6 @@ class UsersController {
 
     @Inject
     lateinit var keycloakController: KeycloakController
-
-    @Inject
-    lateinit var userTranslator: UserTranslator
 
     /**
      * Fetches User from keycloak

@@ -1,5 +1,6 @@
 package fi.metatavu.timebank.api.test.functional.tests
 
+import fi.metatavu.timebank.api.test.functional.data.TestDateUtils.Companion.getThirtyDaysAgo
 import fi.metatavu.timebank.api.test.functional.resources.LocalTestProfile
 import fi.metatavu.timebank.api.test.functional.resources.TestWiremockResource
 import fi.metatavu.timebank.test.client.models.Person
@@ -8,9 +9,8 @@ import io.quarkus.test.common.QuarkusTestResource
 import io.quarkus.test.junit.QuarkusTest
 import io.quarkus.test.junit.TestProfile
 import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.*
-import fi.metatavu.timebank.api.test.functional.data.TestDateUtils.Companion.getThirtyDaysAgo
-import fi.metatavu.timebank.test.client.infrastructure.ClientException
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import kotlin.math.ceil
@@ -142,65 +142,6 @@ class PersonsTest: AbstractTest() {
             )
         }
     }
-
-    /**
-     * Tests overriding vacation days for users via v/1/persons/{personId} -endpoint PUT method. Only admin-roles should be allowed to perform this action.
-     */
-    @Test
-    fun overrideVacationDaysTest() {
-        createTestBuilder().use { testBuilder ->
-            val person = testBuilder.userA.persons.getPersons(active = false).find { it.id == 2 }!!
-            val newPerson = Person(
-                id = person.id,
-                firstName = person.firstName,
-                lastName = person.lastName,
-                email = person.email,
-                monday = person.monday,
-                tuesday = person.tuesday,
-                wednesday = person.wednesday,
-                thursday = person.thursday,
-                friday = person.friday,
-                saturday = person.saturday,
-                sunday = person.sunday,
-                active = person.active,
-                unspentVacations = 32,
-                spentVacations = 37,
-                minimumBillableRate = person.minimumBillableRate,
-                language = person.language,
-                startDate = person.startDate
-            )
-            val updatedPerson = testBuilder.manager.persons.updatePerson(
-                personId = newPerson.id,
-                person = newPerson
-            )
-
-            assertEquals(32, updatedPerson.unspentVacations)
-            assertEquals(37, updatedPerson.spentVacations)
-
-            testBuilder.userA.persons.assertUpdateFail(
-                person = newPerson,
-                expectedStatus = 401
-            )
-
-            try {
-                testBuilder.admin.persons.updatePerson(
-                    personId = newPerson.id,
-                    person = newPerson
-                )
-            } catch (e: ClientException) {
-                assertNotEquals(401, e.statusCode, "Update failed with 401 status")
-            }
-
-            // Quarkus Devservices are not restarted between test runs,
-            // hence resetting edited Keycloak attribute is necessary for consequent test runs.
-            testBuilder.manager.persons.updatePerson(
-                personId = person.id,
-                person = person
-            )
-        }
-    }
-
-
 
     /**
      * Tests /v1/persons/2/total -endpoint

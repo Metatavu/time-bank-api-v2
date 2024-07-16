@@ -3,7 +3,6 @@ package fi.metatavu.timebank.api.controllers
 import fi.metatavu.timebank.model.PersonTotalTime
 import fi.metatavu.timebank.api.forecast.ForecastService
 import fi.metatavu.timebank.api.forecast.models.ForecastPerson
-import fi.metatavu.timebank.api.impl.translate.PersonsTranslator
 import fi.metatavu.timebank.api.keycloak.KeycloakController
 import fi.metatavu.timebank.api.utils.VacationUtils
 import org.slf4j.Logger
@@ -15,7 +14,6 @@ import java.time.LocalDate
 import java.time.temporal.WeekFields
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
-import javax.ws.rs.NotFoundException
 
 /**
  * Controller for Person objects
@@ -37,9 +35,6 @@ class PersonsController {
 
     @Inject
     lateinit var keycloakController: KeycloakController
-
-    @Inject
-    lateinit var personsTranslator: PersonsTranslator
 
     /**
      * Updates Person minimumBillableRate in Keycloak

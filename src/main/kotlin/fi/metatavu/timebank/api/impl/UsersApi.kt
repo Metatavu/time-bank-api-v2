@@ -2,7 +2,6 @@ package fi.metatavu.timebank.api.impl
 
 import fi.metatavu.timebank.api.controllers.UsersController
 import fi.metatavu.timebank.api.impl.translate.UserTranslator
-import fi.metatavu.timebank.model.User
 import fi.metatavu.timebank.spec.UsersApi
 import java.util.*
 import javax.enterprise.context.RequestScoped
@@ -23,7 +22,7 @@ class UsersApi: UsersApi, AbstractApi() {
 
     override suspend fun findUser(userId: UUID): Response {
         loggedUserId ?: return createUnauthorized("Invalid token!")
-        val user = usersController.findUser(userId) ?: return createNotFound("Person with id $userId not found!")
+        val user = usersController.findUser(userId) ?: return createNotFound("User with id $userId not found!")
 
         return createOk(entity = userTranslator.translate(user))
     }

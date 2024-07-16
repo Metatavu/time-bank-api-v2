@@ -1,14 +1,14 @@
 package fi.metatavu.timebank.api.test.functional.tests
 
-import com.github.tomakehurst.wiremock.stubbing.Scenario.STARTED
-import fi.metatavu.timebank.api.test.functional.data.TestDateUtils.Companion.getThirtyDaysAgo
 import fi.metatavu.timebank.api.test.functional.resources.LocalTestProfile
 import fi.metatavu.timebank.api.test.functional.resources.TestWiremockResource
 import io.quarkus.test.common.QuarkusTestResource
 import io.quarkus.test.junit.QuarkusTest
 import io.quarkus.test.junit.TestProfile
-import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
+import java.util.*
 
 @QuarkusTest
 @QuarkusTestResource.List(
@@ -18,19 +18,10 @@ import org.junit.jupiter.api.Assertions.*
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UsersTest: AbstractTest() {
 
-    /**
-     * Resets Wiremock scenario states before each test
-     */
-    @BeforeEach
-    fun resetScenariosBeforeEach(){
-        resetScenarios()
-    }
-
     @Test
     fun listUsers(){
         createTestBuilder().use { testBuilder ->
             val users = testBuilder.manager.users.getUsers()
-            println("Users received: ${users.contentToString()}")
             val testerAUser = users.find { it.firstName == "Manager" }
 
             assertEquals(6, users.size)
@@ -39,9 +30,18 @@ class UsersTest: AbstractTest() {
     }
 
     @Test
+    fun findUser() {
+        createTestBuilder().use { testBuilder ->
+            val user = testBuilder.manager.users.findUser(UUID.fromString("eb4123a3-b722-4798-9af5-8957f823657a"))
+
+            assertEquals(user.email, "testerb@example.com")
+        }
+    }
+
+    @Test
     fun listUsersWithNullToken() {
         createTestBuilder().use { testBuilder ->
-            testBuilder.userWithNullToken.users.assertListFailWithNullToken(expectedStatus = 401)
+            testBuilder.userWithNullToken.users.assertListFailWithStatus(expectedStatus = 401)
         }
     }
 }

@@ -6,7 +6,6 @@ import fi.metatavu.timebank.api.test.functional.settings.ApiTestSettings
 import fi.metatavu.timebank.test.client.apis.UsersApi
 import fi.metatavu.timebank.test.client.infrastructure.ApiClient
 import fi.metatavu.timebank.test.client.infrastructure.ClientException
-import fi.metatavu.timebank.test.client.infrastructure.ServerException
 import fi.metatavu.timebank.test.client.models.User
 import org.junit.Assert
 import java.util.*
@@ -27,13 +26,20 @@ class UsersTestBuilderResource(
         return UsersApi(ApiTestSettings.apiBasePath)
     }
 
+    /**
+     * Gets all users
+     *
+     * @return Array of Users
+     */
     fun getUsers(): Array<User>{
-        println("Fetching users...")
-        val response = api.listUsers()
-        println("Response: $response")
-        return response
+        return api.listUsers()
     }
 
+    /**
+     * Finds user based on UUID
+     *
+     * @return User
+     */
     fun findUser(userId: UUID): User {
         return api.findUser(userId)
     }
@@ -43,7 +49,7 @@ class UsersTestBuilderResource(
      *
      * @param expectedStatus expected status
      */
-    fun assertListFailWithNullToken(expectedStatus: Int) {
+    fun assertListFailWithStatus(expectedStatus: Int) {
         try {
             api.listUsers()
             Assert.fail(String.format("Expected fail with status, $expectedStatus"))

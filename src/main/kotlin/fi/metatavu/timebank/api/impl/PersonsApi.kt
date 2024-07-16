@@ -1,7 +1,6 @@
 package fi.metatavu.timebank.api.impl
 
 import fi.metatavu.timebank.api.controllers.PersonsController
-import fi.metatavu.timebank.api.forecast.models.ForecastPerson
 import fi.metatavu.timebank.api.impl.translate.PersonsTranslator
 import fi.metatavu.timebank.model.Person
 import fi.metatavu.timebank.model.Timespan
