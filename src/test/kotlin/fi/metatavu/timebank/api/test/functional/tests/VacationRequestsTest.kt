@@ -71,16 +71,21 @@ class VacationRequestsTest: AbstractTest() {
     @Test
     fun testListVacationRequests() {
         createTestBuilder().use { testBuilder ->
-            val createdVacation = testBuilder.manager.vacationRequests.createVacationRequest(testVacationRequest)
+            val createdVacationOne = testBuilder.manager.vacationRequests.createVacationRequest(testVacationRequest)
+            val createdVacationTwo = testBuilder.manager.vacationRequests.createVacationRequest(testVacationRequest.copy(draft = true))
 
             val vacations = testBuilder.manager.vacationRequests.listVacationRequests()
+            val draftVacations = testBuilder.manager.vacationRequests.listVacationRequests(draft = true)
+            val nonDraftVacation = vacations.find { !it.draft }
 
-            assertEquals(createdVacation.personId, vacations[0].personId)
-            assertEquals(LocalDate.now().toString(), vacations[0].startDate)
-            assertEquals(LocalDate.now().plusDays(1).toString(), vacations[0].endDate)
-            assertEquals(2, vacations[0].days)
-            assertEquals(VacationType.VACATION, vacations[0].type)
-            assertEquals("Lomaa!!!", vacations[0].message)
+            assertEquals(2, vacations.size)
+            assertEquals(1, draftVacations.size)
+            assertEquals(createdVacationOne.personId, nonDraftVacation?.personId)
+            assertEquals(LocalDate.now().toString(), nonDraftVacation?.startDate)
+            assertEquals(LocalDate.now().plusDays(1).toString(), nonDraftVacation?.endDate)
+            assertEquals(2, nonDraftVacation?.days)
+            assertEquals(VacationType.VACATION, nonDraftVacation?.type)
+            assertEquals("Lomaa!!!", nonDraftVacation?.message)
         }
     }
 

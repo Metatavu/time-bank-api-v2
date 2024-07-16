@@ -35,12 +35,12 @@ class VacationRequest(
     @Column
     var message: String? = null,
 
+    @Column(nullable = false)
+    var draft: Boolean? = null,
+
     @Column
     var createdAt: OffsetDateTime? = null,
 
     @Column
     var updatedAt: OffsetDateTime? = null,
-
-    @Column
-    var draft: Boolean? = null
 )

@@ -40,7 +40,7 @@ class VacationRequestsApi: VacationRequestsApi, AbstractApi() {
             personId = personId,
             before = before,
             after = after,
-            draft = draft
+            draft = draft,
         )
 
         return createOk(entity = vacationRequestTranslator.translate(vacationRequests))

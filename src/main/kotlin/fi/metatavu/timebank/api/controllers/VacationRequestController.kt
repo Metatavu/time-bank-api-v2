@@ -35,9 +35,9 @@ class VacationRequestController {
                 days = vacationRequest.days,
                 type = vacationRequest.type,
                 message = vacationRequest.message,
+                draft = vacationRequest.draft,
                 createdAt = vacationRequest.createdAt,
                 updatedAt = vacationRequest.updatedAt,
-                draft = vacationRequest.draft
             )
         )
     }
@@ -55,7 +55,7 @@ class VacationRequestController {
             personId = personId,
             before = before,
             after = after,
-            draft = draft
+            draft = draft,
         )
     }
 
@@ -83,7 +83,6 @@ class VacationRequestController {
         existingVacationRequest.type = vacationRequest.type
         existingVacationRequest.message = vacationRequest.message
         existingVacationRequest.updatedAt = vacationRequest.updatedAt
-        existingVacationRequest.draft = vacationRequest.draft
 
         return vacationsRequestsRepository.persistSuspending(existingVacationRequest)
     }
