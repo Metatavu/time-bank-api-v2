@@ -45,7 +45,7 @@ class UsersTestBuilderResource(
     }
 
     /**
-     * Asserts that listing users with a null token fails with given status
+     * Asserts that listing users with a null auth token fails with given status
      *
      * @param expectedStatus expected status
      */

@@ -100,7 +100,7 @@ class KeycloakController {
     /**
      * Searches Keycloak users
      *
-     * @return List of UserRepresentation
+     * @return List of UserRepresentations
      */
     fun searchUsers(): List<UserRepresentation> {
         val keycloakClient = getKeycloakClient()
