@@ -1,14 +1,14 @@
 package fi.metatavu.timebank.api.controllers
 
-import fi.metatavu.timebank.model.PersonTotalTime
 import fi.metatavu.timebank.api.forecast.ForecastService
 import fi.metatavu.timebank.api.forecast.models.ForecastPerson
 import fi.metatavu.timebank.api.keycloak.KeycloakController
 import fi.metatavu.timebank.api.utils.VacationUtils
-import org.slf4j.Logger
 import fi.metatavu.timebank.model.DailyEntry
 import fi.metatavu.timebank.model.Person
+import fi.metatavu.timebank.model.PersonTotalTime
 import fi.metatavu.timebank.model.Timespan
+import org.slf4j.Logger
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.temporal.WeekFields
@@ -40,7 +40,7 @@ class PersonsController {
      * Updates Person minimumBillableRate in Keycloak
      *
      * @param person Person
-     * @return person Person
+     * @return person
      */
     suspend fun updatePerson(person: Person): Person {
         if (person.minimumBillableRate > 100 || person.minimumBillableRate < 0) {
