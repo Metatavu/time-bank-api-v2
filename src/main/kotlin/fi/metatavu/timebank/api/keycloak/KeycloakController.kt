@@ -50,38 +50,6 @@ class KeycloakController {
     }
 
     /**
-     * Gets unspentVacations attribute for Person
-     * If not set will set and return default value of -1
-     *
-     * @param user UserRepresentation
-     * @return unspentVacations
-     */
-    fun getUsersUnspentVacationDays(user: UserRepresentation): Int {
-        return try {
-            user.attributes["unspentVacations"]!!.first()!!.toInt()
-        } catch (e: Exception){
-            updateUsersUnspentVacationDays(user, -1)
-            -1
-        }
-    }
-
-    /**
-     * Gets spentVacations attribute for Person
-     * If not set will set and return default value of -1
-     *
-     * @param user UserRepresentation
-     * @return spentVacations
-     */
-    fun getUsersSpentVacationDays(user: UserRepresentation): Int {
-        return try {
-            user.attributes["spentVacations"]!!.first()!!.toInt()
-        } catch (e: Exception){
-            updateUsersSpentVacationDays(user, -1)
-            -1
-        }
-    }
-
-    /**
      * Updates Persons minimumBillableRate attribute
      *
      * @param user UserRepresentation
@@ -95,42 +63,6 @@ class KeycloakController {
             usersResource?.update(user)
         } catch (e: NullPointerException) {
             user.attributes = mapOf("minimumBillableRate" to listOf(newMinimumBillableRate.toString()))
-            usersResource?.update(user)
-        }
-    }
-
-    /**
-     * Updates Persons unspentVacations attribute
-     *
-     * @param user UserRepresentation
-     * @param newUnspent Int
-     */
-    fun updateUsersUnspentVacationDays(user: UserRepresentation, newUnspent: Int) {
-        val usersResource = getUsersResource()?.get(user.id)
-
-        try {
-            user.attributes["unspentVacations"] = listOf(newUnspent.toString())
-            usersResource?.update(user)
-        } catch (e: NullPointerException){
-            user.attributes = mapOf("unspentVacations" to listOf(newUnspent.toString()))
-            usersResource?.update(user)
-        }
-    }
-
-    /**
-     * Updates Persons spentVacations attribute
-     *
-     * @param user UserRepresentation
-     * @param newSpent Int
-     */
-    fun updateUsersSpentVacationDays(user: UserRepresentation, newSpent: Int) {
-        val usersResource = getUsersResource()?.get(user.id)
-
-        try {
-            user.attributes["spentVacations"] = listOf(newSpent.toString())
-            usersResource?.update(user)
-        } catch (e: NullPointerException){
-            user.attributes = mapOf("spentVacations" to listOf(newSpent.toString()))
             usersResource?.update(user)
         }
     }
