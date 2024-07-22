@@ -1,14 +1,14 @@
 package fi.metatavu.timebank.api.controllers
 
-import fi.metatavu.timebank.model.PersonTotalTime
 import fi.metatavu.timebank.api.forecast.ForecastService
 import fi.metatavu.timebank.api.forecast.models.ForecastPerson
 import fi.metatavu.timebank.api.keycloak.KeycloakController
 import fi.metatavu.timebank.api.utils.VacationUtils
-import org.slf4j.Logger
 import fi.metatavu.timebank.model.DailyEntry
 import fi.metatavu.timebank.model.Person
+import fi.metatavu.timebank.model.PersonTotalTime
 import fi.metatavu.timebank.model.Timespan
+import org.slf4j.Logger
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.temporal.WeekFields
@@ -40,7 +40,7 @@ class PersonsController {
      * Updates Person minimumBillableRate in Keycloak
      *
      * @param person Person
-     * @return person Person
+     * @return person
      */
     suspend fun updatePerson(person: Person): Person {
         if (person.minimumBillableRate > 100 || person.minimumBillableRate < 0) {
@@ -52,26 +52,7 @@ class PersonsController {
 
         keycloakController.updateUsersMinimumBillableRate(keycloakUser, person.minimumBillableRate)
 
-        return Person(
-            id = person.id,
-            firstName = person.firstName,
-            lastName = person.firstName,
-            email = person.email,
-            monday = person.monday,
-            tuesday = person.tuesday,
-            wednesday = person.wednesday,
-            thursday = person.thursday,
-            friday = person.friday,
-            saturday = person.saturday,
-            sunday = person.sunday,
-            active = person.active,
-            unspentVacations = person.unspentVacations,
-            spentVacations = person.spentVacations,
-            minimumBillableRate = keycloakController.getUsersMinimumBillableRate(keycloakUser),
-            language = person.language,
-            startDate = person.startDate,
-            keycloakId = person.keycloakId
-        )
+        return person.copy(minimumBillableRate = person.minimumBillableRate)
     }
 
     /**
@@ -266,5 +247,9 @@ class PersonsController {
             Timespan.MONTH -> "$year,$month"
             Timespan.WEEK -> "$year,$month,$week"
         }
+    }
+
+    companion object {
+        const val DEFAULT_MINIMUM_BILLABLE_VALUE = 75
     }
 }

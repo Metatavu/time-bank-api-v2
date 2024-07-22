@@ -1,11 +1,6 @@
 package fi.metatavu.timebank.api.test.functional.data
 
-import fi.metatavu.timebank.api.forecast.models.ForecastHoliday
-import fi.metatavu.timebank.api.forecast.models.ForecastPerson
-import fi.metatavu.timebank.api.forecast.models.ForecastTask
-import fi.metatavu.timebank.api.forecast.models.ForecastTaskResponse
-import fi.metatavu.timebank.api.forecast.models.ForecastTimeEntry
-import fi.metatavu.timebank.api.forecast.models.ForecastTimeEntryResponse
+import fi.metatavu.timebank.api.forecast.models.*
 import java.time.LocalDate
 
 /**

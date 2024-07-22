@@ -4,8 +4,9 @@ import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.keycloak.admin.client.Keycloak
 import org.keycloak.admin.client.KeycloakBuilder
 import org.keycloak.admin.client.resource.UsersResource
-import javax.enterprise.context.ApplicationScoped
 import org.keycloak.representations.idm.UserRepresentation
+import java.util.*
+import javax.enterprise.context.ApplicationScoped
 
 /**
  * Class for Keycloak controller
@@ -36,7 +37,7 @@ class KeycloakController {
      * If not set will set and return default value of 75 (%)
      *
      * @param user UserRepresentation
-     * @return Int minimumBillableRate
+     * @return minimumBillableRate
      */
     fun getUsersMinimumBillableRate(user: UserRepresentation): Int {
 
@@ -52,8 +53,7 @@ class KeycloakController {
      * Updates Persons minimumBillableRate attribute
      *
      * @param user UserRepresentation
-     * @param  newMinimumBillableRate Int
-     * @return Int minimumBillableRate
+     * @param  newMinimumBillableRate In
      */
     fun updateUsersMinimumBillableRate(user: UserRepresentation, newMinimumBillableRate: Int) {
         val usersResource = getUsersResource()?.get(user.id)
@@ -98,6 +98,25 @@ class KeycloakController {
     }
 
     /**
+     * Searches Keycloak users
+     *
+     * @return List of UserRepresentations
+     */
+    fun searchUsers(): List<UserRepresentation> {
+        val keycloakClient = getKeycloakClient()
+        val foundRealm = keycloakClient.realm(realm)
+            ?: throw IllegalArgumentException("Realm $realm not found!")
+
+        return foundRealm.users().search(
+            null,
+            null,
+            null,
+            null,
+            false
+        )
+    }
+
+    /**
      * Builds a Keycloak Admin Client
      *
      * @return Keycloak client
@@ -112,5 +131,15 @@ class KeycloakController {
             .username(adminUsername)
             .password(adminPassword)
             .build()
+    }
+
+    /**
+     * Finds person by their keycloak id
+     *
+     * @param userId UUID
+     * @return UserRepresentation
+     */
+    fun findUserById(userId: UUID): UserRepresentation? {
+        return getKeycloakClient().realm(realm).users().get(userId.toString()).toRepresentation()
     }
 }

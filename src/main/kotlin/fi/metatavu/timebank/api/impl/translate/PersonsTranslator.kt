@@ -1,5 +1,6 @@
 package fi.metatavu.timebank.api.impl.translate
 
+import fi.metatavu.timebank.api.controllers.PersonsController
 import fi.metatavu.timebank.api.forecast.models.ForecastPerson
 import fi.metatavu.timebank.api.keycloak.KeycloakController
 import fi.metatavu.timebank.model.Person
@@ -19,7 +20,7 @@ class PersonsTranslator: AbstractTranslator<ForecastPerson, Person>() {
 
     override fun translate(entity: ForecastPerson): Person {
         val keycloakUser = keycloakController.findUserByEmail(entity.email)
-        val minimumBillableRate = if (keycloakUser == null) 75 else keycloakController.getUsersMinimumBillableRate(keycloakUser)
+        val minimumBillableRate = if (keycloakUser == null) PersonsController.DEFAULT_MINIMUM_BILLABLE_VALUE else keycloakController.getUsersMinimumBillableRate(keycloakUser)
 
         return Person(
             id = entity.id,

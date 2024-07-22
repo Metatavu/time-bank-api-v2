@@ -44,9 +44,9 @@ class VacationRequestStatusTest: AbstractTest() {
     days = 2,
     type = VacationType.VACATION,
     message = "Vacation!!!",
-    draft = false,
     createdAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
     updatedAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
+    draft = false
     )
 
     /**

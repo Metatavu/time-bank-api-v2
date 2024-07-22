@@ -48,8 +48,12 @@ class TestWiremockResource: QuarkusTestResourceLifecycleManager {
         )
     }
 
+
+
     /**
      * /v2/persons -stubs
+     *
+     * Forecast integration has been deprecated.
      *
      * @param wireMockServer WireMockServer
      */

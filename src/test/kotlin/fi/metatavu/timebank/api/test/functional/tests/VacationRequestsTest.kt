@@ -42,9 +42,9 @@ class VacationRequestsTest: AbstractTest() {
     days = 2,
     type = VacationType.VACATION,
     message = "Lomaa!!!",
-    draft = false,
     createdAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
     updatedAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
+    draft = false
     )
 
     /**
@@ -76,7 +76,7 @@ class VacationRequestsTest: AbstractTest() {
 
             val vacations = testBuilder.manager.vacationRequests.listVacationRequests()
             val draftVacations = testBuilder.manager.vacationRequests.listVacationRequests(draft = true)
-            val nonDraftVacation = vacations.find { it.draft == false }
+            val nonDraftVacation = vacations.find { !it.draft }
 
             assertEquals(2, vacations.size)
             assertEquals(1, draftVacations.size)
@@ -145,9 +145,9 @@ class VacationRequestsTest: AbstractTest() {
                 days = 2,
                 type = VacationType.VACATION,
                 message = "Lomaa!!!",
-                draft = false,
                 createdAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
                 updatedAt = getODT(getThirtyDaysAgoThirdWeek()[1].atStartOfDay()),
+                draft = false
             ) )
         }
     }

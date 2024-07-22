@@ -20,7 +20,7 @@ class VacationRequestTranslator: AbstractTranslator<VacationRequest, fi.metatavu
             type = entity.type!!,
             createdAt = entity.createdAt!!,
             updatedAt = entity.updatedAt!!,
-            draft = entity.draft!!,
+            draft = entity.draft!!
         )
     }
 
