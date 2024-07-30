@@ -1,5 +1,6 @@
 package fi.metatavu.timebank.api.keycloak
 
+import fi.metatavu.timebank.model.User
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.keycloak.admin.client.Keycloak
 import org.keycloak.admin.client.KeycloakBuilder
@@ -7,6 +8,7 @@ import org.keycloak.admin.client.resource.UsersResource
 import org.keycloak.representations.idm.UserRepresentation
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
+import javax.validation.constraints.Email
 
 /**
  * Class for Keycloak controller
@@ -63,6 +65,24 @@ class KeycloakController {
             usersResource?.update(user)
         } catch (e: NullPointerException) {
             user.attributes = mapOf("minimumBillableRate" to listOf(newMinimumBillableRate.toString()))
+            usersResource?.update(user)
+        }
+    }
+
+    /**
+     * Updates Users email attribute
+     *
+     * @param user UserRepresentation
+     * @param User
+     */
+    fun updateUsersEmail(user: UserRepresentation, newEmail: String) {
+        val usersResource = getUsersResource()?.get(user.id)
+
+        try {
+            user.attributes["email"] = listOf(newEmail)
+            usersResource?.update(user)
+        } catch (e: NullPointerException) {
+            user.attributes = mapOf("email" to listOf(newEmail))
             usersResource?.update(user)
         }
     }

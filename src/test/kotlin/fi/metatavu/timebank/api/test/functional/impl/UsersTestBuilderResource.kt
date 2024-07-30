@@ -45,6 +45,15 @@ class UsersTestBuilderResource(
     }
 
     /**
+     * Updates user based on UUID
+     *
+     * @return User
+     */
+    fun updateUser(userId: UUID, user: User): User {
+        return api.updateUser(userId, user)
+    }
+
+    /**
      * Asserts that listing users with a null auth token fails with given status
      *
      * @param expectedStatus expected status
