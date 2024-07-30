@@ -1,6 +1,7 @@
 package fi.metatavu.timebank.api.controllers
 
 import fi.metatavu.timebank.api.keycloak.KeycloakController
+import fi.metatavu.timebank.model.User
 import org.keycloak.representations.idm.UserRepresentation
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
@@ -32,5 +33,14 @@ class UsersController {
      */
     fun listUsers(): List<UserRepresentation> {
         return keycloakController.searchUsers()
+    }
+
+    fun updateUser(user: User): User {
+        val keycloakUser = keycloakController.getUsersResource()?.list()?.find { it.email == user.email.lowercase() }
+            ?: throw Error("Invalid e-mail; User not found!")
+
+        keycloakController.updateUsersEmail(keycloakUser, user.email)
+
+        return user.copy(email = user.email)
     }
 }

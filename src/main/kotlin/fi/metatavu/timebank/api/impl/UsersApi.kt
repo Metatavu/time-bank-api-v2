@@ -2,6 +2,7 @@ package fi.metatavu.timebank.api.impl
 
 import fi.metatavu.timebank.api.controllers.UsersController
 import fi.metatavu.timebank.api.impl.translate.UserTranslator
+import fi.metatavu.timebank.model.User
 import fi.metatavu.timebank.spec.UsersApi
 import java.util.*
 import javax.enterprise.context.RequestScoped
@@ -35,6 +36,17 @@ class UsersApi: UsersApi, AbstractApi() {
             createOk(entity = userTranslator.translate(persons))
         } catch (e: Exception){
             createBadRequest(e.localizedMessage)
+        }
+    }
+
+    override suspend fun updateUser(userId: UUID, user: User): Response {
+        loggedUserId ?: return createUnauthorized("Invalid token!")
+        if (!isAdmin()) return createUnauthorized("Only admin is allowed to perform this action!")
+
+        return try {
+            createOk(entity = usersController.updateUser(user))
+        } catch (e: Error) {
+            createInternalServerError(e.localizedMessage)
         }
     }
 }
