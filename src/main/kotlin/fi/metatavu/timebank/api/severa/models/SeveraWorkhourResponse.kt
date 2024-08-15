@@ -8,8 +8,8 @@ import io.quarkus.runtime.annotations.RegisterForReflection
  */
 @RegisterForReflection
 @JsonIgnoreProperties(ignoreUnknown = true)
-class SeveraTimeEntryResponse {
-    var pageContents: List<SeveraTimeEntry>? = null
+class SeveraWorkhourResponse {
+    var pageContents: List<SeveraWorkhour>? = null
     var pageSize: Int = 0
     var totalObjectCount: Int = 0
 }

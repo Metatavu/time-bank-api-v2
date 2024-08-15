@@ -10,15 +10,15 @@ import io.quarkus.runtime.annotations.RegisterForReflection
 @RegisterForReflection
 @JsonIgnoreProperties(ignoreUnknown = true)
 
-class SeveraTimeEntry {
-    var id: Int? = null
-    var person: Int = 0
-    var task: Int? = null
-    var date: String = ""
+class SeveraWorkhour {
+    var guid: String? = null
+    var user: String? = null
+    var project: String? = null
+    var eventDate: String = ""
     @JsonProperty("created_by")
-    var createdBy: Int = 0
+    var createdBy: String? = null
     @JsonProperty("updated_by")
-    var updatedBy: Int = 0
+    var updatedBy: String? = null
     @JsonProperty("created_at")
     var createdAt: String = ""
     @JsonProperty("updated_at")

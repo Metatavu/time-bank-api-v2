@@ -1,13 +1,13 @@
 package fi.metatavu.timebank.api.severa
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import fi.metatavu.timebank.api.severa.models.SeveraTimeEntryResponse
+import fi.metatavu.timebank.api.severa.models.SeveraFlextime
+import fi.metatavu.timebank.api.severa.models.SeveraWorkhourResponse
 import fi.metatavu.timebank.model.User
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.slf4j.Logger
-import java.time.LocalDate
 import javax.inject.Inject
 
 class SeveraService {
@@ -19,6 +19,8 @@ class SeveraService {
 
     @ConfigProperty(name = "severa.client.secret")
     lateinit var severaClientSecret: String
+
+    lateinit var bearerToken: String
 
     @Inject
     lateinit var logger: Logger
@@ -33,6 +35,7 @@ class SeveraService {
         return try {
             val client = OkHttpClient()
             val request = Request.Builder().url("${severaBaseUrl}${path}")
+                .addHeader("Authorization", bearerToken)
                 .addHeader("Client_id", severaClientId)
                 .addHeader("Client_secret", severaClientSecret)
                 .build()
@@ -72,21 +75,35 @@ class SeveraService {
     }
 
     /**
-     * Gets time registrations from Severa
+     * Gets work hours from Severa
      *
-     * @param date after in YYYY-MM-DD LocalDate
+     * @param startDate starting date for query
+     * @param endDate ending date for query
      * @param pageNumber page of paginated response to request
+     *
      * @return SeveraTimeEntryResponse
      */
-    fun getTimeEntries(after: LocalDate?, pageNumber: Int): SeveraTimeEntryResponse {
+    fun getWorkhoursForUser(startDate: String?, endDate: String?, pageNumber: Int, guid: String): SeveraWorkhourResponse {
         val pathSections = mutableListOf<String>()
-        pathSections.add("/v1/timeentries")
-        if (after != null) {
-            pathSections.add("?changedSince=$after")
+        pathSections.add("/v1/users/$guid/workhours")
+        if (startDate != null) {
+            pathSections.add("?startDate=$startDate")
         }
+        if (endDate != null) {
+            pathSections.add("?endDate=$endDate")
+        }
+        pathSections.add("?pageSize=1000&pageNumber=$pageNumber")
+
         return jacksonObjectMapper().readValue(
             doRequest(pathSections.joinToString("")),
-            SeveraTimeEntryResponse::class.java
+            SeveraWorkhourResponse::class.java
+        )
+    }
+
+    fun getUserFlextimeBalance(guid: String): SeveraFlextime {
+        return jacksonObjectMapper().readValue(
+            doRequest("/v1/users/$guid/flextime"),
+            SeveraFlextime::class.java
         )
     }
 }
