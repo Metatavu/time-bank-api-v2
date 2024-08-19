@@ -2,8 +2,6 @@ package fi.metatavu.timebank.api.severa
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import fi.metatavu.timebank.api.severa.models.SeveraAccessToken
-import fi.metatavu.timebank.api.severa.models.SeveraFlextime
-import fi.metatavu.timebank.api.severa.models.SeveraWorkhourResponse
 import fi.metatavu.timebank.model.User
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -21,7 +19,7 @@ class SeveraService {
     @ConfigProperty(name = "severa.client.secret")
     lateinit var severaClientSecret: String
 
-    var accessToken: SeveraAccessToken? = null
+    var severaAccessToken: SeveraAccessToken? = null
 
     lateinit var severaBearerTokenContainer: SeveraBearerTokenContainer
 
@@ -35,14 +33,14 @@ class SeveraService {
      * @return Response from the request
      */
     private fun doRequest(path: String, scope: String): String? {
-        if (accessToken == null){
-            accessToken = severaBearerTokenContainer.getNewBearerToken(scope)
+        if (severaAccessToken == null){
+            severaAccessToken = severaBearerTokenContainer.getNewBearerToken(scope)
         }
 
         return try {
             val client = OkHttpClient()
             val request = Request.Builder().url("${severaBaseUrl}${path}")
-                .addHeader("Authorization", "Bearer ${accessToken!!.bearerToken}")
+                .addHeader("Authorization", "Bearer ${severaAccessToken!!.bearerToken}")
                 .addHeader("Client_id", severaClientId)
                 .addHeader("Client_secret", severaClientSecret)
                 .build()
