@@ -1,6 +1,7 @@
 package fi.metatavu.timebank.api.severa
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import fi.metatavu.timebank.api.severa.models.SeveraAccessToken
 import fi.metatavu.timebank.api.severa.models.SeveraFlextime
 import fi.metatavu.timebank.api.severa.models.SeveraWorkhourResponse
 import fi.metatavu.timebank.model.User
@@ -20,7 +21,9 @@ class SeveraService {
     @ConfigProperty(name = "severa.client.secret")
     lateinit var severaClientSecret: String
 
-    lateinit var bearerToken: String
+    var accessToken: SeveraAccessToken? = null
+
+    lateinit var severaBearerTokenContainer: SeveraBearerTokenContainer
 
     @Inject
     lateinit var logger: Logger
@@ -31,17 +34,25 @@ class SeveraService {
      * @param path path for the request
      * @return Response from the request
      */
-    private fun doRequest(path: String): String? {
+    private fun doRequest(path: String, scope: String): String? {
+        if (accessToken == null){
+            accessToken = severaBearerTokenContainer.getNewBearerToken(scope)
+        }
+
         return try {
             val client = OkHttpClient()
             val request = Request.Builder().url("${severaBaseUrl}${path}")
-                .addHeader("Authorization", "Bearer $bearerToken")
+                .addHeader("Authorization", "Bearer ${accessToken!!.bearerToken}")
                 .addHeader("Client_id", severaClientId)
                 .addHeader("Client_secret", severaClientSecret)
                 .build()
             val response = client.newCall(request).execute()
             when (response.code()) {
                 200 -> response.body()?.string()
+                401 -> {
+                    severaBearerTokenContainer.getNewBearerToken("")
+                    doRequest(path, scope)
+                }
                 else -> throw Error("Couldn't reach Severa API.")
             }
         } catch (e: Error) {
@@ -57,7 +68,7 @@ class SeveraService {
      */
     fun getUsers(): List<User> {
         return jacksonObjectMapper().readValue(
-            doRequest("/v1/users"),
+            doRequest("/v1/users", "users:read"),
             Array<User>::class.java
         ).toList()
     }
@@ -69,41 +80,8 @@ class SeveraService {
      */
     fun findUser(guid: String): User {
         return jacksonObjectMapper().readValue(
-            doRequest("/v1/users/$guid"),
+            doRequest("/v1/users/$guid", "users:read"),
             User::class.java
-        )
-    }
-
-    /**
-     * Gets work hours from Severa
-     *
-     * @param startDate starting date for query
-     * @param endDate ending date for query
-     * @param pageNumber page of paginated response to request
-     *
-     * @return SeveraTimeEntryResponse
-     */
-    fun getWorkhoursForUser(startDate: String?, endDate: String?, pageNumber: Int, guid: String): SeveraWorkhourResponse {
-        val pathSections = mutableListOf<String>()
-        pathSections.add("/v1/users/$guid/workhours")
-        if (startDate != null) {
-            pathSections.add("?startDate=$startDate")
-        }
-        if (endDate != null) {
-            pathSections.add("?endDate=$endDate")
-        }
-        pathSections.add("?pageSize=1000&pageNumber=$pageNumber")
-
-        return jacksonObjectMapper().readValue(
-            doRequest(pathSections.joinToString("")),
-            SeveraWorkhourResponse::class.java
-        )
-    }
-
-    fun getUserFlextimeBalance(guid: String): SeveraFlextime {
-        return jacksonObjectMapper().readValue(
-            doRequest("/v1/users/$guid/flextime"),
-            SeveraFlextime::class.java
         )
     }
 }

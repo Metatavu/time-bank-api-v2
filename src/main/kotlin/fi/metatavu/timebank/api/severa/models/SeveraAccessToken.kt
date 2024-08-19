@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAlias
 import io.quarkus.runtime.annotations.RegisterForReflection
 
 @RegisterForReflection
-data class SeveraBearerToken (
+data class SeveraAccessToken (
     @JsonAlias("access_token")
     var bearerToken: String,
     @JsonAlias("access_token_expires_in")

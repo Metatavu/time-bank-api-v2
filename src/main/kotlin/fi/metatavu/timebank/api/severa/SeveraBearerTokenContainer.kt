@@ -2,7 +2,7 @@ package fi.metatavu.timebank.api.severa
 
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
-import fi.metatavu.timebank.api.severa.models.SeveraBearerToken
+import fi.metatavu.timebank.api.severa.models.SeveraAccessToken
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -31,7 +31,7 @@ class SeveraBearerTokenContainer {
      * @param scope Scope
      * @return Bearer token for Severa API calls
      */
-    fun getNewBearerToken(scope: String): SeveraBearerToken{
+    fun getNewBearerToken(scope: String): SeveraAccessToken{
         return try {
             val client = OkHttpClient()
             val requestBody = FormBody.Builder()
@@ -59,10 +59,10 @@ class SeveraBearerTokenContainer {
      * @param responseBody responseBody
      * @return Bearer token for Severa API calls
      */
-    fun parseBearerTokenFromJson(responseBody: String?): SeveraBearerToken{
+    fun parseBearerTokenFromJson(responseBody: String?): SeveraAccessToken{
         return try {
             val gson = Gson()
-            gson.fromJson(responseBody, SeveraBearerToken::class.java)
+            gson.fromJson(responseBody, SeveraAccessToken::class.java)
         } catch (e: JsonSyntaxException) {
             throw Error("Error when parsing bearer token from JSON: ${e.localizedMessage}")
         }
