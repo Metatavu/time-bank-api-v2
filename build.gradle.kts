@@ -31,6 +31,7 @@ dependencies {
     implementation("io.quarkus:quarkus-hibernate-orm")
     implementation("io.quarkus:quarkus-hibernate-validator")
     implementation("io.smallrye.reactive:mutiny-kotlin")
+    implementation("com.google.code.gson:gson:2.8.8")
     implementation("io.quarkus:quarkus-smallrye-jwt")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("io.quarkus:quarkus-arc")

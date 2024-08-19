@@ -35,7 +35,7 @@ class SeveraService {
         return try {
             val client = OkHttpClient()
             val request = Request.Builder().url("${severaBaseUrl}${path}")
-                .addHeader("Authorization", bearerToken)
+                .addHeader("Authorization", "Bearer $bearerToken")
                 .addHeader("Client_id", severaClientId)
                 .addHeader("Client_secret", severaClientSecret)
                 .build()
