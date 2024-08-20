@@ -26,7 +26,7 @@ class SeveraBearerTokenContainer {
     lateinit var logger: Logger
 
     /**
-     * Generates a new bearer token for Severa API calls
+     * Generates a new access token for Severa API calls
      *
      * @param scope Scope
      * @return Bearer token for Severa API calls
@@ -44,7 +44,7 @@ class SeveraBearerTokenContainer {
                 .build()
             val response = client.newCall(request).execute()
             when (response.code()) {
-                200 -> parseBearerTokenFromJson(response.body().toString())
+                200 -> parseAccessTokenFromJson(response.body().toString())
                 else -> throw Error("Couldn't reach Severa API.")
             }
         } catch (e: Error) {
@@ -54,12 +54,12 @@ class SeveraBearerTokenContainer {
     }
 
     /**
-     * Parses Bearer token from response body
+     * Parses access token from response body
      *
      * @param responseBody responseBody
      * @return Bearer token for Severa API calls
      */
-    fun parseBearerTokenFromJson(responseBody: String?): SeveraAccessToken{
+    fun parseAccessTokenFromJson(responseBody: String?): SeveraAccessToken{
         return try {
             val gson = Gson()
             gson.fromJson(responseBody, SeveraAccessToken::class.java)
