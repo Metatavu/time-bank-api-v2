@@ -19,8 +19,9 @@ class SeveraService {
     @ConfigProperty(name = "severa.client.secret")
     lateinit var severaClientSecret: String
 
-    var severaAccessToken: SeveraAccessToken? = null
+    private var severaAccessToken: SeveraAccessToken? = null
 
+    @Inject
     lateinit var severaBearerTokenContainer: SeveraBearerTokenContainer
 
     @Inject
@@ -34,7 +35,7 @@ class SeveraService {
      */
     private fun doRequest(path: String, scope: String): String? {
         if (severaAccessToken == null){
-            severaAccessToken = severaBearerTokenContainer.getNewBearerToken(scope)
+            severaAccessToken = severaBearerTokenContainer.getNewAccessToken(scope)
         }
 
         return try {
@@ -48,7 +49,8 @@ class SeveraService {
             when (response.code()) {
                 200 -> response.body()?.string()
                 401 -> {
-                    severaBearerTokenContainer.getNewBearerToken("")
+                    logger.error("Request unauthorized (401), generating new access token...")
+                    severaBearerTokenContainer.getNewAccessToken(scope)
                     doRequest(path, scope)
                 }
                 else -> throw Error("Couldn't reach Severa API.")

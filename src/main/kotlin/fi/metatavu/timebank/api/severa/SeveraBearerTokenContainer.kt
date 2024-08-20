@@ -31,7 +31,7 @@ class SeveraBearerTokenContainer {
      * @param scope Scope
      * @return Bearer token for Severa API calls
      */
-    fun getNewBearerToken(scope: String): SeveraAccessToken{
+    fun getNewAccessToken(scope: String): SeveraAccessToken{
         return try {
             val client = OkHttpClient()
             val requestBody = FormBody.Builder()
@@ -48,7 +48,7 @@ class SeveraBearerTokenContainer {
                 else -> throw Error("Couldn't reach Severa API.")
             }
         } catch (e: Error) {
-            logger.error("Error when executing get request: ${e.localizedMessage}")
+            logger.error("Error when generating new access token: ${e.localizedMessage}")
             throw Error(e.localizedMessage)
         }
     }
