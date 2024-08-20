@@ -12,19 +12,15 @@ import javax.inject.Inject
 
 @RequestScoped
 class SeveraService {
+
     @ConfigProperty(name = "severa.base.url")
     lateinit var severaBaseUrl: String
 
     @ConfigProperty(name = "severa.client.id")
     lateinit var severaClientId: String
 
-    @ConfigProperty(name = "severa.client.secret")
-    lateinit var severaClientSecret: String
-
-    private var severaAccessToken: SeveraAccessToken? = null
-
     @Inject
-    lateinit var severaBearerTokenContainer: SeveraBearerTokenContainer
+    lateinit var severaAccessTokenContainer: SeveraAccessTokenContainer
 
     @Inject
     lateinit var logger: Logger
@@ -36,24 +32,16 @@ class SeveraService {
      * @return Response from the request
      */
     private fun doRequest(path: String, scope: String): String? {
-        if (severaAccessToken == null){
-            severaAccessToken = severaBearerTokenContainer.getNewAccessToken(scope)
-        }
-
         return try {
             val client = OkHttpClient()
+            val accessToken = severaAccessTokenContainer.getAccessToken(scope).accessToken
             val request = Request.Builder().url("${severaBaseUrl}${path}")
-                .addHeader("Authorization", "Bearer ${severaAccessToken!!.bearerToken}")
+                .addHeader("Authorization", "Bearer $accessToken")
                 .addHeader("Client_id", severaClientId)
-                .addHeader("Client_secret", severaClientSecret)
                 .build()
             val response = client.newCall(request).execute()
             when (response.code()) {
                 200 -> response.body()?.string()
-                401 -> {
-                    severaAccessToken = severaBearerTokenContainer.getNewAccessToken(scope)
-                    doRequest(path, scope)
-                }
                 else -> throw Error("Couldn't reach Severa API.")
             }
         } catch (e: Error) {
@@ -69,7 +57,7 @@ class SeveraService {
      */
     fun getUsers(): List<User> {
         return jacksonObjectMapper().readValue(
-            doRequest("/v1/users", "users:read"),
+            doRequest("/v1/users", USERS_READ),
             Array<User>::class.java
         ).toList()
     }
@@ -84,5 +72,9 @@ class SeveraService {
             doRequest("/v1/users/$guid", "users:read"),
             User::class.java
         )
+    }
+
+    companion object {
+        const val USERS_READ = "users:read"
     }
 }
