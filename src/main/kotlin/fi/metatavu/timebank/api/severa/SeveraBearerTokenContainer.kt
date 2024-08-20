@@ -9,9 +9,10 @@ import okhttp3.Request
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.slf4j.Logger
 import javax.enterprise.context.ApplicationScoped
+import javax.enterprise.context.RequestScoped
 import javax.inject.Inject
 
-@ApplicationScoped
+@RequestScoped
 class SeveraBearerTokenContainer {
     @ConfigProperty(name = "severa.base.url")
     lateinit var severaBaseUrl: String
