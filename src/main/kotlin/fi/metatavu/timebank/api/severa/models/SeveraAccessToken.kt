@@ -12,5 +12,6 @@ data class SeveraAccessToken (
     @JsonAlias("refresh_token")
     var refreshToken: String,
     @JsonAlias("refresh_token_expires_in")
-    var refreshTokenExpiresIn: Int
+    var refreshTokenExpiresIn: Int,
+    var scope: List<String>
 )

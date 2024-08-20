@@ -29,19 +29,47 @@ class SeveraAccessTokenContainer {
     /**
      * Determines if a new access token is needed. Returns a functional access token for Severa API calls
      *
-     * @param scope Scope
+     * @param scopes List of scopes
      * @return Access token for Severa API calls
      */
-    fun getAccessToken(scope: String): SeveraAccessToken{
-        return if (isValidToken(severaAccessToken.accessToken)){
+    fun getAccessToken(scopes: List<String>): SeveraAccessToken{
+        return if (isValidToken(severaAccessToken.accessToken) && containsScopes(scopes)){
             severaAccessToken
         } else {
-            getNewAccessToken(scope)
+            getNewAccessToken(scopesToString(scopes))
         }
     }
 
     /**
-     * Checks if an access token is valid.
+     * Converts a list of scopes to be a suitable string for requesting an access token
+     *
+     * @param scopes List of scopes
+     * @return String
+     */
+    private fun scopesToString(scopes: List<String>): String{
+        val scopeBuilder = StringBuilder()
+        for (scope in scopes){
+            scopeBuilder.append(scope).append(", ")
+        }
+
+        return scopeBuilder.toString()
+    }
+
+    /**
+     * Checks if potentially existing access token has the needed scope(s)
+     *
+     * @param scopes List of scopes
+     * @return Boolean
+     */
+    private fun containsScopes(scopes: List<String>): Boolean {
+        for (scope in scopes){
+            if (!severaAccessToken.scope.contains(scope)) return false
+        }
+        return true
+    }
+
+    /**
+     * Checks if an access token is valid. Does NOT check for suitable scopes.
      *
      * @param token accessToken
      * @return boolean

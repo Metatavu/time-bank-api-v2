@@ -28,13 +28,18 @@ class SeveraService {
     /**
      * Sends get request to Severa API
      *
-     * @param path path for the request
+     * @param path Path for the request
+     * @param scopes List of scopes
      * @return Response from the request
      */
-    private fun doRequest(path: String, scope: String): String? {
+    private fun doRequest(path: String, scopes: List<String>): String? {
         return try {
             val client = OkHttpClient()
-            val accessToken = severaAccessTokenContainer.getAccessToken(scope).accessToken
+            val scopeBuilder = StringBuilder()
+            for (scope in scopes){
+                scopeBuilder.append(scope).append(", ")
+            }
+            val accessToken = severaAccessTokenContainer.getAccessToken(scopes).accessToken
             val request = Request.Builder().url("${severaBaseUrl}${path}")
                 .addHeader("Authorization", "Bearer $accessToken")
                 .addHeader("Client_id", severaClientId)
@@ -57,7 +62,7 @@ class SeveraService {
      */
     fun getUsers(): List<User> {
         return jacksonObjectMapper().readValue(
-            doRequest("/v1/users", USERS_READ),
+            doRequest("/v1/users", listOf(USERS_READ)),
             Array<User>::class.java
         ).toList()
     }
@@ -69,7 +74,7 @@ class SeveraService {
      */
     fun findUser(guid: String): User {
         return jacksonObjectMapper().readValue(
-            doRequest("/v1/users/$guid", "users:read"),
+            doRequest("/v1/users/$guid", listOf(USERS_READ)),
             User::class.java
         )
     }
