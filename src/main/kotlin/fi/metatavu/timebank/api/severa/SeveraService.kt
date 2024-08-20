@@ -51,8 +51,7 @@ class SeveraService {
             when (response.code()) {
                 200 -> response.body()?.string()
                 401 -> {
-                    logger.error("Request unauthorized (401), generating new access token...")
-                    severaBearerTokenContainer.getNewAccessToken(scope)
+                    severaAccessToken = severaBearerTokenContainer.getNewAccessToken(scope)
                     doRequest(path, scope)
                 }
                 else -> throw Error("Couldn't reach Severa API.")
