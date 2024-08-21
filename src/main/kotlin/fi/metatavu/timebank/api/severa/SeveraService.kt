@@ -35,10 +35,6 @@ class SeveraService {
     private fun doRequest(path: String, scopes: List<String>): String? {
         return try {
             val client = OkHttpClient()
-            val scopeBuilder = StringBuilder()
-            for (scope in scopes){
-                scopeBuilder.append(scope).append(", ")
-            }
             val accessToken = severaAccessTokenContainer.getAccessToken(scopes).accessToken
             val request = Request.Builder().url("${severaBaseUrl}${path}")
                 .addHeader("Authorization", "Bearer $accessToken")

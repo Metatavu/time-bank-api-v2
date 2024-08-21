@@ -1,6 +1,7 @@
 package fi.metatavu.timebank.api.test.functional.data
 
 import fi.metatavu.timebank.api.forecast.models.*
+import fi.metatavu.timebank.api.severa.models.SeveraUser
 import java.time.LocalDate
 
 /**
@@ -97,6 +98,24 @@ class TestData {
          */
         fun getPersons(): List<ForecastPerson> {
             return TestPersonsData.getPersons()
+        }
+
+        /**
+         * Gets all mock users
+         *
+         * @param List of SeveraUser
+         */
+        fun getUsers(): List<SeveraUser>{
+            return TestUsersData.getUsers()
+        }
+
+        /**
+         * Finds mock user based on guid
+         *
+         * @param mock SeveraUser
+         */
+        fun findUser(guid: String): SeveraUser {
+            return TestUsersData.findUser(guid)
         }
 
         /**

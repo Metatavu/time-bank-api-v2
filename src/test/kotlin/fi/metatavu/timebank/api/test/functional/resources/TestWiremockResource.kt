@@ -41,6 +41,7 @@ class TestWiremockResource: QuarkusTestResourceLifecycleManager {
         holidayCalendarStubs(wireMockServer)
         timeRegistrationStubs(wireMockServer)
         tasksStubs(wireMockServer)
+        usersStubs(wireMockServer)
 
         return mapOf(
             "forecast.base.url" to  wireMockServer.baseUrl(),
@@ -48,7 +49,21 @@ class TestWiremockResource: QuarkusTestResourceLifecycleManager {
         )
     }
 
-
+    /**
+     * /v1/users -stubs
+     *
+     * @param wireMockServer WireMockServer
+     */
+    private fun usersStubs(wireMockServer: WireMockServer) {
+        wireMockServer.stubFor(
+            get(urlPathEqualTo("/v1/users"))
+                .willReturn(jsonResponse(objectMapper.writeValueAsString(TestData.getUsers()), 200))
+        )
+        wireMockServer.stubFor(
+            get(urlPathEqualTo("/v1/users/3c"))
+                .willReturn(jsonResponse(objectMapper.writeValueAsString(TestData.findUser("3c")), 200))
+        )
+    }
 
     /**
      * /v2/persons -stubs
