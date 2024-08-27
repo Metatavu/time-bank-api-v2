@@ -1,22 +1,21 @@
 package fi.metatavu.timebank.api.severa
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import fi.metatavu.timebank.api.severa.models.SeveraAccessToken
-import fi.metatavu.timebank.model.User
+import fi.metatavu.timebank.api.severa.models.SeveraUser
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.slf4j.Logger
-import javax.enterprise.context.RequestScoped
+import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 
-@RequestScoped
+@ApplicationScoped
 class SeveraService {
 
-    @ConfigProperty(name = "severa.base.url")
+    @ConfigProperty(name = "severa.demo.base.url")
     lateinit var severaBaseUrl: String
 
-    @ConfigProperty(name = "severa.client.id")
+    @ConfigProperty(name = "severa.demo.client.id")
     lateinit var severaClientId: String
 
     @Inject
@@ -32,7 +31,7 @@ class SeveraService {
      * @param scopes List of scopes
      * @return Response from the request
      */
-    private fun doRequest(path: String, scopes: List<String>): String? {
+    private inline fun <reified T> doRequest(path: String, scopes: List<String>): T? {
         return try {
             val client = OkHttpClient()
             val accessToken = severaAccessTokenContainer.getAccessToken(scopes).accessToken
@@ -42,7 +41,7 @@ class SeveraService {
                 .build()
             val response = client.newCall(request).execute()
             when (response.code()) {
-                200 -> response.body()?.string()
+                200 -> jacksonObjectMapper().readValue(response.body()?.string(), T::class.java)
                 else -> throw Error("Couldn't reach Severa API.")
             }
         } catch (e: Error) {
@@ -56,11 +55,14 @@ class SeveraService {
      *
      * @return List of Users
      */
-    fun getUsers(): List<User> {
-        return jacksonObjectMapper().readValue(
-            doRequest("/v1/users", listOf(USERS_READ)),
-            Array<User>::class.java
-        ).toList()
+    fun getUsers(): List<SeveraUser> {
+        val response = doRequest<Array<SeveraUser>>("/v1/users", listOf(USERS_READ))
+        if (response != null) {
+            return response.toList()
+        } else {
+            logger.error("getUsers(): Request failed or returned null")
+            return emptyList()
+        }
     }
 
     /**
@@ -68,11 +70,8 @@ class SeveraService {
      *
      * @return List of ForecastPersons
      */
-    fun findUser(guid: String): User {
-        return jacksonObjectMapper().readValue(
-            doRequest("/v1/users/$guid", listOf(USERS_READ)),
-            User::class.java
-        )
+    fun findUser(guid: String): SeveraUser {
+        return doRequest<SeveraUser>("/v1/users/$guid", listOf(USERS_READ)) ?: SeveraUser()
     }
 
     companion object {

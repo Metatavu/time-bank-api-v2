@@ -5,6 +5,7 @@ import fi.metatavu.timebank.api.severa.models.SeveraAccessToken
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.Response
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.slf4j.Logger
 import javax.enterprise.context.ApplicationScoped
@@ -12,19 +13,20 @@ import javax.inject.Inject
 
 @ApplicationScoped
 class SeveraAccessTokenContainer {
-    @ConfigProperty(name = "severa.base.url")
+
+    @ConfigProperty(name = "severa.demo.base.url")
     lateinit var severaBaseUrl: String
 
-    @ConfigProperty(name = "severa.client.id")
+    @ConfigProperty(name = "severa.demo.client.id")
     lateinit var severaClientId: String
 
-    @ConfigProperty(name = "severa.client.secret")
+    @ConfigProperty(name = "severa.demo.client.secret")
     lateinit var severaClientSecret: String
 
     @Inject
     lateinit var logger: Logger
 
-    private lateinit var severaAccessToken: SeveraAccessToken
+    private var severaAccessToken: SeveraAccessToken? = null
 
     /**
      * Determines if a new access token is needed. Returns a functional access token for Severa API calls
@@ -32,9 +34,13 @@ class SeveraAccessTokenContainer {
      * @param scopes List of scopes
      * @return Access token for Severa API calls
      */
-    fun getAccessToken(scopes: List<String>): SeveraAccessToken{
-        return if (isValidToken(severaAccessToken.accessToken) && containsScopes(scopes)){
-            severaAccessToken
+    fun getAccessToken(scopes: List<String>): SeveraAccessToken {
+        if (severaAccessToken == null){
+            return getNewAccessToken(scopesToString(scopes))
+        }
+
+        return if (isValidToken(severaAccessToken!!.accessToken) && containsScopes(scopes)){
+            severaAccessToken!!
         } else {
             getNewAccessToken(scopesToString(scopes))
         }
@@ -63,13 +69,13 @@ class SeveraAccessTokenContainer {
      */
     private fun containsScopes(scopes: List<String>): Boolean {
         for (scope in scopes){
-            if (!severaAccessToken.scope.contains(scope)) return false
+            if (!severaAccessToken!!.scope.contains(scope)) return false
         }
         return true
     }
 
     /**
-     * Checks if an access token is valid. Does NOT check for suitable scopes.
+     * Checks if an access token is expired. Does NOT check for suitable scopes.
      *
      * @param token accessToken
      * @return boolean
@@ -111,8 +117,10 @@ class SeveraAccessTokenContainer {
                 .build()
             val response = client.newCall(request).execute()
             when (response.code()) {
-                200 -> parseAccessTokenFromJson(response.body().toString())
-                else -> throw Error("Couldn't reach Severa API.")
+                200 -> {
+                    parseAccessTokenFromJson(response)
+                }
+                else -> throw Error("Couldn't reach Severa API. new token")
             }
         } catch (e: Error) {
             logger.error("Error when generating new access token: ${e.localizedMessage}")
@@ -126,9 +134,11 @@ class SeveraAccessTokenContainer {
      * @param responseBody responseBody
      * @return Bearer token for Severa API calls
      */
-    fun parseAccessTokenFromJson(responseBody: String?): SeveraAccessToken{
+    private fun parseAccessTokenFromJson(response: Response): SeveraAccessToken{
         return try {
-            jacksonObjectMapper().readValue(responseBody, SeveraAccessToken::class.java)
+            severaAccessToken = jacksonObjectMapper().readValue(response.body()?.string(), SeveraAccessToken::class.java)
+            logger.info(severaAccessToken.toString())
+            severaAccessToken!!
         } catch (e: Exception) {
             throw Error("Error when parsing bearer token from JSON: ${e.localizedMessage}")
         }

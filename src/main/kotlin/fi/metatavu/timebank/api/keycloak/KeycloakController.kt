@@ -50,6 +50,25 @@ class KeycloakController {
     }
 
     /**
+     * Updates keycloak user with SeveraUser data
+     *
+     * @param user UserRepresentation
+     * @param newUser UserRepresentation
+     */
+    fun updateUser(newUser: UserRepresentation) {
+        val user = findUserByEmail(newUser.email)!!
+        val usersResource = getUsersResource()?.get(user.id)
+
+        try {
+            user.firstName = newUser.firstName
+            user.lastName = newUser.lastName
+            usersResource?.update(user)
+        } catch (e: Exception){
+            throw e
+        }
+    }
+
+    /**
      * Updates Persons minimumBillableRate attribute
      *
      * @param user UserRepresentation

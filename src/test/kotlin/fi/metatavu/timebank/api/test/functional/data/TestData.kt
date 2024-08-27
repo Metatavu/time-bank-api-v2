@@ -1,6 +1,7 @@
 package fi.metatavu.timebank.api.test.functional.data
 
 import fi.metatavu.timebank.api.forecast.models.*
+import fi.metatavu.timebank.api.severa.models.SeveraAccessToken
 import fi.metatavu.timebank.api.severa.models.SeveraUser
 import java.time.LocalDate
 
@@ -98,6 +99,15 @@ class TestData {
          */
         fun getPersons(): List<ForecastPerson> {
             return TestPersonsData.getPersons()
+        }
+
+        /**
+         * Gets mock access token
+         *
+         * @return SeveraAccessToken
+         */
+        fun getAccessToken(): SeveraAccessToken {
+            return TestTokenData.getAccessToken()
         }
 
         /**

@@ -42,10 +42,37 @@ class TestWiremockResource: QuarkusTestResourceLifecycleManager {
         timeRegistrationStubs(wireMockServer)
         tasksStubs(wireMockServer)
         usersStubs(wireMockServer)
+        tokenStubs(wireMockServer)
+        heartbeatStubs(wireMockServer)
 
         return mapOf(
             "forecast.base.url" to  wireMockServer.baseUrl(),
+            "severa.demo.base.url" to wireMockServer.baseUrl(),
             "forecast.api.key" to "noapikey"
+        )
+    }
+
+    /**
+     * /heartbeat/authorized -stubs
+     *
+     * @param wireMockServer WireMockServer
+     */
+    private fun heartbeatStubs(wireMockServer: WireMockServer) {
+        wireMockServer.stubFor(
+            get(urlPathEqualTo("/heartbeat/authorized"))
+                .willReturn(jsonResponse(null, 204))
+        )
+    }
+
+    /**
+     * /v1/token -stubs
+     *
+     * @param wireMockServer WireMockServer
+     */
+    private fun tokenStubs(wireMockServer: WireMockServer) {
+        wireMockServer.stubFor(
+            post(urlPathEqualTo("/v1/token"))
+                .willReturn(jsonResponse(objectMapper.writeValueAsString(TestData.getAccessToken()), 200))
         )
     }
 
