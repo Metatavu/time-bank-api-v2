@@ -19,7 +19,7 @@ import javax.inject.Inject
 )
 @TestProfile(LocalTestProfile::class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class SeveraTest: AbstractTest() {
+class SeveraTokenTest: AbstractTest() {
 
     @Inject
     lateinit var severaAccessTokenContainer: SeveraAccessTokenContainer

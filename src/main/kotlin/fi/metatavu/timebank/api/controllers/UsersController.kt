@@ -24,7 +24,7 @@ class UsersController {
     lateinit var logger: Logger
 
     /**
-     * Fetches User from keycloak
+     * Fetches User from keycloak. Updates severaGuid -attribute for found user in keycloak.
      *
      * @param userId UUID
      * @return UserRepresentation
