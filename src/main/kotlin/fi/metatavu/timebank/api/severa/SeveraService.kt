@@ -42,7 +42,7 @@ class SeveraService {
             val response = client.newCall(request).execute()
             when (response.code()) {
                 200 -> jacksonObjectMapper().readValue(response.body()?.string(), T::class.java)
-                else -> throw Error("Couldn't reach Severa API.")
+                else -> throw Error("Couldn't reach Severa API. Response code: ${response.code()}")
             }
         } catch (e: Error) {
             logger.error("Error when executing get request: ${e.localizedMessage}")
@@ -57,11 +57,11 @@ class SeveraService {
      */
     fun getUsers(): List<SeveraUser> {
         val response = doRequest<Array<SeveraUser>>("/v1/users", listOf(USERS_READ))
-        if (response != null) {
-            return response.toList()
+        return if (response != null) {
+            response.toList()
         } else {
             logger.error("getUsers(): Request failed or returned null")
-            return emptyList()
+            emptyList()
         }
     }
 

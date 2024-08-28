@@ -1,6 +1,7 @@
 package fi.metatavu.timebank.api.test.functional.tests
 
 import fi.metatavu.timebank.api.severa.SeveraAccessTokenContainer
+import fi.metatavu.timebank.api.severa.SeveraService
 import fi.metatavu.timebank.api.severa.SeveraService.Companion.USERS_READ
 import fi.metatavu.timebank.api.test.functional.resources.LocalTestProfile
 import fi.metatavu.timebank.api.test.functional.resources.TestWiremockResource
@@ -19,10 +20,13 @@ import javax.inject.Inject
 )
 @TestProfile(LocalTestProfile::class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class SeveraTokenTest: AbstractTest() {
+class SeveraTest: AbstractTest() {
 
     @Inject
     lateinit var severaAccessTokenContainer: SeveraAccessTokenContainer
+
+    @Inject
+    lateinit var severaService: SeveraService
 
     @Test
     fun generateAccessToken(){
@@ -31,5 +35,24 @@ class SeveraTokenTest: AbstractTest() {
         assertEquals("exampleAccessToken123", severaAccessToken.accessToken)
         assertEquals(80000, severaAccessToken.refreshTokenExpiresIn)
         assertTrue(severaAccessToken.scope.contains(USERS_READ))
+    }
+
+    @Test
+    fun getSeveraUsers(){
+        val severaUsers = severaService.getUsers()
+
+        assertEquals(severaUsers.size, 4)
+        assertEquals(severaUsers[0].firstName, "FirstA")
+        assertTrue(severaUsers[2].isActive)
+        assertEquals(severaUsers[1].severaWorkContract?.startDate, "2021-07-25")
+    }
+
+    @Test
+    fun findSeveraUser(){
+        val severaUser = severaService.findUser("4d")
+
+        assertEquals(severaUser.email, "TesterD@example.com")
+        assertEquals(severaUser.severaWorkContract?.endDate, null)
+        assertTrue(severaUser.isActive)
     }
 }

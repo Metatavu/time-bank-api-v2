@@ -87,8 +87,8 @@ class TestWiremockResource: QuarkusTestResourceLifecycleManager {
                 .willReturn(jsonResponse(objectMapper.writeValueAsString(TestData.getUsers()), 200))
         )
         wireMockServer.stubFor(
-            get(urlPathEqualTo("/v1/users/3c"))
-                .willReturn(jsonResponse(objectMapper.writeValueAsString(TestData.findUser("3c")), 200))
+            get(urlPathEqualTo("/v1/users/4d"))
+                .willReturn(jsonResponse(objectMapper.writeValueAsString(TestData.findUser("4d")), 200))
         )
     }
 
