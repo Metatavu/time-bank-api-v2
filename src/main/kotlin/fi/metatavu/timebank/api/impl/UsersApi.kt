@@ -3,7 +3,6 @@ package fi.metatavu.timebank.api.impl
 import fi.metatavu.timebank.api.controllers.UsersController
 import fi.metatavu.timebank.api.impl.translate.UserTranslator
 import fi.metatavu.timebank.spec.UsersApi
-import org.slf4j.Logger
 import java.util.*
 import javax.enterprise.context.RequestScoped
 import javax.inject.Inject
