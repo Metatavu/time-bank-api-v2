@@ -16,9 +16,7 @@ class SeveraUser {
     @JsonProperty("lastName")
     var lastName: String = ""
     var email: String = ""
-    @JsonProperty("startDate")
-    var startDate: String = ""
-    @JsonProperty("endDate")
-    var endDate: String? = null
+    @JsonProperty("workContract")
+    var severaWorkContract: SeveraWorkContract? = null
     var isActive: Boolean = false
 }
