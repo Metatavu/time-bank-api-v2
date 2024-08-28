@@ -12,10 +12,10 @@ import javax.inject.Inject
 @ApplicationScoped
 class SeveraService {
 
-    @ConfigProperty(name = "severa.demo.base.url")
+    @ConfigProperty(name = "severa.base.url")
     lateinit var severaBaseUrl: String
 
-    @ConfigProperty(name = "severa.demo.client.id")
+    @ConfigProperty(name = "severa.client.id")
     lateinit var severaClientId: String
 
     @Inject

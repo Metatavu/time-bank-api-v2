@@ -14,13 +14,13 @@ import javax.inject.Inject
 @ApplicationScoped
 class SeveraAccessTokenContainer {
 
-    @ConfigProperty(name = "severa.demo.base.url")
+    @ConfigProperty(name = "severa.base.url")
     lateinit var severaBaseUrl: String
 
-    @ConfigProperty(name = "severa.demo.client.id")
+    @ConfigProperty(name = "severa.client.id")
     lateinit var severaClientId: String
 
-    @ConfigProperty(name = "severa.demo.client.secret")
+    @ConfigProperty(name = "severa.client.secret")
     lateinit var severaClientSecret: String
 
     @Inject

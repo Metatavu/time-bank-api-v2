@@ -47,7 +47,7 @@ class TestWiremockResource: QuarkusTestResourceLifecycleManager {
 
         return mapOf(
             "forecast.base.url" to  wireMockServer.baseUrl(),
-            "severa.demo.base.url" to wireMockServer.baseUrl(),
+            "severa.base.url" to wireMockServer.baseUrl(),
             "forecast.api.key" to "noapikey"
         )
     }
