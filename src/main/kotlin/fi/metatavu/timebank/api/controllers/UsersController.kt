@@ -24,7 +24,7 @@ class UsersController {
     lateinit var logger: Logger
 
     /**
-     * Fetches User from keycloak. Updates severaGuid -attribute for found user in keycloak.
+     * Fetches User from keycloak. Updates severaGuid -attribute, firstName, and lastName for found user in keycloak.
      *
      * @param userId UUID
      * @return UserRepresentation
@@ -33,7 +33,7 @@ class UsersController {
         val user = keycloakController.findUserById(userId)
 
         if (user != null){
-            val severaGuid = user.attributes["severaGuid"]?.firstOrNull()
+            val severaGuid = user.attributes["severa-user-id"]?.firstOrNull()
                 ?: severaService.getUsers().find { it.email == user.email }?.guid
             if (severaGuid != null){
                 val severaUser = severaService.findUser(severaGuid)
@@ -41,7 +41,8 @@ class UsersController {
                     user.apply {
                         firstName = severaUser.firstName
                         lastName = severaUser.lastName
-                    }
+                    },
+                    severaGuid
                 )
             }
         }

@@ -55,13 +55,14 @@ class KeycloakController {
      * @param user UserRepresentation
      * @param newUser UserRepresentation
      */
-    fun updateUser(newUser: UserRepresentation) {
+    fun updateUser(newUser: UserRepresentation, newGuid: String) {
         val user = findUserByEmail(newUser.email)!!
         val usersResource = getUsersResource()?.get(user.id)
 
         try {
             user.firstName = newUser.firstName
             user.lastName = newUser.lastName
+            user.attributes["severa-user-id"] = listOf(newGuid)
             usersResource?.update(user)
         } catch (e: Exception){
             throw e
