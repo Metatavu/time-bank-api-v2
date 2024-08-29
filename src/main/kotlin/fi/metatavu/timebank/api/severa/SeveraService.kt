@@ -56,13 +56,7 @@ class SeveraService {
      * @return List of Users
      */
     fun getUsers(): List<SeveraUser> {
-        val response = doRequest<Array<SeveraUser>>("/v1/users", listOf(USERS_READ))
-        return if (response != null) {
-            response.toList()
-        } else {
-            logger.error("getUsers(): Request failed or returned null")
-            emptyList()
-        }
+        return doRequest<Array<SeveraUser>>("/v1/users", listOf(USERS_READ))?.toList() ?: emptyList()
     }
 
     /**
