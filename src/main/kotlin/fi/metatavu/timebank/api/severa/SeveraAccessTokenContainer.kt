@@ -71,6 +71,7 @@ class SeveraAccessTokenContainer {
         for (scope in scopes){
             if (!severaAccessToken!!.scope.contains(scope)) return false
         }
+
         return true
     }
 
@@ -123,7 +124,7 @@ class SeveraAccessTokenContainer {
                 else -> throw Error("Couldn't reach Severa API. new token")
             }
         } catch (e: Error) {
-            logger.error("Error when generating new access token: ${e.localizedMessage}")
+            logger.error("Error when requesting new access token: ${e.localizedMessage}")
             throw Error(e.localizedMessage)
         }
     }

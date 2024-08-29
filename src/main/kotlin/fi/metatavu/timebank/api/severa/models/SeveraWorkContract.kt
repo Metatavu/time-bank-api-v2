@@ -1,7 +1,6 @@
 package fi.metatavu.timebank.api.severa.models
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import com.fasterxml.jackson.annotation.JsonProperty
 import io.quarkus.runtime.annotations.RegisterForReflection
 
 /**
@@ -10,8 +9,6 @@ import io.quarkus.runtime.annotations.RegisterForReflection
 @RegisterForReflection
 @JsonIgnoreProperties(ignoreUnknown = true)
 class SeveraWorkContract {
-    @JsonProperty("startDate")
     var startDate: String = ""
-    @JsonProperty("endDate")
     var endDate: String? = null
 }

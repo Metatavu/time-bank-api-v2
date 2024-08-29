@@ -11,9 +11,7 @@ import io.quarkus.runtime.annotations.RegisterForReflection
 @JsonIgnoreProperties(ignoreUnknown = true)
 class SeveraUser {
     var guid: String = ""
-    @JsonProperty("firstName")
     var firstName: String = ""
-    @JsonProperty("lastName")
     var lastName: String = ""
     var email: String = ""
     @JsonProperty("workContract")
