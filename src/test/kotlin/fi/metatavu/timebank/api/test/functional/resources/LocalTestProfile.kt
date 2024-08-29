@@ -14,8 +14,9 @@ class LocalTestProfile: QuarkusTestProfile {
             "keycloak.client.id" to "admin-cli",
             "keycloak.client.secret" to "secret",
             "keycloak.realm" to "timebank",
-            "forecast.webhook.key" to "forecastKey"
+            "forecast.webhook.key" to "forecastKey",
+            "severa.client.id" to "123abcdef",
+            "severa.client.secret" to "abc123def"
         )
     }
-
 }

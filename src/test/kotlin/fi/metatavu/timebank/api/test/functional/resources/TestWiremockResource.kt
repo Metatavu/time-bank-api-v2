@@ -41,14 +41,56 @@ class TestWiremockResource: QuarkusTestResourceLifecycleManager {
         holidayCalendarStubs(wireMockServer)
         timeRegistrationStubs(wireMockServer)
         tasksStubs(wireMockServer)
+        usersStubs(wireMockServer)
+        tokenStubs(wireMockServer)
+        heartbeatStubs(wireMockServer)
 
         return mapOf(
             "forecast.base.url" to  wireMockServer.baseUrl(),
+            "severa.base.url" to wireMockServer.baseUrl(),
             "forecast.api.key" to "noapikey"
         )
     }
 
+    /**
+     * /heartbeat/authorized -stubs
+     *
+     * @param wireMockServer WireMockServer
+     */
+    private fun heartbeatStubs(wireMockServer: WireMockServer) {
+        wireMockServer.stubFor(
+            get(urlPathEqualTo("/heartbeat/authorized"))
+                .willReturn(jsonResponse(null, 204))
+        )
+    }
 
+    /**
+     * /v1/token -stubs
+     *
+     * @param wireMockServer WireMockServer
+     */
+    private fun tokenStubs(wireMockServer: WireMockServer) {
+        wireMockServer.stubFor(
+            post(urlPathEqualTo("/v1/token"))
+                .willReturn(jsonResponse(objectMapper.writeValueAsString(TestData.getAccessToken()), 200))
+        )
+    }
+
+    /**
+     * /v1/users -stubs
+     *
+     * @param wireMockServer WireMockServer
+     */
+    private fun usersStubs(wireMockServer: WireMockServer) {
+        wireMockServer.stubFor(
+            get(urlPathEqualTo("/v1/users"))
+                .willReturn(jsonResponse(objectMapper.writeValueAsString(TestData.getUsers()), 200))
+        )
+        wireMockServer.stubFor(
+            get(urlPathEqualTo("/v1/users/4d"))
+                .willReturn(jsonResponse(objectMapper.writeValueAsString(TestData.findUser("4d")), 200))
+        )
+    }
 
     /**
      * /v2/persons -stubs
